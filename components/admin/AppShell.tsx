@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { signOut } from "next-auth/react";
 import {
   LayoutDashboard, Users, FileText, CalendarDays, Package,
   CreditCard, Tag, BarChart3, Settings, LogOut, Menu, X,
@@ -29,7 +30,13 @@ const navItems = [
  */
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  async function handleLogout() {
+    await signOut({ redirect: false });
+    router.push("/admin/login");
+  }
 
   return (
     <div className="flex h-screen overflow-hidden bg-cosmic-950">
@@ -99,7 +106,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <ChevronRight className="h-4 w-4 rotate-180" />
             View Live Site
           </Link>
-          <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-text-muted hover:text-rose hover:bg-surface transition-colors">
+          <button
+            onClick={handleLogout}
+            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-text-muted hover:text-rose hover:bg-surface transition-colors"
+          >
             <LogOut className="h-4 w-4" />
             Logout
           </button>
