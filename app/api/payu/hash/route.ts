@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { generatePayUHash, getPayUUrl } from "@/lib/payu";
+import { generateHash, getPayUEndpoint } from "@/lib/payu";
 
 /**
  * POST /api/payu/hash
  * Generate PayU hash for payment initiation
- * Edge runtime for lowest latency (no Prisma needed here)
+ * Node runtime (uses crypto module for SHA-512)
  */
-export const runtime = "edge";
+export const runtime = "nodejs";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const hash = generatePayUHash({
+    const hash = generateHash({
       txnid,
       amount: String(amount),
       productinfo,
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       key: process.env.PAYU_KEY || "zide1p",
       hash,
-      action: getPayUUrl(),
+      action: getPayUEndpoint(),
     });
   } catch (error) {
     console.error("[PayU Hash] Error:", error);

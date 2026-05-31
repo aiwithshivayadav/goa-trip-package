@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { verifyPayUHash } from "@/lib/payu";
+import { verifyHash } from "@/lib/payu";
 
 /**
  * POST /api/payu/success
@@ -19,7 +19,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Verify hash — ensures response is authentic from PayU
-    const isValid = verifyPayUHash({
+    const isValid = verifyHash({
       txnid: response.txnid || "",
       amount: response.amount || "",
       productinfo: response.productinfo || "",
