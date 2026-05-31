@@ -8,22 +8,31 @@ export interface ProductData {
   type: "package" | "cruise" | "yacht" | "activity" | "hotel" | "party";
   name: string;
   shortDesc: string;
+  longDesc?: string; // Rich description paragraph
   basePrice: number;
-  originalPrice?: number; // For strikethrough was/now pricing
+  originalPrice?: number;
   priceUnit: string;
   duration?: string;
   durationDays?: number;
   capacity?: string;
   location?: string;
   rating?: number;
+  reviewCount?: number;
   isFeatured?: boolean;
   isSelfServe?: boolean;
   isQuoteLed?: boolean;
   imageUrl?: string;
+  images?: string[]; // Multiple images for gallery/slider
   inclusions?: string[];
   exclusions?: string[];
-  highlights?: string[]; // Green highlighted special experiences (MMT-style)
+  highlights?: string[];
+  keyFeatures?: { icon: string; label: string; value: string }[]; // Specs table
+  meetingPoint?: string;
+  timing?: string;
+  whatToBring?: string[];
+  cancellationPolicy?: string;
   itinerary?: { day: number; title: string; description: string }[];
+  faq?: { q: string; a: string }[];
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -35,19 +44,43 @@ export const packages: ProductData[] = [
     type: "package",
     name: "Goa Honeymoon Classic — 3N/4D",
     shortDesc: "Romantic beaches, sunset cruise, candlelight dinner, and private transfers for newlyweds.",
+    longDesc: "Start your journey together in Goa's most romantic settings. This 3-night honeymoon package blends beach relaxation with curated couple experiences — from a private sunset cruise on the Mandovi River to a candlelight dinner under the stars at a premium beachside restaurant. Stay in a comfortable 3-star AC room with daily breakfast, and explore both North and South Goa with guided sightseeing. Airport transfers included so you don't worry about logistics from the moment you land.",
     basePrice: 12999,
     priceUnit: "per couple",
     duration: "3N / 4D",
     durationDays: 4,
     location: "North & South Goa",
     rating: 4.9,
+    reviewCount: 320,
     isFeatured: true,
     isQuoteLed: true,
     imageUrl: "https://goatrippackage.com/wp-content/uploads/2026/05/08-honeymoon-standard-featured-800x600.jpg",
+    images: [
+      "https://goatrippackage.com/wp-content/uploads/2026/05/08-honeymoon-standard-featured-800x600.jpg",
+      "https://goatrippackage.com/wp-content/uploads/2026/05/09-premium-honeymoon-featured-800x600.jpg",
+      "https://goatrippackage.com/wp-content/uploads/2026/05/beach-resort-01-800x600.jpg",
+      "https://goatrippackage.com/wp-content/uploads/2026/05/Sunset-800x600.jpeg",
+      "https://goatrippackage.com/wp-content/uploads/2026/05/South-Goa-Tour-4.jpg",
+    ],
     originalPrice: 17999,
-    inclusions: ["3-star hotel (AC room)", "Breakfast daily", "Airport pickup & drop", "Sunset cruise for 2", "Candlelight dinner", "North Goa sightseeing", "South Goa sightseeing"],
-    exclusions: ["Flights", "Lunch & dinner (except candlelight)", "Water activities", "Personal expenses"],
-    highlights: ["Sunset Cruise for 2", "Candlelight Beach Dinner"],
+    inclusions: ["3-star hotel (AC room)", "Breakfast daily", "Airport pickup & drop", "Sunset cruise for 2", "Candlelight dinner at premium restaurant", "North Goa sightseeing (full day)", "South Goa sightseeing (full day)", "Couple welcome drink on arrival"],
+    exclusions: ["Flights", "Lunch & dinner (except candlelight)", "Water activities", "Personal expenses", "Room upgrades"],
+    highlights: ["Sunset Cruise for 2", "Candlelight Beach Dinner", "Private Airport Transfers"],
+    keyFeatures: [
+      { icon: "calendar", label: "Duration", value: "3 Nights / 4 Days" },
+      { icon: "hotel", label: "Stay", value: "3-Star AC Room" },
+      { icon: "utensils", label: "Meals", value: "Daily Breakfast + 1 Dinner" },
+      { icon: "car", label: "Transfers", value: "Airport Pickup & Drop" },
+      { icon: "star", label: "Rating", value: "4.9★ (320 reviews)" },
+      { icon: "shield", label: "Cancellation", value: "Free up to 48 hrs" },
+    ],
+    cancellationPolicy: "Free cancellation up to 48 hours before check-in. 25% fee within 24-48 hours. No refund within 24 hours.",
+    faq: [
+      { q: "Can I upgrade the hotel to 4-star or 5-star?", a: "Absolutely! Contact us on WhatsApp for a custom quote with upgraded stay. We work with 50+ hotels across Goa." },
+      { q: "Is the sunset cruise private?", a: "The cruise is on a shared vessel but the experience is romantic — sunset views, live music, and dinner on the river. For a private cruise, add ₹8,000." },
+      { q: "Can I customize the itinerary?", a: "Yes! This is a base itinerary. We can swap sightseeing for water sports, add a spa session, or change the dinner venue. Just tell us what you want." },
+      { q: "What if our flight arrives late?", a: "No worries — we track your flight and adjust the pickup time. Day 1 activities will be rescheduled if needed." },
+    ],
     itinerary: [
       { day: 1, title: "Arrival & Beach Evening", description: "Airport pickup, hotel check-in, evening at Calangute/Baga beach, dinner at a beach shack." },
       { day: 2, title: "North Goa Sightseeing", description: "Fort Aguada, Vagator, Anjuna flea market, Chapora Fort, sunset at Ozran beach." },
@@ -154,20 +187,47 @@ export const cruises: ProductData[] = [
     type: "cruise",
     name: "Royal Cruise — Floating Night Party",
     shortDesc: "Goa's most premium floating night party. Live DJ, premium bar, 2 drink coupons, tequila shots & dinner buffet.",
+    longDesc: "Royal Cruise isn't a dinner cruise — it's a full nightclub floating on the Mandovi River. Step aboard Goa's most premium party vessel and experience 3 hours of non-stop entertainment with a live DJ spinning EDM, Bollywood, and international hits. The royal interiors feature LED lighting, a dedicated dance floor, and lounge seating. Your ticket includes 2 complimentary IMFL/beer coupons, tequila shots on arrival, and a lavish dinner buffet (veg & non-veg). This is the cruise that locals recommend and tourists never forget.",
     basePrice: 2000,
     priceUnit: "per person",
     duration: "3 hrs (8:30–11:30 PM)",
     capacity: "200 guests",
     location: "Mandovi River, Panjim",
     rating: 4.9,
+    reviewCount: 500,
     isFeatured: true,
     isSelfServe: true,
     isQuoteLed: true,
     imageUrl: "https://goatrippackage.com/wp-content/uploads/2026/05/Royal-cruise-photos-3.png",
+    images: [
+      "https://goatrippackage.com/wp-content/uploads/2026/05/Royal-cruise-photos-3.png",
+      "https://goatrippackage.com/wp-content/uploads/2026/05/Royal-cruise-photos-2-1022x1080.png",
+      "https://goatrippackage.com/wp-content/uploads/2026/05/Royal-cruise-photos-1.png",
+      "https://goatrippackage.com/wp-content/uploads/2026/05/Sunset-800x600.jpeg",
+    ],
     originalPrice: 2500,
-    inclusions: ["Live DJ performance", "2 drink coupons (IMFL/beer)", "Tequila shots", "Full dinner buffet", "Royal interiors & lighting", "Dance floor"],
-    exclusions: ["Extra drinks beyond 2 coupons", "Camera/photography charges", "Transportation to jetty"],
-    highlights: ["2 Free Drink Coupons", "Tequila Shots Included"],
+    inclusions: ["Live DJ performance (EDM + Bollywood + International)", "2 drink coupons (IMFL/beer)", "Tequila shots on arrival", "Full dinner buffet (veg & non-veg)", "Royal interiors & LED lighting", "Dedicated dance floor", "Lounge seating areas", "Welcome aboard photo"],
+    exclusions: ["Extra drinks beyond 2 coupons", "Camera/photography charges", "Transportation to jetty", "Personal expenses"],
+    highlights: ["2 Free Drink Coupons", "Tequila Shots on Arrival", "Live DJ — EDM + Bollywood"],
+    keyFeatures: [
+      { icon: "clock", label: "Duration", value: "3 hours" },
+      { icon: "calendar", label: "Timing", value: "8:30 PM – 11:30 PM" },
+      { icon: "users", label: "Capacity", value: "Up to 200 guests" },
+      { icon: "map-pin", label: "Boarding", value: "Multi-Level Car Park Jetty, Panjim" },
+      { icon: "star", label: "Rating", value: "4.9★ (500+ reviews)" },
+      { icon: "zap", label: "Confirmation", value: "Instant" },
+    ],
+    meetingPoint: "Multi-Level Car Park Jetty, Dayanand Bandodkar Marg, Panjim, Goa 403001. Report 30 minutes before departure.",
+    timing: "Daily: 8:30 PM – 11:30 PM (boarding starts 8:00 PM)",
+    whatToBring: ["Valid ID proof", "Comfortable party wear", "Cash for extra drinks", "Camera/phone for photos"],
+    cancellationPolicy: "Free cancellation up to 24 hours before departure. 50% refund for 12-24 hours. No refund within 12 hours.",
+    faq: [
+      { q: "Is food included in the ticket?", a: "Yes! A full dinner buffet (both veg and non-veg) is included. The buffet is served during the cruise." },
+      { q: "Are drinks included?", a: "2 drink coupons (IMFL or beer) + tequila shots on arrival are included. Additional drinks can be purchased at the bar." },
+      { q: "Is it suitable for couples?", a: "Absolutely! It's popular with couples, friend groups, and birthday celebrations. The vibe is premium party, not rowdy." },
+      { q: "What should I wear?", a: "Smart casuals or party wear. No beachwear or slippers. Think nightclub dress code." },
+      { q: "Can I book for a birthday celebration?", a: "Yes! We can arrange cake, decorations, and a special announcement. Contact us on WhatsApp for custom arrangements." },
+    ],
   },
   {
     slug: "sunset-dinner-cruise",
