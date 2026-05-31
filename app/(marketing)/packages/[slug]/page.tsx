@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Clock, Users, MapPin, Star, Check, X, ArrowLeft } from "lucide-react";
 import { packages, type ProductData } from "@/lib/data/products";
 import { formatINR } from "@/lib/utils";
+import { EnquiryButton } from "@/components/booking/EnquiryButton";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -111,18 +112,21 @@ export default async function PackageDetailPage({ params }: PageProps) {
 
                 {/* CTA buttons */}
                 <div className="space-y-3">
-                  <Link
-                    href={`/custom-trip?package=${pkg.slug}`}
-                    className="flex h-12 w-full items-center justify-center rounded-xl bg-gold-gradient text-sm font-bold text-cosmic-950 transition-transform hover:scale-[1.02] active:scale-[0.98]"
-                  >
-                    Get Custom Quote
-                  </Link>
-                  <a
-                    href={`https://wa.me/919890830249?text=${encodeURIComponent(`Hi, I'm interested in: ${pkg.name} (${formatINR(pkg.basePrice)} ${pkg.priceUnit})`)}`}
-                    className="flex h-12 w-full items-center justify-center rounded-xl border border-border-gold text-sm font-medium text-gold transition-colors hover:bg-surface"
-                  >
-                    WhatsApp Enquiry
-                  </a>
+                  <EnquiryButton
+                    productName={pkg.name}
+                    productSlug={pkg.slug}
+                    productType="package"
+                    productPrice={pkg.basePrice}
+                    variant="gold"
+                    label="Get Custom Quote"
+                  />
+                  <EnquiryButton
+                    productName={pkg.name}
+                    productSlug={pkg.slug}
+                    productType="package"
+                    productPrice={pkg.basePrice}
+                    label="WhatsApp Enquiry"
+                  />
                 </div>
 
                 <p className="mt-4 text-center text-xs text-text-dim">
@@ -214,19 +218,21 @@ export default async function PackageDetailPage({ params }: PageProps) {
             <p className="text-xs text-text-dim">From</p>
             <p className="text-lg font-bold text-white">{formatINR(pkg.basePrice)}</p>
           </div>
-          <Link
-            href={`/custom-trip?package=${pkg.slug}`}
-            className="flex h-11 items-center justify-center rounded-xl bg-gold-gradient px-6 text-sm font-bold text-cosmic-950"
-          >
-            Get Quote
-          </Link>
-          <a
-            href={`https://wa.me/919890830249?text=${encodeURIComponent(`Hi, interested in: ${pkg.name}`)}`}
-            className="flex h-11 w-11 items-center justify-center rounded-xl border border-border-gold text-gold"
-            aria-label="WhatsApp"
-          >
-            💬
-          </a>
+          <EnquiryButton
+            productName={pkg.name}
+            productSlug={pkg.slug}
+            productType="package"
+            productPrice={pkg.basePrice}
+            variant="outline"
+            label="Get Quote"
+          />
+          <EnquiryButton
+            productName={pkg.name}
+            productSlug={pkg.slug}
+            productType="package"
+            productPrice={pkg.basePrice}
+            variant="compact"
+          />
         </div>
       </div>
     </div>

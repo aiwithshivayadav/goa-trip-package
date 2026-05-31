@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Clock, Users, MapPin, Star, Check, X, ArrowLeft } from "lucide-react";
 import { yachts } from "@/lib/data/products";
 import { formatINR } from "@/lib/utils";
+import { EnquiryButton } from "@/components/booking/EnquiryButton";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -77,9 +78,7 @@ export default async function YachtDetailPage({ params }: PageProps) {
                       Get Quote
                     </Link>
                   )}
-                  <a href={`https://wa.me/919890830249?text=${encodeURIComponent(`Hi, interested in ${yacht.name} yacht charter`)}`} className="flex h-12 w-full items-center justify-center rounded-xl border border-border-gold text-sm font-medium text-gold hover:bg-surface transition-colors">
-                    WhatsApp Enquiry
-                  </a>
+                  <EnquiryButton productName={yacht.name} productSlug={yacht.slug} productType="yacht" productPrice={yacht.basePrice} label="WhatsApp Enquiry" />
                 </div>
               </div>
             </div>
@@ -113,7 +112,7 @@ export default async function YachtDetailPage({ params }: PageProps) {
           ) : (
             <Link href={`/custom-trip?package=${yacht.slug}`} className="flex h-11 items-center justify-center rounded-xl bg-gold-gradient px-6 text-sm font-bold text-cosmic-950">Get Quote</Link>
           )}
-          <a href={`https://wa.me/919890830249?text=${encodeURIComponent(`Interested in: ${yacht.name}`)}`} className="flex h-11 w-11 items-center justify-center rounded-xl border border-border-gold text-gold" aria-label="WhatsApp">💬</a>
+          <EnquiryButton productName={yacht.name} productSlug={yacht.slug} productType="yacht" productPrice={yacht.basePrice} variant="compact" />
         </div>
       </div>
     </div>

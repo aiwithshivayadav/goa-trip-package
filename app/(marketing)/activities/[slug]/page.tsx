@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Clock, MapPin, Star, Check, X, ArrowLeft } from "lucide-react";
 import { activities } from "@/lib/data/products";
 import { formatINR } from "@/lib/utils";
+import { EnquiryButton } from "@/components/booking/EnquiryButton";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -65,9 +66,7 @@ export default async function ActivityDetailPage({ params }: PageProps) {
                   <Link href={`/checkout?product=${activity.slug}&type=activity`} className="flex h-12 w-full items-center justify-center rounded-xl bg-gold-gradient text-sm font-bold text-cosmic-950 transition-transform hover:scale-[1.02] active:scale-[0.98]">
                     Book Now — {formatINR(activity.basePrice)}
                   </Link>
-                  <a href={`https://wa.me/919890830249?text=${encodeURIComponent(`Hi, interested in: ${activity.name}`)}`} className="flex h-12 w-full items-center justify-center rounded-xl border border-border-gold text-sm font-medium text-gold hover:bg-surface transition-colors">
-                    WhatsApp Enquiry
-                  </a>
+                  <EnquiryButton productName={activity.name} productSlug={activity.slug} productType="activity" productPrice={activity.basePrice} label="WhatsApp Enquiry" />
                 </div>
               </div>
             </div>
@@ -96,7 +95,7 @@ export default async function ActivityDetailPage({ params }: PageProps) {
         <div className="flex items-center gap-3">
           <div className="flex-1"><p className="text-xs text-text-dim">Price</p><p className="text-lg font-bold text-white">{formatINR(activity.basePrice)}</p></div>
           <Link href={`/checkout?product=${activity.slug}&type=activity`} className="flex h-11 items-center justify-center rounded-xl bg-gold-gradient px-6 text-sm font-bold text-cosmic-950">Book Now</Link>
-          <a href={`https://wa.me/919890830249?text=${encodeURIComponent(`Interested in: ${activity.name}`)}`} className="flex h-11 w-11 items-center justify-center rounded-xl border border-border-gold text-gold" aria-label="WhatsApp">💬</a>
+          <EnquiryButton productName={activity.name} productSlug={activity.slug} productType="activity" productPrice={activity.basePrice} variant="compact" />
         </div>
       </div>
     </div>

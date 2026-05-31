@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Clock, Users, MapPin, Star, Check, X, ArrowLeft } from "lucide-react";
 import { cruises } from "@/lib/data/products";
 import { formatINR } from "@/lib/utils";
+import { EnquiryButton } from "@/components/booking/EnquiryButton";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -120,12 +121,13 @@ export default async function CruiseDetailPage({ params }: PageProps) {
                       Get Custom Quote
                     </Link>
                   )}
-                  <a
-                    href={`https://wa.me/919890830249?text=${encodeURIComponent(`Hi, I'm interested in: ${cruise.name} (${formatINR(cruise.basePrice)} ${cruise.priceUnit})`)}`}
-                    className="flex h-12 w-full items-center justify-center rounded-xl border border-border-gold text-sm font-medium text-gold transition-colors hover:bg-surface"
-                  >
-                    WhatsApp Enquiry
-                  </a>
+                  <EnquiryButton
+                    productName={cruise.name}
+                    productSlug={cruise.slug}
+                    productType="cruise"
+                    productPrice={cruise.basePrice}
+                    label="WhatsApp Enquiry"
+                  />
                 </div>
               </div>
             </div>
@@ -183,7 +185,7 @@ export default async function CruiseDetailPage({ params }: PageProps) {
               Get Quote
             </Link>
           )}
-          <a href={`https://wa.me/919890830249?text=${encodeURIComponent(`Interested in: ${cruise.name}`)}`} className="flex h-11 w-11 items-center justify-center rounded-xl border border-border-gold text-gold" aria-label="WhatsApp">💬</a>
+          <EnquiryButton productName={cruise.name} productSlug={cruise.slug} productType="cruise" productPrice={cruise.basePrice} variant="compact" />
         </div>
       </div>
     </div>
