@@ -72,9 +72,9 @@ export default function QuotesPage() {
             <Filter className="h-3.5 w-3.5" /> Filters
           </button>
         </div>
-        <button onClick={() => toast.info("Quote builder coming soon")} className="flex h-9 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02]">
+        <Link href="/admin/quotes/new" className="flex h-9 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02]">
           <Plus className="h-3.5 w-3.5" /> New Quote
-        </button>
+        </Link>
       </div>
 
       {/* Status tabs (kanban-style) */}

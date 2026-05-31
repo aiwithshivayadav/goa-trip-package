@@ -5,6 +5,8 @@ import { Footer } from "@/components/marketing/Footer";
 import { WhyChooseUs } from "@/components/marketing/WhyChooseUs";
 import { OffersStrip } from "@/components/marketing/OffersStrip";
 import { ProductCard } from "@/components/marketing/ProductCard";
+import { ScrollReveal } from "@/components/marketing/ScrollReveal";
+import { AnimatedCounter } from "@/components/marketing/AnimatedCounter";
 import { cruises, yachts, packages, activities, hotels } from "@/lib/data/products";
 import { Anchor, Sailboat, Waves, Mountain, Hotel, PartyPopper, ArrowRight, Star, Shield, Headphones, Users, MapPin, Bike, Ship, Palmtree, Camera, Globe, Gem, Clock, Search, ChevronRight, Calendar } from "lucide-react";
 
@@ -120,7 +122,7 @@ export default function HomePage() {
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
             {stats.map((s) => (
               <div key={s.label} className="text-center">
-                <p className="text-2xl font-bold text-white md:text-3xl">{s.value}</p>
+                <p className="text-2xl font-bold text-white md:text-3xl"><AnimatedCounter value={s.value} /></p>
                 <p className="mt-0.5 text-[11px] text-text-muted uppercase tracking-wider">{s.label}</p>
               </div>
             ))}
@@ -152,18 +154,20 @@ export default function HomePage() {
       {/* ═══ CRUISES SECTION ═══ */}
       <section className="py-14 bg-cosmic-950">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
-          <div className="flex items-end justify-between mb-8">
-            <div>
-              <p className="text-xs uppercase tracking-[0.15em] text-gold mb-1">Mandovi River</p>
-              <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
-                Unforgettable Goa <span className="text-gold-gradient">Cruise</span> Experiences
-              </h2>
-              <p className="mt-1 text-sm text-text-muted">13 cruises — sunset, dinner, party, dolphin, private</p>
+          <ScrollReveal>
+            <div className="flex items-end justify-between mb-8">
+              <div>
+                <p className="text-xs uppercase tracking-[0.15em] text-gold mb-1">Mandovi River</p>
+                <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
+                  Unforgettable Goa <span className="text-gold-gradient">Cruise</span> Experiences
+                </h2>
+                <p className="mt-1 text-sm text-text-muted">13 cruises — sunset, dinner, party, dolphin, private</p>
+              </div>
+              <Link href="/cruises" className="hidden sm:flex items-center gap-1 text-sm text-gold hover:text-gold-200 transition-colors">
+                View all 13 <ChevronRight className="h-4 w-4" />
+              </Link>
             </div>
-            <Link href="/cruises" className="hidden sm:flex items-center gap-1 text-sm text-gold hover:text-gold-200 transition-colors">
-              View all 13 <ChevronRight className="h-4 w-4" />
-            </Link>
-          </div>
+          </ScrollReveal>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {cruises.slice(0, 4).map((c) => (
               <ProductCard key={c.slug} slug={c.slug} type={c.type} name={c.name} basePrice={c.basePrice} originalPrice={c.originalPrice} priceUnit={c.priceUnit} duration={c.duration} capacity={c.capacity} location={c.location} rating={c.rating} isFeatured={c.isFeatured} isSelfServe={c.isSelfServe} imageUrl={c.imageUrl} inclusions={c.inclusions} highlights={c.highlights} />
