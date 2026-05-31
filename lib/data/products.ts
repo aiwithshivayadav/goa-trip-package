@@ -9,6 +9,7 @@ export interface ProductData {
   name: string;
   shortDesc: string;
   basePrice: number;
+  originalPrice?: number; // For strikethrough was/now pricing
   priceUnit: string;
   duration?: string;
   durationDays?: number;
@@ -21,6 +22,7 @@ export interface ProductData {
   imageUrl?: string;
   inclusions?: string[];
   exclusions?: string[];
+  highlights?: string[]; // Green highlighted special experiences (MMT-style)
   itinerary?: { day: number; title: string; description: string }[];
 }
 
@@ -42,8 +44,10 @@ export const packages: ProductData[] = [
     isFeatured: true,
     isQuoteLed: true,
     imageUrl: "https://goatrippackage.com/wp-content/uploads/2026/05/08-honeymoon-standard-featured-800x600.jpg",
+    originalPrice: 17999,
     inclusions: ["3-star hotel (AC room)", "Breakfast daily", "Airport pickup & drop", "Sunset cruise for 2", "Candlelight dinner", "North Goa sightseeing", "South Goa sightseeing"],
     exclusions: ["Flights", "Lunch & dinner (except candlelight)", "Water activities", "Personal expenses"],
+    highlights: ["Sunset Cruise for 2", "Candlelight Beach Dinner"],
     itinerary: [
       { day: 1, title: "Arrival & Beach Evening", description: "Airport pickup, hotel check-in, evening at Calangute/Baga beach, dinner at a beach shack." },
       { day: 2, title: "North Goa Sightseeing", description: "Fort Aguada, Vagator, Anjuna flea market, Chapora Fort, sunset at Ozran beach." },
@@ -65,8 +69,10 @@ export const packages: ProductData[] = [
     isFeatured: true,
     isQuoteLed: true,
     imageUrl: "https://goatrippackage.com/wp-content/uploads/2026/05/09-premium-honeymoon-featured-800x600.jpg",
+    originalPrice: 44999,
     inclusions: ["5-star resort (sea-view room)", "All meals (MAP)", "Private airport transfers", "Private yacht (2 hrs)", "Couple spa session", "Sunset cruise premium", "South Goa heritage tour", "Candlelight dinner on beach"],
     exclusions: ["Flights", "Water activities", "Personal shopping", "Tips"],
+    highlights: ["Private Yacht Charter (2 hrs)", "Couple Spa Session", "Candlelight Dinner on Beach"],
   },
   {
     slug: "goa-family-fun-3n4d",
@@ -81,8 +87,10 @@ export const packages: ProductData[] = [
     rating: 4.8,
     isQuoteLed: true,
     imageUrl: "https://goatrippackage.com/wp-content/uploads/2026/05/14-family-premium-featured-800x600.jpg",
+    originalPrice: 12499,
     inclusions: ["3-star family hotel", "Breakfast daily", "Airport transfers", "Dolphin sightseeing", "Spice plantation visit", "North & South Goa tour"],
     exclusions: ["Flights", "Lunch & dinner", "Water sports", "Personal expenses"],
+    highlights: ["Dolphin Sightseeing Trip", "Spice Plantation Tour"],
   },
   {
     slug: "goa-group-trip-bachelor-3n4d",
@@ -98,8 +106,10 @@ export const packages: ProductData[] = [
     isFeatured: true,
     isQuoteLed: true,
     imageUrl: "https://goatrippackage.com/wp-content/uploads/2026/05/05-group-departure-featured-800x600.jpg",
+    originalPrice: 7999,
     inclusions: ["Hostel/hotel (AC room)", "Party cruise ticket", "Tito's + Club Cubana entry", "North Goa sightseeing", "Bike rental (1 day)", "Airport pickup"],
     exclusions: ["Flights", "Meals", "Drinks at clubs", "Personal expenses"],
+    highlights: ["Party Cruise Night", "Tito's + Club Cubana VIP Entry"],
   },
   {
     slug: "goa-corporate-offsite-2n3d",
@@ -154,8 +164,10 @@ export const cruises: ProductData[] = [
     isSelfServe: true,
     isQuoteLed: true,
     imageUrl: "https://goatrippackage.com/wp-content/uploads/2026/05/Royal-cruise-photos-3.png",
+    originalPrice: 2500,
     inclusions: ["Live DJ performance", "2 drink coupons (IMFL/beer)", "Tequila shots", "Full dinner buffet", "Royal interiors & lighting", "Dance floor"],
     exclusions: ["Extra drinks beyond 2 coupons", "Camera/photography charges", "Transportation to jetty"],
+    highlights: ["2 Free Drink Coupons", "Tequila Shots Included"],
   },
   {
     slug: "sunset-dinner-cruise",

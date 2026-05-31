@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { Header } from "@/components/marketing/Header";
 import { Footer } from "@/components/marketing/Footer";
+import { WhyChooseUs } from "@/components/marketing/WhyChooseUs";
+import { OffersStrip } from "@/components/marketing/OffersStrip";
 import { Anchor, Sailboat, Waves, Mountain, Hotel, PartyPopper, ArrowRight, Star, Shield, Headphones, Users } from "lucide-react";
 
 /**
@@ -104,6 +106,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ═══ WHY CHOOSE US (EaseMyTrip-style benefit strip) ═══ */}
+      <WhyChooseUs />
+
       {/* ═══ FEATURED CRUISES (horizontal scroll) ═══ */}
       <section className="border-y border-border-gold bg-cosmic-900/50 py-16">
         <div className="mx-auto max-w-7xl px-4 md:px-8">
@@ -160,6 +165,9 @@ export default function HomePage() {
           </Link>
         </div>
       </section>
+
+      {/* ═══ OFFERS & DEALS (EaseMyTrip-style promo codes) ═══ */}
+      <OffersStrip />
 
       {/* ═══ CATEGORIES GRID ═══ */}
       <section className="py-20 bg-cosmic-950">
