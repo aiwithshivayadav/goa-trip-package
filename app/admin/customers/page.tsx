@@ -1,5 +1,8 @@
+"use client";
+
+import { useState } from "react";
+import { toast } from "sonner";
 import { Search, Filter, Download, Users } from "lucide-react";
-import { db } from "@/lib/db";
 
 // Mock data — shown when DB is empty or unreachable
 const mockCustomers = [
@@ -11,39 +14,35 @@ const mockCustomers = [
   { id: 6, name: "Meera Joshi", phone: "+91 43210 98765", bookings: 1, ltv: 3500, lastBooking: "Jun 3, 2026", source: "Website" },
 ];
 
-export default async function CustomersPage() {
-  // ── Fetch real customers from DB (with fallback) ──
-  let customers = mockCustomers;
+export default function CustomersPage() {
+  const [search, setSearch] = useState("");
+  const customers = mockCustomers;
 
-  try {
-    const realCustomers = await db.customer.findMany({
-      orderBy: { lastSeenAt: "desc" },
-      take: 50,
-    }).catch(() => []);
+  const filtered = search
+    ? customers.filter((c) => c.name.toLowerCase().includes(search.toLowerCase()) || c.phone.includes(search))
+    : customers;
 
-    if (realCustomers.length > 0) {
-      customers = realCustomers.map((c) => ({
-        id: c.id,
-        name: c.name,
-        phone: c.phone,
-        email: c.email || undefined,
-        bookings: c.totalBookings,
-        ltv: Number(c.lifetimeValue),
-        lastBooking: c.lastSeenAt.toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" }),
-        source: c.source || "—",
-      }));
-    }
-  } catch {
-    // DB unreachable — keep mock data
-  }
+  const handleExportCSV = () => {
+    const csv = "ID,Name,Phone,Email,Bookings,Lifetime Value,Last Booking,Source\n" +
+      customers.map(c => `${c.id},${c.name},${c.phone},${c.email || ""},${c.bookings},${c.ltv},${c.lastBooking},${c.source}`).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "customers.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Customers exported to CSV");
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="relative flex-1 sm:max-w-xs">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-dim" />
-          <input type="text" placeholder="Search customers..." className="w-full h-9 rounded-lg bg-surface border border-border-gold pl-9 pr-3 text-sm text-white placeholder:text-text-dim focus:border-gold transition-colors" />
+          <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search customers..." className="w-full h-9 rounded-lg bg-surface border border-border-gold pl-9 pr-3 text-sm text-white placeholder:text-text-dim focus:border-gold transition-colors" />
         </div>
-        <button className="flex h-9 items-center gap-1.5 rounded-lg border border-border-gold px-3 text-xs text-text-muted hover:text-white hover:bg-surface transition-colors">
+        <button onClick={handleExportCSV} className="flex h-9 items-center gap-1.5 rounded-lg border border-border-gold px-3 text-xs text-text-muted hover:text-white hover:bg-surface transition-colors">
           <Download className="h-3.5 w-3.5" /> Export
         </button>
       </div>
@@ -62,8 +61,8 @@ export default async function CustomersPage() {
               </tr>
             </thead>
             <tbody>
-              {customers.map((c) => (
-                <tr key={c.id} className="border-b border-border-gold/10 hover:bg-surface/50 transition-colors cursor-pointer">
+              {filtered.map((c) => (
+                <tr key={c.id} onClick={() => toast.info("Customer detail coming soon")} className="border-b border-border-gold/10 hover:bg-surface/50 transition-colors cursor-pointer">
                   <td className="px-4 py-3.5">
                     <div className="flex items-center gap-3">
                       <div className="h-8 w-8 rounded-full bg-gold/20 flex items-center justify-center shrink-0">

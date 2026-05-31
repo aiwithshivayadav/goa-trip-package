@@ -1,6 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 import { Search, Filter, Plus, Download } from "lucide-react";
-import { db } from "@/lib/db";
 
 // Mock data — shown when DB is empty or unreachable
 const mockBookings = [
@@ -39,37 +42,26 @@ const paymentColors: Record<string, string> = {
   failed: "bg-red-500/20 text-red-400",
 };
 
-export default async function BookingsPage() {
-  // ── Fetch real bookings from DB (with fallback) ──
-  let bookings = mockBookings;
+export default function BookingsPage() {
+  const [search, setSearch] = useState("");
+  const bookings = mockBookings;
 
-  try {
-    const realBookings = await db.booking.findMany({
-      orderBy: { createdAt: "desc" },
-      take: 50,
-    }).catch(() => []);
+  const filtered = search
+    ? bookings.filter((b) => b.customer.toLowerCase().includes(search.toLowerCase()) || b.id.toLowerCase().includes(search.toLowerCase()))
+    : bookings;
 
-    if (realBookings.length > 0) {
-      bookings = realBookings.map((b) => ({
-        id: b.bookingId,
-        customer: b.customerName,
-        phone: b.customerPhone,
-        package: b.packageName,
-        category: categoryMap[b.packageCategory] || b.packageCategory,
-        date: b.travelDate.toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" }),
-        adults: b.adults,
-        children: b.children,
-        total: Number(b.totalAmount),
-        paid: Number(b.advancePaid),
-        balance: Number(b.balanceDue),
-        paymentStatus: b.paymentStatus,
-        status: b.status,
-        source: "—",
-      }));
-    }
-  } catch {
-    // DB unreachable — keep mock data
-  }
+  const handleExportCSV = () => {
+    const csv = "ID,Customer,Phone,Package,Category,Date,Adults,Children,Total,Paid,Balance,Payment Status,Status,Source\n" +
+      bookings.map(b => `${b.id},${b.customer},${b.phone},"${b.package}",${b.category},${b.date},${b.adults},${b.children},${b.total},${b.paid},${b.balance},${b.paymentStatus},${b.status},${b.source}`).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "bookings.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Bookings exported to CSV");
+  };
 
   return (
     <div className="space-y-4">
@@ -78,17 +70,17 @@ export default async function BookingsPage() {
         <div className="flex items-center gap-3 flex-1">
           <div className="relative flex-1 sm:max-w-xs">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-dim" />
-            <input type="text" placeholder="Search bookings..." className="w-full h-9 rounded-lg bg-surface border border-border-gold pl-9 pr-3 text-sm text-white placeholder:text-text-dim focus:border-gold transition-colors" />
+            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search bookings..." className="w-full h-9 rounded-lg bg-surface border border-border-gold pl-9 pr-3 text-sm text-white placeholder:text-text-dim focus:border-gold transition-colors" />
           </div>
           <button className="flex h-9 items-center gap-1.5 rounded-lg border border-border-gold px-3 text-xs text-text-muted hover:text-white hover:bg-surface transition-colors">
             <Filter className="h-3.5 w-3.5" /> Filters
           </button>
         </div>
         <div className="flex items-center gap-2">
-          <button className="flex h-9 items-center gap-1.5 rounded-lg border border-border-gold px-3 text-xs text-text-muted hover:text-white hover:bg-surface transition-colors">
+          <button onClick={handleExportCSV} className="flex h-9 items-center gap-1.5 rounded-lg border border-border-gold px-3 text-xs text-text-muted hover:text-white hover:bg-surface transition-colors">
             <Download className="h-3.5 w-3.5" /> Export CSV
           </button>
-          <button className="flex h-9 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02]">
+          <button onClick={() => toast.info("New booking form coming soon")} className="flex h-9 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02]">
             <Plus className="h-3.5 w-3.5" /> New Booking
           </button>
         </div>
@@ -111,8 +103,8 @@ export default async function BookingsPage() {
               </tr>
             </thead>
             <tbody>
-              {bookings.map((b) => (
-                <tr key={b.id} className="border-b border-border-gold/10 hover:bg-surface/50 transition-colors cursor-pointer">
+              {filtered.map((b) => (
+                <tr key={b.id} onClick={() => toast.info("Booking detail view coming soon")} className="border-b border-border-gold/10 hover:bg-surface/50 transition-colors cursor-pointer">
                   <td className="px-4 py-3.5">
                     <span className="font-mono text-xs text-gold">{b.id}</span>
                   </td>
@@ -152,7 +144,7 @@ export default async function BookingsPage() {
 
       {/* Summary bar */}
       <div className="flex flex-wrap items-center justify-between gap-4 text-xs text-text-muted">
-        <span>Showing {bookings.length} bookings</span>
+        <span>Showing {filtered.length} of {bookings.length} bookings</span>
         <div className="flex items-center gap-4">
           <span>Total Revenue: <strong className="text-white">₹{bookings.reduce((s, b) => s + b.total, 0).toLocaleString("en-IN")}</strong></span>
           <span>Collected: <strong className="text-green-400">₹{bookings.reduce((s, b) => s + b.paid, 0).toLocaleString("en-IN")}</strong></span>

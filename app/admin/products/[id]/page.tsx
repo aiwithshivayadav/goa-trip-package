@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Save, Plus, X, Upload, GripVertical, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
 
 /**
  * Admin Product Add/Edit Page
@@ -42,6 +43,50 @@ export default function ProductEditPage() {
   const [highlights, setHighlights] = useState<string[]>([""]);
   const [itinerary, setItinerary] = useState<{ day: number; title: string; description: string }[]>([]);
   const [faq, setFaq] = useState<{ q: string; a: string }[]>([]);
+  const [dragging, setDragging] = useState(false);
+
+  useEffect(() => {
+    if (!isNew) {
+      fetch(`/api/products/${params.id}`).then(r => r.json()).then(data => {
+        if (data.product) {
+          const p = data.product;
+          setForm({
+            name: p.name || "",
+            slug: p.slug || "",
+            type: p.type || "package",
+            shortDesc: p.shortDesc || "",
+            longDesc: p.longDescMd || "",
+            basePrice: String(p.basePrice || ""),
+            originalPrice: "",
+            priceUnit: p.priceUnit || "per person",
+            duration: "",
+            capacity: "",
+            location: p.location || "",
+            status: p.status || "active",
+            isFeatured: p.isFeatured || false,
+            isSelfServe: p.isSelfServe || false,
+            isQuoteLed: p.isQuoteLed !== false,
+          });
+          if (p.imagesJson) setImages(JSON.parse(p.imagesJson));
+          if (p.inclusionsJson) setInclusions(JSON.parse(p.inclusionsJson));
+          if (p.exclusionsJson) setExclusions(JSON.parse(p.exclusionsJson));
+        }
+      }).catch(() => {});
+    }
+  }, [isNew, params.id]);
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setDragging(false);
+    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith("image/"));
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.result) setImages(prev => [...prev, reader.result as string]);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 
   function updateForm(field: string, value: string | boolean) {
     setForm((p) => ({ ...p, [field]: value }));
@@ -253,6 +298,21 @@ export default function ProductEditPage() {
             ))}
           </div>
         )}
+
+        {/* Drag & drop zone */}
+        <div
+          onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={handleDrop}
+          className={cn(
+            "border-2 border-dashed rounded-xl p-8 text-center transition-colors cursor-pointer",
+            dragging ? "border-gold bg-gold/5" : "border-border-gold/30 hover:border-gold/50"
+          )}
+        >
+          <Upload className="h-8 w-8 text-text-dim mx-auto mb-2" />
+          <p className="text-sm text-text-muted">Drag & drop images here</p>
+          <p className="text-[10px] text-text-dim mt-1">or paste URL below</p>
+        </div>
 
         {/* Add image URL */}
         <div className="flex gap-2">

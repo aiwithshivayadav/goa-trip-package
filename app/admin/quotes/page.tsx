@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { toast } from "sonner";
 import { Search, Filter, Plus, FileText, Eye, Send, CheckCircle2, XCircle, Clock } from "lucide-react";
 
 type QuoteStatus = "draft" | "sent" | "viewed" | "accepted" | "declined" | "expired";
@@ -71,7 +72,7 @@ export default function QuotesPage() {
             <Filter className="h-3.5 w-3.5" /> Filters
           </button>
         </div>
-        <button className="flex h-9 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02]">
+        <button onClick={() => toast.info("Quote builder coming soon")} className="flex h-9 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02]">
           <Plus className="h-3.5 w-3.5" /> New Quote
         </button>
       </div>
@@ -131,7 +132,7 @@ export default function QuotesPage() {
             </thead>
             <tbody>
               {filtered.map((q) => (
-                <tr key={q.id} className="border-b border-border-gold/10 hover:bg-surface/50 transition-colors cursor-pointer">
+                <tr key={q.id} onClick={() => toast.info("Quote detail view coming soon")} className="border-b border-border-gold/10 hover:bg-surface/50 transition-colors cursor-pointer">
                   <td className="px-4 py-3.5">
                     <span className="font-mono text-xs text-gold">{q.id}</span>
                   </td>

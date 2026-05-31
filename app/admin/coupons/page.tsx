@@ -1,3 +1,6 @@
+"use client";
+
+import { toast } from "sonner";
 import { Search, Plus, Tag, Percent, IndianRupee, Copy } from "lucide-react";
 
 interface Coupon {
@@ -65,7 +68,7 @@ export default function CouponsPage() {
             className="w-full h-9 rounded-lg bg-surface border border-border-gold pl-9 pr-3 text-sm text-white placeholder:text-text-dim focus:border-gold transition-colors"
           />
         </div>
-        <button className="flex h-9 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02]">
+        <button onClick={() => toast.info("Coupon editor coming soon")} className="flex h-9 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02]">
           <Plus className="h-3.5 w-3.5" /> Create Coupon
         </button>
       </div>

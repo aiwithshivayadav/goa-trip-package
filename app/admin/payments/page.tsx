@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+import { toast } from "sonner";
 import { Search, Download, IndianRupee } from "lucide-react";
 
 const payments = [
@@ -9,16 +13,34 @@ const payments = [
 ];
 
 export default function PaymentsPage() {
+  const [search, setSearch] = useState("");
   const total = payments.reduce((s, p) => s + p.amount, 0);
+
+  const filtered = search
+    ? payments.filter((p) => p.customer.toLowerCase().includes(search.toLowerCase()) || p.bookingId.toLowerCase().includes(search.toLowerCase()) || p.txnId.toLowerCase().includes(search.toLowerCase()))
+    : payments;
+
+  const handleExportCSV = () => {
+    const csv = "Date,Booking ID,Customer,Amount,Method,Status,Txn ID\n" +
+      payments.map(p => `${p.date},${p.bookingId},${p.customer},${p.amount},${p.method},${p.status},${p.txnId}`).join("\n");
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "payment-ledger.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+    toast.success("Payment ledger exported to CSV");
+  };
 
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="relative flex-1 sm:max-w-xs">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-dim" />
-          <input type="text" placeholder="Search payments..." className="w-full h-9 rounded-lg bg-surface border border-border-gold pl-9 pr-3 text-sm text-white placeholder:text-text-dim focus:border-gold transition-colors" />
+          <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search payments..." className="w-full h-9 rounded-lg bg-surface border border-border-gold pl-9 pr-3 text-sm text-white placeholder:text-text-dim focus:border-gold transition-colors" />
         </div>
-        <button className="flex h-9 items-center gap-1.5 rounded-lg border border-border-gold px-3 text-xs text-text-muted hover:text-white hover:bg-surface transition-colors">
+        <button onClick={handleExportCSV} className="flex h-9 items-center gap-1.5 rounded-lg border border-border-gold px-3 text-xs text-text-muted hover:text-white hover:bg-surface transition-colors">
           <Download className="h-3.5 w-3.5" /> Export Ledger
         </button>
       </div>
@@ -54,7 +76,7 @@ export default function PaymentsPage() {
               </tr>
             </thead>
             <tbody>
-              {payments.map((p) => (
+              {filtered.map((p) => (
                 <tr key={p.id} className="border-b border-border-gold/10 hover:bg-surface/50 transition-colors">
                   <td className="px-4 py-3.5 text-text-muted whitespace-nowrap">{p.date}</td>
                   <td className="px-4 py-3.5"><span className="font-mono text-xs text-gold">{p.bookingId}</span></td>

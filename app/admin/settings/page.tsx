@@ -1,3 +1,6 @@
+"use client";
+
+import { toast } from "sonner";
 import { CreditCard, Mail, MessageSquare, Receipt, Palette, Users, Shield, ExternalLink, Info } from "lucide-react";
 
 interface SettingsSection {
@@ -224,7 +227,7 @@ export default function SettingsPage() {
             {/* Save button for form sections */}
             {section.fields.length > 0 && (
               <div className="flex justify-end mt-5 ml-14">
-                <button className="flex h-8 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-[11px] font-bold text-cosmic-950 transition-transform hover:scale-[1.02]">
+                <button onClick={() => toast.success("Settings saved")} className="flex h-8 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-[11px] font-bold text-cosmic-950 transition-transform hover:scale-[1.02]">
                   <Shield className="h-3 w-3" /> Save Changes
                 </button>
               </div>

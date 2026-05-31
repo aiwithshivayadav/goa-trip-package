@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { Phone, Mail, Clock, MapPin, Tag, Plus, Search, Filter } from "lucide-react";
 
 type LeadStatus = "new" | "contacted" | "quoted" | "negotiating" | "won" | "lost";
@@ -117,9 +118,9 @@ export default function LeadsPage() {
             <Filter className="h-3.5 w-3.5" /> Filters
           </button>
         </div>
-        <button className="flex h-9 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02]">
+        <Link href="/custom-trip" className="flex h-9 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02]">
           <Plus className="h-3.5 w-3.5" /> Add Lead
-        </button>
+        </Link>
       </div>
 
       {/* Kanban board */}

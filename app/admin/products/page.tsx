@@ -115,7 +115,7 @@ export default function ProductsPage() {
                       </div>
                     </td>
                     <td className="px-4 py-3.5">
-                      <p className="font-medium text-white text-sm">{p.name}</p>
+                      <Link href={`/admin/products/${p.id}`} className="font-medium text-white text-sm hover:text-gold transition-colors">{p.name}</Link>
                     </td>
                     <td className="px-4 py-3.5">
                       <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold ${typeColors[p.type]}`}>
