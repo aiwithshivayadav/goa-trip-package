@@ -397,7 +397,7 @@ model Coupon {
 /// Every payment attempt + result
 model Payment {
   id              Int              @id @default(autoincrement())
-  bookingId       Int              @map("booking_id")
+  bookingId       Int              @map("booking_id") @db.UnsignedInt
   booking         Booking          @relation(fields: [bookingId], references: [id])
   milestone       PaymentMilestone @default(full)
   amount          Decimal          @db.Decimal(10, 2)
@@ -418,7 +418,7 @@ model Payment {
 /// GST-compliant invoice
 model Invoice {
   id              Int       @id @default(autoincrement())
-  bookingId       Int       @map("booking_id")
+  bookingId       Int       @map("booking_id") @db.UnsignedInt
   booking         Booking   @relation(fields: [bookingId], references: [id])
   invoiceNumber   String    @unique @map("invoice_number") @db.VarChar(30)
   invoiceDate     DateTime  @map("invoice_date") @db.Date
@@ -489,7 +489,7 @@ model CommLog {
   id              Int         @id @default(autoincrement())
   customerId      Int?        @map("customer_id")
   customer        Customer?   @relation(fields: [customerId], references: [id])
-  bookingId       Int?        @map("booking_id")
+  bookingId       Int?        @map("booking_id") @db.UnsignedInt
   booking         Booking?    @relation(fields: [bookingId], references: [id])
   channel         CommChannel
   templateUsed    String?     @map("template_used") @db.VarChar(100)
@@ -509,7 +509,7 @@ model Review {
   id              Int       @id @default(autoincrement())
   customerId      Int?      @map("customer_id")
   customer        Customer? @relation(fields: [customerId], references: [id])
-  bookingId       Int?      @map("booking_id")
+  bookingId       Int?      @map("booking_id") @db.UnsignedInt
   booking         Booking?  @relation(fields: [bookingId], references: [id])
   productId       Int?      @map("product_id")
   product         Product?  @relation(fields: [productId], references: [id])
