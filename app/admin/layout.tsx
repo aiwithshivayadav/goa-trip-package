@@ -1,23 +1,11 @@
 import type { Metadata } from "next";
+import { AppShell } from "@/components/admin/AppShell";
 
 export const metadata: Metadata = {
-  title: "Admin Dashboard",
+  title: { default: "Admin Dashboard", template: "%s | GTP Admin" },
   robots: { index: false, follow: false },
 };
 
-/**
- * Admin layout — wraps all /admin/* pages
- * Children are rendered inside the AppShell (sidebar + topbar) once built
- * For now, just passes through
- */
-export default function AdminLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="min-h-screen bg-cosmic-950">
-      {children}
-    </div>
-  );
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  return <AppShell>{children}</AppShell>;
 }

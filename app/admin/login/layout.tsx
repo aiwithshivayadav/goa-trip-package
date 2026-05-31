@@ -1,0 +1,6 @@
+/**
+ * Login page has its own layout — no AppShell sidebar
+ */
+export default function LoginLayout({ children }: { children: React.ReactNode }) {
+  return <>{children}</>;
+}
