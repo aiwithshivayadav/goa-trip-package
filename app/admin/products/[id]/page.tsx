@@ -81,7 +81,32 @@ export default function ProductEditPage() {
     }
     setSaving(true);
     try {
-      // TODO: POST to /api/products when DB is wired
+      const payload = {
+        ...form,
+        basePrice: parseFloat(form.basePrice),
+        originalPrice: form.originalPrice ? parseFloat(form.originalPrice) : undefined,
+        images: images.filter(Boolean),
+        inclusions: inclusions.filter(Boolean),
+        exclusions: exclusions.filter(Boolean),
+        highlights: highlights.filter(Boolean),
+        itinerary: itinerary.length > 0 ? itinerary : undefined,
+        faq: faq.length > 0 ? faq : undefined,
+      };
+
+      const url = isNew ? "/api/products" : `/api/products/${params.id}`;
+      const method = isNew ? "POST" : "PATCH";
+
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Save failed");
+      }
+
       toast.success(isNew ? "Product created!" : "Product updated!");
       router.push("/admin/products");
     } catch {
