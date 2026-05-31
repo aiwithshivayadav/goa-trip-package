@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Goa Trip Package — Booking Platform
 
-## Getting Started
+Apple-grade Next.js 15 booking platform for **Goa Trip Package** (goatrippackage.com).
 
-First, run the development server:
+**Live:** [goa-trip-package.vercel.app](https://goa-trip-package.vercel.app)
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 15 (App Router, TypeScript strict) |
+| Styling | Tailwind CSS v4 + custom gold/cosmic design tokens |
+| UI | shadcn/ui (customised) + Lucide icons |
+| Typography | Inter (UI) + Fraunces (display) |
+| Database | Prisma 6 + MySQL (Hostinger) |
+| Auth | Auth.js v5 (Credentials provider) |
+| Payment | PayU India (SHA-512 hash, production MID) |
+| Email | Nodemailer (Hostinger SMTP) |
+| Webhooks | n8n (WhatsApp via Interakt) |
+| Search | Fuse.js (client-side fuzzy) |
+| Charts | Recharts |
+| Hosting | Vercel (free tier) |
+
+## Pages (59 total)
+
+**Customer Storefront:** Homepage, 5 category listings, 22 product detail pages, checkout, booking confirmation/failure, custom trip wizard, search, booking lookup, public quote page, about, contact, help/FAQ, 4 legal pages, 404, 500.
+
+**Admin Dashboard:** Login, dashboard, leads kanban, quotes, bookings, customers, payments, products, coupons, calendar, reports, settings.
+
+**API Routes:** Lead capture, PayU hash/success/failure.
+
+## Local Development
 
 ```bash
+# Clone
+git clone https://github.com/aiwithshivayadav/goa-trip-package.git
+cd goa-trip-package
+
+# Install
+npm install
+
+# Environment
+cp .env.example .env.local
+# Fill in DATABASE_URL, PAYU_SALT, SMTP_PASS
+
+# Generate Prisma client
+npx prisma generate
+
+# Run
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# Open http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Deploy to Vercel
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Push to GitHub
+2. Import at [vercel.com/new](https://vercel.com/new)
+3. Add environment variables (DATABASE_URL, PAYU_SALT, SMTP_PASS)
+4. Deploy
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment Variables
 
-## Learn More
+See `.env.example` for the full list. Required for production:
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Required | Description |
+|---|---|---|
+| `DATABASE_URL` | Yes | MySQL connection string |
+| `PAYU_KEY` | Yes | PayU merchant key (default: zide1p) |
+| `PAYU_SALT` | Yes | PayU merchant salt (SECRET) |
+| `PAYU_MODE` | Yes | `test` or `production` |
+| `SMTP_PASS` | For email | Hostinger SMTP password |
+| `N8N_WEBHOOK_URL` | For WhatsApp | n8n webhook endpoint |
+| `NEXT_PUBLIC_SITE_URL` | Yes | Production URL |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## PayU Salt Rotation
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+PayU rotates the salt every 14 days. Update via:
+1. Vercel Dashboard > Settings > Environment Variables > `PAYU_SALT`
+2. Or Admin > Settings > PayU Configuration (once DB-connected)
 
-## Deploy on Vercel
+## Database Schema
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+14 Prisma models: Booking, Customer, Lead, Quote, Product, ProductAvailability, Coupon, Payment, Invoice, SalesUser, ActivityLog, CommLog, Review, Settings.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Run migrations:
+```bash
+npx prisma migrate dev --name init
+```
+
+---
+
+Built by Sam (AI Co-founder) for Shiva, Founder of Goa Trip Package.
