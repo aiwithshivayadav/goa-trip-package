@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
-import { Inter, Fraunces } from "next/font/google";
+import { Inter, Fraunces, Geist } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
+
 
 // ── Fonts (next/font/google auto-downloads + self-hosts at build time) ──
 const inter = Inter({
@@ -70,7 +74,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${fraunces.variable} h-full`}
+      className={cn("h-full", inter.variable, fraunces.variable, "font-sans", geist.variable)}
       suppressHydrationWarning
     >
       <head>
