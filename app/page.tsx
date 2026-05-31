@@ -88,12 +88,12 @@ export default function HomePage() {
           </p>
 
           <h1 className="font-display text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl">
-            Goa Trip Packages
-            <span className="text-gold-gradient block mt-1 text-3xl md:text-5xl lg:text-6xl">Cruises, Yachts & Tours from ₹399</span>
+            Your Royal
+            <span className="text-gold-gradient block mt-1">Goa Experience</span>
           </h1>
 
           <p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-text-muted md:text-lg">
-            39 packages · 13 cruises · 23 yachts · 18 activities · 50 hotels
+            Premium packages, cruises, yachts &amp; adventures — crafted for the moments that matter.
           </p>
 
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
