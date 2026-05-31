@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Phone, Mail, Clock, MapPin, Tag, Plus, Search, Filter } from "lucide-react";
 
 type LeadStatus = "new" | "contacted" | "quoted" | "negotiating" | "won" | "lost";
@@ -40,9 +40,59 @@ const columns: { key: LeadStatus; label: string; color: string }[] = [
   { key: "lost", label: "Lost", color: "bg-red-500" },
 ];
 
+// Map DB status values to UI status values
+const dbStatusMap: Record<string, LeadStatus> = {
+  new_lead: "new",
+  contacted: "contacted",
+  quoted: "quoted",
+  negotiating: "negotiating",
+  won: "won",
+  lost: "lost",
+};
+
+function timeAgo(dateStr: string): string {
+  const date = new Date(dateStr);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  if (diffMins < 60) return `${diffMins} min ago`;
+  const diffHrs = Math.floor(diffMins / 60);
+  if (diffHrs < 24) return `${diffHrs} hr${diffHrs > 1 ? "s" : ""} ago`;
+  const diffDays = Math.floor(diffHrs / 24);
+  if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`;
+  const diffWeeks = Math.floor(diffDays / 7);
+  return `${diffWeeks} week${diffWeeks > 1 ? "s" : ""} ago`;
+}
+
 export default function LeadsPage() {
-  const [leads] = useState(mockLeads);
+  const [leads, setLeads] = useState(mockLeads);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/leads")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.leads && data.leads.length > 0) {
+          const mapped: Lead[] = data.leads.map((l: Record<string, unknown>) => ({
+            id: l.id as number,
+            name: (l.name as string) || "Unknown",
+            phone: (l.phone as string) || "",
+            email: (l.email as string) || undefined,
+            product: (l.productInterest as string) || (l.productSlug as string) || "General Enquiry",
+            source: (l.source as string) || "Website",
+            status: dbStatusMap[(l.status as string)] || "new",
+            createdAt: l.createdAt ? timeAgo(l.createdAt as string) : "—",
+            assignedTo: undefined,
+          }));
+          setLeads(mapped);
+        }
+      })
+      .catch(() => {
+        // Keep mock data on error
+      })
+      .finally(() => setLoading(false));
+  }, []);
 
   const filtered = search
     ? leads.filter((l) => l.name.toLowerCase().includes(search.toLowerCase()) || l.product.toLowerCase().includes(search.toLowerCase()))

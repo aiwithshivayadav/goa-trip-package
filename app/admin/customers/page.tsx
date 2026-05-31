@@ -1,6 +1,8 @@
 import { Search, Filter, Download, Users } from "lucide-react";
+import { db } from "@/lib/db";
 
-const customers = [
+// Mock data — shown when DB is empty or unreachable
+const mockCustomers = [
   { id: 1, name: "Priya Sharma", phone: "+91 98765 43210", email: "priya@gmail.com", bookings: 2, ltv: 38997, lastBooking: "Jun 8, 2026", source: "Google Ads" },
   { id: 2, name: "Vikram Patel", phone: "+91 87654 32109", email: "vikram@corp.com", bookings: 1, ltv: 149980, lastBooking: "Jun 15, 2026", source: "Referral" },
   { id: 3, name: "Sneha Rao", phone: "+91 76543 21098", email: "sneha@outlook.com", bookings: 3, ltv: 12800, lastBooking: "May 28, 2026", source: "Instagram" },
@@ -9,7 +11,31 @@ const customers = [
   { id: 6, name: "Meera Joshi", phone: "+91 43210 98765", bookings: 1, ltv: 3500, lastBooking: "Jun 3, 2026", source: "Website" },
 ];
 
-export default function CustomersPage() {
+export default async function CustomersPage() {
+  // ── Fetch real customers from DB (with fallback) ──
+  let customers = mockCustomers;
+
+  try {
+    const realCustomers = await db.customer.findMany({
+      orderBy: { lastSeenAt: "desc" },
+      take: 50,
+    }).catch(() => []);
+
+    if (realCustomers.length > 0) {
+      customers = realCustomers.map((c) => ({
+        id: c.id,
+        name: c.name,
+        phone: c.phone,
+        email: c.email || undefined,
+        bookings: c.totalBookings,
+        ltv: Number(c.lifetimeValue),
+        lastBooking: c.lastSeenAt.toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" }),
+        source: c.source || "—",
+      }));
+    }
+  } catch {
+    // DB unreachable — keep mock data
+  }
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">

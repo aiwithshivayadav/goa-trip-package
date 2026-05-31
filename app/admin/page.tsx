@@ -1,26 +1,28 @@
 import { Inbox, FileText, CalendarDays, IndianRupee, TrendingUp, Clock, AlertCircle, Users, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import Link from "next/link";
+import { db } from "@/lib/db";
 
 /**
  * Admin Dashboard — Today KPIs + This Month + Pending Actions + Quick Links
+ * Fetches real counts from DB; falls back to mock data if DB is empty/unreachable.
  */
 
-// Mock data (will come from DB in Phase E)
-const todayStats = [
+// Mock data — shown when DB is empty or unreachable
+const mockTodayStats = [
   { label: "New Leads", value: "8", change: "+3", up: true, icon: Inbox, href: "/admin/leads", color: "text-blue-400" },
   { label: "Quotes Sent", value: "3", change: "+1", up: true, icon: FileText, href: "/admin/quotes", color: "text-violet-400" },
   { label: "Bookings", value: "2", change: "0", up: true, icon: CalendarDays, href: "/admin/bookings", color: "text-green-400" },
   { label: "Revenue Today", value: "₹34,500", change: "+₹12k", up: true, icon: IndianRupee, href: "/admin/payments", color: "text-gold" },
 ];
 
-const monthStats = {
+const mockMonthStats = {
   revenue: "₹4,85,000",
   bookings: 47,
   leads: 186,
   conversion: "25.3%",
 };
 
-const pendingActions = [
+const mockPendingActions = [
   { type: "follow-up", text: "Follow up with Priya Sharma — honeymoon quote sent 2d ago", time: "Overdue", urgent: true },
   { type: "balance", text: "₹15,000 balance due from Arjun's Group — travel in 5 days", time: "Due Jun 6", urgent: true },
   { type: "quote", text: "Quote Q-2026-X7K2P viewed 3 times but not accepted", time: "2 hrs ago", urgent: false },
@@ -28,13 +30,66 @@ const pendingActions = [
   { type: "review", text: "Post-trip review request pending for Sneha & Amit (anniversary trip)", time: "Send today", urgent: false },
 ];
 
-const recentBookings = [
+const mockRecentBookings = [
   { id: "GTP-2026-A8K2L", customer: "Meera Joshi", package: "Scuba Diving — Grande Island", date: "Jun 3", amount: "₹3,500", status: "confirmed" },
   { id: "GTP-2026-B3M9N", customer: "Rahul & Priya", package: "Honeymoon Classic 3N/4D", date: "Jun 8", amount: "₹12,999", status: "partial" },
   { id: "GTP-2026-C7P4Q", customer: "Vikram's Team", package: "Corporate Offsite 2N/3D", date: "Jun 15", amount: "₹1,49,980", status: "pending" },
 ];
 
-export default function AdminDashboardPage() {
+export default async function AdminDashboardPage() {
+  // ── Fetch real data from DB (with fallback) ──
+  let leadCount = 0;
+  let bookingCount = 0;
+  let customerCount = 0;
+  let quoteCount = 0;
+  let dbRecentBookings: typeof mockRecentBookings = [];
+  let usingRealData = false;
+
+  try {
+    [leadCount, bookingCount, customerCount, quoteCount] = await Promise.all([
+      db.lead.count().catch(() => 0),
+      db.booking.count().catch(() => 0),
+      db.customer.count().catch(() => 0),
+      db.quote.count().catch(() => 0),
+    ]);
+
+    usingRealData = leadCount > 0 || bookingCount > 0 || customerCount > 0;
+
+    if (bookingCount > 0) {
+      const realBookings = await db.booking.findMany({
+        orderBy: { createdAt: "desc" },
+        take: 5,
+      }).catch(() => []);
+
+      dbRecentBookings = realBookings.map((b) => ({
+        id: b.bookingId,
+        customer: b.customerName,
+        package: b.packageName,
+        date: b.travelDate.toLocaleDateString("en-IN", { month: "short", day: "numeric" }),
+        amount: `₹${Number(b.totalAmount).toLocaleString("en-IN")}`,
+        status: b.paymentStatus === "paid" ? "confirmed" : b.paymentStatus === "partial" ? "partial" : "pending",
+      }));
+    }
+  } catch {
+    // DB unreachable — fall through to mock data
+  }
+
+  const todayStats = usingRealData
+    ? [
+        { label: "Total Leads", value: String(leadCount), change: "", up: true, icon: Inbox, href: "/admin/leads", color: "text-blue-400" },
+        { label: "Quotes", value: String(quoteCount), change: "", up: true, icon: FileText, href: "/admin/quotes", color: "text-violet-400" },
+        { label: "Bookings", value: String(bookingCount), change: "", up: true, icon: CalendarDays, href: "/admin/bookings", color: "text-green-400" },
+        { label: "Customers", value: String(customerCount), change: "", up: true, icon: Users, href: "/admin/customers", color: "text-gold" },
+      ]
+    : mockTodayStats;
+
+  const monthStats = usingRealData
+    ? { revenue: "—", bookings: bookingCount, leads: leadCount, conversion: "—" }
+    : mockMonthStats;
+
+  const pendingActions = mockPendingActions;
+
+  const recentBookings = dbRecentBookings.length > 0 ? dbRecentBookings : mockRecentBookings;
   return (
     <div className="space-y-6">
       {/* Welcome */}

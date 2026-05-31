@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { Search, Filter, Plus, Download } from "lucide-react";
+import { db } from "@/lib/db";
 
-// Mock data
-const bookings = [
+// Mock data — shown when DB is empty or unreachable
+const mockBookings = [
   { id: "GTP-2026-A8K2L", customer: "Meera Joshi", phone: "+91 98765 43210", package: "Scuba Diving — Grande Island", category: "activity", date: "Jun 3, 2026", adults: 1, children: 0, total: 3500, paid: 3500, balance: 0, paymentStatus: "paid", status: "confirmed", source: "Website" },
   { id: "GTP-2026-B3M9N", customer: "Rahul & Priya", phone: "+91 87654 32109", package: "Honeymoon Classic 3N/4D", category: "package", date: "Jun 8, 2026", adults: 2, children: 0, total: 25998, paid: 6500, balance: 19498, paymentStatus: "partial", status: "confirmed", source: "Google Ads" },
   { id: "GTP-2026-C7P4Q", customer: "Vikram's Team (20)", phone: "+91 76543 21098", package: "Corporate Offsite 2N/3D", category: "package", date: "Jun 15, 2026", adults: 20, children: 0, total: 149980, paid: 0, balance: 149980, paymentStatus: "pending", status: "confirmed", source: "Referral" },
@@ -10,6 +11,19 @@ const bookings = [
   { id: "GTP-2026-E5T8U", customer: "Arjun's Group (8)", phone: "+91 54321 09876", package: "Bachelor Group 3N/4D", category: "package", date: "Jun 20, 2026", adults: 8, children: 0, total: 47992, paid: 12000, balance: 35992, paymentStatus: "partial", status: "confirmed", source: "WhatsApp" },
   { id: "GTP-2026-F9V1W", customer: "Divya Kapoor", phone: "+91 43210 98765", package: "Maxum Luxury Yacht", category: "yacht", date: "Jun 5, 2026", adults: 10, children: 2, total: 24000, paid: 24000, balance: 0, paymentStatus: "paid", status: "confirmed", source: "Website" },
 ];
+
+// Map Prisma packageCategory enum to UI category string
+const categoryMap: Record<string, string> = {
+  cruise: "cruise",
+  yacht: "yacht",
+  package_tour: "package",
+  activity: "activity",
+  party: "party",
+  hotel: "hotel",
+  combo: "combo",
+  transfer: "transfer",
+  custom: "custom",
+};
 
 const statusColors: Record<string, string> = {
   confirmed: "bg-green-500/20 text-green-400",
@@ -25,7 +39,38 @@ const paymentColors: Record<string, string> = {
   failed: "bg-red-500/20 text-red-400",
 };
 
-export default function BookingsPage() {
+export default async function BookingsPage() {
+  // ── Fetch real bookings from DB (with fallback) ──
+  let bookings = mockBookings;
+
+  try {
+    const realBookings = await db.booking.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 50,
+    }).catch(() => []);
+
+    if (realBookings.length > 0) {
+      bookings = realBookings.map((b) => ({
+        id: b.bookingId,
+        customer: b.customerName,
+        phone: b.customerPhone,
+        package: b.packageName,
+        category: categoryMap[b.packageCategory] || b.packageCategory,
+        date: b.travelDate.toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" }),
+        adults: b.adults,
+        children: b.children,
+        total: Number(b.totalAmount),
+        paid: Number(b.advancePaid),
+        balance: Number(b.balanceDue),
+        paymentStatus: b.paymentStatus,
+        status: b.status,
+        source: "—",
+      }));
+    }
+  } catch {
+    // DB unreachable — keep mock data
+  }
+
   return (
     <div className="space-y-4">
       {/* Top bar */}

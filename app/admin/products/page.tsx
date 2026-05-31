@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Search, Filter, Plus, Star, Image, Anchor, Ship, Waves, Hotel, Palmtree } from "lucide-react";
 
 type ProductType = "package" | "cruise" | "yacht" | "activity" | "hotel";
@@ -82,9 +83,9 @@ export default function ProductsPage() {
             <Filter className="h-3.5 w-3.5" /> Filters
           </button>
         </div>
-        <button className="flex h-9 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02]">
+        <Link href="/admin/products/new" className="flex h-9 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02]">
           <Plus className="h-3.5 w-3.5" /> Add Product
-        </button>
+        </Link>
       </div>
 
       {/* Table */}
