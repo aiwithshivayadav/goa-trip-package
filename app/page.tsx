@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Header } from "@/components/marketing/Header";
 import { Footer } from "@/components/marketing/Footer";
 import { Anchor, Sailboat, Waves, Mountain, Hotel, PartyPopper, ArrowRight, Star, Shield, Headphones, Users } from "lucide-react";
@@ -9,12 +10,12 @@ import { Anchor, Sailboat, Waves, Mountain, Hotel, PartyPopper, ArrowRight, Star
  *           Featured Experiences → Testimonials → Newsletter → Footer
  */
 
-// Temporarily hardcoded featured cruises (will come from DB in Phase E)
+// Featured cruises with real images from goatrippackage.com
 const featuredCruises = [
-  { slug: "royal-cruise-night-party", name: "Royal Cruise — Night Party", price: 2000, duration: "3 hrs", image: null },
-  { slug: "sunset-dinner-cruise", name: "Sunset Dinner Cruise", price: 1200, duration: "2 hrs", image: null },
-  { slug: "dolphin-sightseeing", name: "Dolphin Sightseeing Cruise", price: 399, duration: "1 hr", image: null },
-  { slug: "premium-party-cruise", name: "Premium Party Cruise", price: 1500, duration: "2.5 hrs", image: null },
+  { slug: "royal-cruise-night-party", name: "Royal Cruise — Night Party", price: 2000, duration: "3 hrs", image: "https://goatrippackage.com/wp-content/uploads/2026/05/Royal-cruise-photos-3.png" },
+  { slug: "sunset-dinner-cruise", name: "Sunset Dinner Cruise", price: 1200, duration: "2 hrs", image: "https://goatrippackage.com/wp-content/uploads/2026/05/Sunset-800x600.jpeg" },
+  { slug: "dolphin-sightseeing-cruise", name: "Dolphin Sightseeing Cruise", price: 399, duration: "1 hr", image: "https://goatrippackage.com/wp-content/uploads/2026/05/dolphin-02-800x600.jpg" },
+  { slug: "premium-party-cruise", name: "Premium Party Cruise", price: 1500, duration: "2.5 hrs", image: "https://goatrippackage.com/wp-content/uploads/2026/05/Princesa-2-800x600.jpg" },
 ];
 
 const categories = [
@@ -46,9 +47,20 @@ export default function HomePage() {
 
       {/* ═══ HERO ═══ */}
       <section className="relative flex min-h-[90vh] items-center justify-center overflow-hidden pt-20">
-        {/* Background */}
-        <div className="bg-cosmic-scene absolute inset-0 -z-20" />
-        <div className="bg-stars absolute inset-0 -z-10" />
+        {/* Full-bleed hero image */}
+        <div className="absolute inset-0 -z-30">
+          <Image
+            src="https://goatrippackage.com/wp-content/uploads/2026/05/15-luxury-escape-featured-800x600.jpg"
+            alt="Luxury Goa beach resort at sunset"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+        </div>
+        {/* Dark overlay for text readability */}
+        <div className="absolute inset-0 -z-20 bg-gradient-to-b from-cosmic-950/80 via-cosmic-950/60 to-cosmic-950/90" />
+        <div className="bg-stars absolute inset-0 -z-10 opacity-60" />
 
         {/* Content */}
         <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
@@ -114,8 +126,17 @@ export default function HomePage() {
                 href={`/cruises/${cruise.slug}`}
                 className="glass-card group flex-shrink-0 w-72 snap-start rounded-xl overflow-hidden transition-all hover:border-gold/50 hover:shadow-gold"
               >
-                {/* Image placeholder */}
-                <div className="h-36 bg-gradient-to-br from-cosmic-800 via-cosmic-700 to-gold-800/20 relative overflow-hidden">
+                {/* Cruise image */}
+                <div className="h-36 relative overflow-hidden bg-cosmic-800">
+                  {cruise.image && (
+                    <Image
+                      src={cruise.image}
+                      alt={cruise.name}
+                      fill
+                      sizes="288px"
+                      className="object-cover transition-transform duration-500 group-hover:scale-105"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-gradient-to-t from-cosmic-950/60 to-transparent" />
                   <div className="absolute bottom-3 left-3 rounded-full bg-cosmic-950/80 backdrop-blur-sm px-3 py-1 text-xs text-text-muted">
                     {cruise.duration}
@@ -229,7 +250,16 @@ export default function HomePage() {
 
       {/* ═══ CTA SECTION ═══ */}
       <section className="relative py-20 overflow-hidden">
-        <div className="bg-cosmic-scene absolute inset-0 -z-10" />
+        <div className="absolute inset-0 -z-20">
+          <Image
+            src="https://goatrippackage.com/wp-content/uploads/2026/05/Sunset-800x600.jpeg"
+            alt="Goa sunset cruise experience"
+            fill
+            sizes="100vw"
+            className="object-cover"
+          />
+        </div>
+        <div className="absolute inset-0 -z-10 bg-cosmic-950/85" />
         <div className="mx-auto max-w-3xl px-6 text-center">
           <div className="gold-divider mx-auto mb-8 w-16" />
           <h2 className="font-display text-3xl font-bold text-white md:text-5xl">
