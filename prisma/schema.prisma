@@ -1,0 +1,536 @@
+// ═══════════════════════════════════════════════════════════════
+// GOA TRIP PACKAGE — Prisma Schema
+// Database: MySQL on Hostinger (u242456635_gtpbook)
+// Based on PRD §7 + existing gtp_bookings table from setup.php
+// ═══════════════════════════════════════════════════════════════
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ── Enums ──
+
+enum PackageCategory {
+  cruise
+  yacht
+  package_tour @map("package")
+  activity
+  party
+  hotel
+  combo
+  transfer
+  custom
+}
+
+enum LeadStatus {
+  new_lead @map("new")
+  contacted
+  quoted
+  negotiating
+  won
+  lost
+  spam
+}
+
+enum Priority {
+  low
+  normal
+  high
+  urgent
+}
+
+enum QuoteStatus {
+  draft
+  sent
+  viewed
+  accepted
+  declined
+  expired
+  converted
+}
+
+enum BookingStatus {
+  draft
+  confirmed
+  cancelled
+  completed
+}
+
+enum PaymentStatus {
+  pending
+  partial
+  paid
+  failed
+  refunded
+}
+
+enum PaymentMethod {
+  payu
+  cash
+  bank_transfer
+  upi_qr
+}
+
+enum PaymentMilestone {
+  advance
+  balance
+  full
+  addon
+  refund
+}
+
+enum ProductStatus {
+  active
+  paused
+  archived
+}
+
+enum ProductType {
+  package_tour @map("package")
+  cruise
+  yacht
+  activity
+  hotel
+  party
+  combo
+  transfer
+}
+
+enum UserRole {
+  admin
+  sales
+  viewer
+}
+
+enum CommChannel {
+  whatsapp
+  email
+  sms
+  phone
+}
+
+enum CouponType {
+  percent
+  flat
+  per_person
+}
+
+// ── Models ──
+
+/// Existing table from setup.php — augmented with foreign keys
+model Booking {
+  id              Int             @id @default(autoincrement()) @db.UnsignedInt
+  bookingId       String          @unique @map("booking_id") @db.VarChar(20)
+  createdAt       DateTime        @default(now()) @map("created_at")
+  updatedAt       DateTime        @default(now()) @updatedAt @map("updated_at")
+
+  // Customer
+  customerName    String          @map("customer_name") @db.VarChar(120)
+  customerEmail   String          @map("customer_email") @db.VarChar(160)
+  customerPhone   String          @map("customer_phone") @db.VarChar(25)
+  customerPhoneRaw String         @default("") @map("customer_phone_raw") @db.VarChar(20)
+
+  // Booking details
+  packageName     String          @map("package_name") @db.VarChar(200)
+  packageCategory PackageCategory @default(custom) @map("package_category")
+  travelDate      DateTime        @map("travel_date") @db.Date
+  adults          Int             @default(1) @db.UnsignedTinyInt
+  children        Int             @default(0) @db.UnsignedTinyInt
+  pickupLocation  String          @default("") @map("pickup_location") @db.VarChar(200)
+
+  // Pricing
+  basePrice       Decimal         @default(0) @map("base_price") @db.Decimal(10, 2)
+  discount        Decimal         @default(0) @db.Decimal(10, 2)
+  gstAmount       Decimal         @default(0) @map("gst_amount") @db.Decimal(10, 2)
+  totalAmount     Decimal         @default(0) @map("total_amount") @db.Decimal(10, 2)
+  advancePaid     Decimal         @default(0) @map("advance_paid") @db.Decimal(10, 2)
+  balanceDue      Decimal         @default(0) @map("balance_due") @db.Decimal(10, 2)
+
+  // Payment
+  paymentStatus   PaymentStatus   @default(pending) @map("payment_status")
+  payuTxnid       String          @default("") @map("payu_txnid") @db.VarChar(120)
+  payuMihpayid    String          @default("") @map("payu_mihpayid") @db.VarChar(120)
+  payuStatus      String          @default("") @map("payu_status") @db.VarChar(30)
+
+  // Status & Notes
+  status          BookingStatus   @default(confirmed)
+  specialRequests String?         @map("special_requests") @db.Text
+  notes           String?         @db.Text
+  createdBy       String          @default("admin") @map("created_by") @db.VarChar(50)
+
+  // New columns (Phase 1 augmentation)
+  customerId      Int?            @map("customer_id")
+  customer        Customer?       @relation(fields: [customerId], references: [id])
+  quoteId         Int?            @map("quote_id")
+  quote           Quote?          @relation(fields: [quoteId], references: [id])
+  leadId          Int?            @map("lead_id")
+  lead            Lead?           @relation(fields: [leadId], references: [id])
+  salesUserId     Int?            @map("sales_user_id")
+  salesUser       SalesUser?      @relation(fields: [salesUserId], references: [id])
+  couponCode      String?         @map("coupon_code") @db.VarChar(50)
+  couponDiscount  Decimal?        @map("coupon_discount") @db.Decimal(10, 2)
+
+  // Relations
+  payments        Payment[]
+  invoices        Invoice[]
+  commLogs        CommLog[]
+  reviews         Review[]
+
+  @@index([bookingId], map: "idx_booking_id")
+  @@index([travelDate], map: "idx_travel_date")
+  @@index([status], map: "idx_status")
+  @@index([paymentStatus], map: "idx_payment")
+  @@index([customerPhone], map: "idx_customer_phone")
+  @@index([customerId])
+  @@index([quoteId])
+  @@index([leadId])
+  @@map("gtp_bookings")
+}
+
+/// Customer master — lifetime view, dedupe by phone
+model Customer {
+  id              Int       @id @default(autoincrement())
+  name            String    @db.VarChar(120)
+  email           String?   @db.VarChar(160)
+  phone           String    @unique @db.VarChar(25)
+  phoneRaw        String    @unique @map("phone_raw") @db.VarChar(20)
+  whatsapp        String?   @db.VarChar(25)
+  city            String?   @db.VarChar(100)
+  state           String?   @db.VarChar(50)
+  address         String?   @db.Text
+  gstin           String?   @db.VarChar(20)
+  tags            String?   @db.VarChar(500)
+  notes           String?   @db.Text
+  totalBookings   Int       @default(0) @map("total_bookings")
+  lifetimeValue   Decimal   @default(0) @map("lifetime_value") @db.Decimal(12, 2)
+  firstSeenAt     DateTime  @default(now()) @map("first_seen_at")
+  lastSeenAt      DateTime  @default(now()) @map("last_seen_at")
+  source          String?   @db.VarChar(100)
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Relations
+  leads           Lead[]
+  quotes          Quote[]
+  bookings        Booking[]
+  commLogs        CommLog[]
+  reviews         Review[]
+
+  @@map("customers")
+}
+
+/// Every enquiry before conversion
+model Lead {
+  id              Int        @id @default(autoincrement())
+  leadCode        String     @unique @map("lead_code") @db.VarChar(20)
+  customerId      Int?       @map("customer_id")
+  customer        Customer?  @relation(fields: [customerId], references: [id])
+  name            String     @db.VarChar(120)
+  email           String?    @db.VarChar(160)
+  phone           String     @db.VarChar(25)
+  phoneRaw        String     @map("phone_raw") @db.VarChar(20)
+  source          String?    @db.VarChar(100)
+  sourceDetail    String?    @map("source_detail") @db.VarChar(200)
+  landingPage     String?    @map("landing_page") @db.VarChar(500)
+  referrer        String?    @db.VarChar(500)
+  productInterest String?    @map("product_interest") @db.VarChar(200)
+  productSlug     String?    @map("product_slug") @db.VarChar(200)
+  travelDateFrom  DateTime?  @map("travel_date_from") @db.Date
+  travelDateTo    DateTime?  @map("travel_date_to") @db.Date
+  adults          Int        @default(0)
+  children        Int        @default(0)
+  budgetBand      String?    @map("budget_band") @db.VarChar(50)
+  message         String?    @db.Text
+  status          LeadStatus @default(new_lead)
+  priority        Priority   @default(normal)
+  assignedTo      Int?       @map("assigned_to")
+  assignedUser    SalesUser? @relation(fields: [assignedTo], references: [id])
+  lostReason      String?    @map("lost_reason") @db.VarChar(200)
+  convertedBookingId Int?    @map("converted_to_booking_id")
+  lastContactedAt DateTime?  @map("last_contacted_at")
+  nextFollowUpAt  DateTime?  @map("next_follow_up_at")
+  notes           String?    @db.Text
+  utmSource       String?    @map("utm_source") @db.VarChar(100)
+  utmMedium       String?    @map("utm_medium") @db.VarChar(100)
+  utmCampaign     String?    @map("utm_campaign") @db.VarChar(200)
+  createdAt       DateTime   @default(now()) @map("created_at")
+  updatedAt       DateTime   @updatedAt @map("updated_at")
+
+  // Relations
+  quotes          Quote[]
+  bookings        Booking[]
+
+  @@index([status])
+  @@index([assignedTo])
+  @@index([phone])
+  @@index([createdAt])
+  @@map("leads")
+}
+
+/// Quotation with day-wise itinerary JSON
+model Quote {
+  id              Int         @id @default(autoincrement())
+  quoteCode       String      @unique @map("quote_code") @db.VarChar(20)
+  leadId          Int?        @map("lead_id")
+  lead            Lead?       @relation(fields: [leadId], references: [id])
+  customerId      Int?        @map("customer_id")
+  customer        Customer?   @relation(fields: [customerId], references: [id])
+  salesUserId     Int?        @map("sales_user_id")
+  salesUser       SalesUser?  @relation(fields: [salesUserId], references: [id])
+  title           String      @db.VarChar(200)
+  validUntil      DateTime    @map("valid_until")
+  itemsJson       String      @map("items_json") @db.LongText
+  totalPrice      Decimal     @map("total_price") @db.Decimal(12, 2)
+  discountAmount  Decimal     @default(0) @map("discount_amount") @db.Decimal(10, 2)
+  discountCode    String?     @map("discount_code") @db.VarChar(50)
+  gstAmount       Decimal     @default(0) @map("gst_amount") @db.Decimal(10, 2)
+  currency        String      @default("INR") @db.VarChar(5)
+  status          QuoteStatus @default(draft)
+  publicToken     String?     @unique @map("public_token") @db.VarChar(32)
+  viewedCount     Int         @default(0) @map("viewed_count")
+  viewedFirstAt   DateTime?   @map("viewed_first_at")
+  viewedLastAt    DateTime?   @map("viewed_last_at")
+  brand           String      @default("goatrippackage") @db.VarChar(50)
+  advancePercent  Int         @default(25) @map("advance_percent")
+  termsMarkdown   String?     @map("terms_md") @db.Text
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+
+  // Relations
+  bookings        Booking[]
+
+  @@index([status])
+  @@index([publicToken])
+  @@index([leadId])
+  @@index([customerId])
+  @@map("quotes")
+}
+
+/// Product catalog — single source of truth
+model Product {
+  id              Int           @id @default(autoincrement())
+  slug            String        @unique @db.VarChar(200)
+  type            ProductType
+  name            String        @db.VarChar(200)
+  shortDesc       String?       @map("short_desc") @db.VarChar(500)
+  longDescMd      String?       @map("long_desc_md") @db.LongText
+  basePrice       Decimal       @map("base_price") @db.Decimal(10, 2)
+  priceUnit       String        @default("per_person") @map("price_unit") @db.VarChar(20)
+  durationHrs     Decimal?      @map("duration_hrs") @db.Decimal(5, 1)
+  durationDays    Int?          @map("duration_days")
+  capacityMin     Int?          @map("capacity_min")
+  capacityMax     Int?          @map("capacity_max")
+  location        String?       @db.VarChar(200)
+  imagesJson      String?       @map("images_json") @db.LongText
+  inclusionsJson  String?       @map("inclusions_json") @db.LongText
+  exclusionsJson  String?       @map("exclusions_json") @db.LongText
+  itineraryJson   String?       @map("itinerary_json") @db.LongText
+  faqJson         String?       @map("faq_json") @db.LongText
+  termsMd         String?       @map("terms_md") @db.Text
+  status          ProductStatus @default(active)
+  isFeatured      Boolean       @default(false) @map("is_featured")
+  isSelfServe     Boolean       @default(false) @map("is_self_serve")
+  isQuoteLed      Boolean       @default(true) @map("is_quote_led")
+  sortOrder       Int           @default(0) @map("sort_order")
+  brand           String        @default("goatrippackage") @db.VarChar(50)
+  seoTitle        String?       @map("seo_title") @db.VarChar(200)
+  seoDescription  String?       @map("seo_description") @db.VarChar(500)
+  createdAt       DateTime      @default(now()) @map("created_at")
+  updatedAt       DateTime      @updatedAt @map("updated_at")
+
+  // Relations
+  availability    ProductAvailability[]
+  reviews         Review[]
+
+  @@index([type, status])
+  @@index([slug])
+  @@index([isFeatured])
+  @@map("products")
+}
+
+/// Per-date availability / blocking
+model ProductAvailability {
+  id              Int       @id @default(autoincrement())
+  productId       Int       @map("product_id")
+  product         Product   @relation(fields: [productId], references: [id])
+  date            DateTime  @db.Date
+  slot            String    @default("all_day") @db.VarChar(20)
+  capacityTotal   Int       @default(0) @map("capacity_total")
+  capacityBooked  Int       @default(0) @map("capacity_booked")
+  isBlocked       Boolean   @default(false) @map("is_blocked")
+  blockReason     String?   @map("block_reason") @db.VarChar(200)
+  priceOverride   Decimal?  @map("price_override") @db.Decimal(10, 2)
+
+  @@unique([productId, date, slot])
+  @@index([productId, date])
+  @@map("product_availability")
+}
+
+/// Discount codes
+model Coupon {
+  id              Int       @id @default(autoincrement())
+  code            String    @unique @db.VarChar(50)
+  type            CouponType @default(percent)
+  value           Decimal   @db.Decimal(10, 2)
+  appliesTo       String    @default("all") @map("applies_to") @db.VarChar(50)
+  productIdsJson  String?   @map("product_ids_json") @db.Text
+  minAmount       Decimal?  @map("min_amount") @db.Decimal(10, 2)
+  maxDiscount     Decimal?  @map("max_discount") @db.Decimal(10, 2)
+  maxUses         Int?      @map("max_uses")
+  usedCount       Int       @default(0) @map("used_count")
+  validFrom       DateTime? @map("valid_from")
+  validTo         DateTime? @map("valid_to")
+  isActive        Boolean   @default(true) @map("is_active")
+  createdBy       Int?      @map("created_by")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  @@index([code])
+  @@index([isActive])
+  @@map("coupons")
+}
+
+/// Every payment attempt + result
+model Payment {
+  id              Int              @id @default(autoincrement())
+  bookingId       Int              @map("booking_id")
+  booking         Booking          @relation(fields: [bookingId], references: [id])
+  milestone       PaymentMilestone @default(full)
+  amount          Decimal          @db.Decimal(10, 2)
+  method          PaymentMethod    @default(payu)
+  payuTxnid       String?          @map("payu_txnid") @db.VarChar(120)
+  payuMihpayid    String?          @map("payu_mihpayid") @db.VarChar(120)
+  status          PaymentStatus    @default(pending)
+  gatewayResponse String?          @map("gateway_response") @db.LongText
+  createdAt       DateTime         @default(now()) @map("created_at")
+  completedAt     DateTime?        @map("completed_at")
+
+  @@index([bookingId])
+  @@index([status])
+  @@index([payuTxnid])
+  @@map("payments")
+}
+
+/// GST-compliant invoice
+model Invoice {
+  id              Int       @id @default(autoincrement())
+  bookingId       Int       @map("booking_id")
+  booking         Booking   @relation(fields: [bookingId], references: [id])
+  invoiceNumber   String    @unique @map("invoice_number") @db.VarChar(30)
+  invoiceDate     DateTime  @map("invoice_date") @db.Date
+  customerName    String    @map("customer_name") @db.VarChar(120)
+  customerAddress String?   @map("customer_address") @db.Text
+  customerGstin   String?   @map("customer_gstin") @db.VarChar(20)
+  sgstAmount      Decimal   @default(0) @map("sgst_amount") @db.Decimal(10, 2)
+  cgstAmount      Decimal   @default(0) @map("cgst_amount") @db.Decimal(10, 2)
+  igstAmount      Decimal   @default(0) @map("igst_amount") @db.Decimal(10, 2)
+  totalAmount     Decimal   @map("total_amount") @db.Decimal(10, 2)
+  pdfPath         String?   @map("pdf_path") @db.VarChar(500)
+  sentViaEmailAt  DateTime? @map("sent_via_email_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  @@index([bookingId])
+  @@index([invoiceNumber])
+  @@map("invoices")
+}
+
+/// Sales staff + admins
+model SalesUser {
+  id              Int       @id @default(autoincrement())
+  username        String    @unique @db.VarChar(50)
+  passwordHash    String    @map("password_hash") @db.VarChar(255)
+  name            String    @db.VarChar(120)
+  email           String?   @db.VarChar(160)
+  phone           String?   @db.VarChar(25)
+  role            UserRole  @default(sales)
+  commissionPct   Decimal   @default(0) @map("commission_pct") @db.Decimal(4, 2)
+  isActive        Boolean   @default(true) @map("is_active")
+  lastLoginAt     DateTime? @map("last_login_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  leads           Lead[]
+  quotes          Quote[]
+  bookings        Booking[]
+  activityLogs    ActivityLog[]
+
+  @@map("sales_users")
+}
+
+/// Audit trail
+model ActivityLog {
+  id              Int       @id @default(autoincrement())
+  salesUserId     Int?      @map("sales_user_id")
+  salesUser       SalesUser? @relation(fields: [salesUserId], references: [id])
+  entityType      String    @map("entity_type") @db.VarChar(30)
+  entityId        Int       @map("entity_id")
+  action          String    @db.VarChar(50)
+  detailsJson     String?   @map("details_json") @db.Text
+  ip              String?   @db.VarChar(50)
+  userAgent       String?   @map("user_agent") @db.VarChar(500)
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  // Polymorphic — resolved at app layer via entityType + entityId
+  // No Prisma relation here (can't FK on a polymorphic field)
+  // Query pattern: db.activityLog.findMany({ where: { entityType: "lead", entityId: leadId } })
+
+  @@index([entityType, entityId])
+  @@index([salesUserId])
+  @@index([createdAt])
+  @@map("activity_log")
+}
+
+/// Communication log (WA, email, SMS)
+model CommLog {
+  id              Int         @id @default(autoincrement())
+  customerId      Int?        @map("customer_id")
+  customer        Customer?   @relation(fields: [customerId], references: [id])
+  bookingId       Int?        @map("booking_id")
+  booking         Booking?    @relation(fields: [bookingId], references: [id])
+  channel         CommChannel
+  templateUsed    String?     @map("template_used") @db.VarChar(100)
+  bodySnapshot    String?     @map("body_snapshot") @db.Text
+  status          String      @default("sent") @db.VarChar(30)
+  providerMsgId   String?     @map("provider_message_id") @db.VarChar(200)
+  createdAt       DateTime    @default(now()) @map("created_at")
+
+  @@index([customerId])
+  @@index([bookingId])
+  @@index([createdAt])
+  @@map("comm_log")
+}
+
+/// Customer reviews
+model Review {
+  id              Int       @id @default(autoincrement())
+  customerId      Int?      @map("customer_id")
+  customer        Customer? @relation(fields: [customerId], references: [id])
+  bookingId       Int?      @map("booking_id")
+  booking         Booking?  @relation(fields: [bookingId], references: [id])
+  productId       Int?      @map("product_id")
+  product         Product?  @relation(fields: [productId], references: [id])
+  rating          Int       @db.TinyInt
+  reviewText      String?   @map("review_text") @db.Text
+  isPublished     Boolean   @default(false) @map("is_published")
+  isFeatured      Boolean   @default(false) @map("is_featured")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  @@index([productId])
+  @@index([customerId])
+  @@index([isPublished])
+  @@map("reviews")
+}
+
+/// Key-value settings store
+model Settings {
+  key             String    @id @db.VarChar(100)
+  value           String?   @db.Text
+  valueJson       String?   @map("value_json") @db.LongText
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@map("settings")
+}

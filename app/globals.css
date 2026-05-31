@@ -1,26 +1,229 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* ═══════════════════════════════════════════════════════════════
+   GOA TRIP PACKAGE — Design System Tokens (Tailwind v4 CSS-first)
+   Extracted from Royal-Cruise-booking-PAYU.html + PLAN.md §3
+   ═══════════════════════════════════════════════════════════════ */
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* ── Typography ── */
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-fraunces);
+
+  /* ── Gold spectrum (primary brand accent) ── */
+  --color-gold-50: #fdf8e8;
+  --color-gold-100: #f5ecc4;
+  --color-gold-200: #f0d080;
+  --color-gold-300: #e8c97a;
+  --color-gold-400: #d4b04a;
+  --color-gold: #c9a84c;
+  --color-gold-600: #8b6914;
+  --color-gold-700: #6b4f0e;
+  --color-gold-800: #4a3709;
+  --color-gold-900: #2e2206;
+
+  /* ── Cosmic dark (primary surfaces) ── */
+  --color-cosmic-950: #05000f;
+  --color-cosmic-900: #0a0020;
+  --color-cosmic-800: #0d0825;
+  --color-cosmic-700: #130e35;
+  --color-cosmic: #05000f;
+
+  /* ── Rose accent ── */
+  --color-rose: #ff416c;
+
+  /* ── Sand neutral (light mode bg) ── */
+  --color-sand: #f8f5f0;
+
+  /* ── Charcoal ── */
+  --color-charcoal: #1a1a1a;
+
+  /* ── Glass surfaces ── */
+  --color-surface: rgba(255, 255, 255, 0.04);
+  --color-surface-hover: rgba(255, 255, 255, 0.08);
+  --color-border-gold: rgba(201, 168, 76, 0.25);
+  --color-border-gold-strong: rgba(201, 168, 76, 0.5);
+
+  /* ── Text on dark ── */
+  --color-text-primary: #ffffff;
+  --color-text-muted: rgba(255, 255, 255, 0.55);
+  --color-text-dim: rgba(255, 255, 255, 0.4);
+
+  /* ── Spacing scale (8pt grid) ── */
+  --spacing-1: 0.25rem;  /* 4px */
+  --spacing-2: 0.5rem;   /* 8px */
+  --spacing-3: 0.75rem;  /* 12px */
+  --spacing-4: 1rem;     /* 16px */
+  --spacing-6: 1.5rem;   /* 24px */
+  --spacing-8: 2rem;     /* 32px */
+  --spacing-12: 3rem;    /* 48px */
+  --spacing-16: 4rem;    /* 64px */
+  --spacing-24: 6rem;    /* 96px */
+  --spacing-32: 8rem;    /* 128px */
+
+  /* ── Border radius ── */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
+
+  /* ── Shadows ── */
+  --shadow-gold: 0 0 20px rgba(201, 168, 76, 0.15);
+  --shadow-gold-lg: 0 0 40px rgba(201, 168, 76, 0.25);
+
+  /* ── Animations ── */
+  --animate-fade-in: fade-in 0.5s ease-out;
+  --animate-slide-up: slide-up 0.6s ease-out;
+  --animate-gold-shimmer: gold-shimmer 3s ease-in-out infinite;
+  --animate-pulse-gold: pulse-gold 2s ease-in-out infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ── Keyframes ── */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gold-shimmer {
+  0%, 100% { background-position: -200% center; }
+  50% { background-position: 200% center; }
+}
+
+@keyframes pulse-gold {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201, 168, 76, 0.4); }
+  50% { box-shadow: 0 0 0 12px rgba(201, 168, 76, 0); }
+}
+
+@keyframes ken-burns {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.04); }
+}
+
+@keyframes cascade-up {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Base styles ── */
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  letter-spacing: 0.005em;
+}
+
+/* ── Cosmic background scene ── */
+.bg-cosmic-scene {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% -10%, rgba(80, 0, 160, 0.45) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 40% at 10% 80%, rgba(201, 168, 76, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 90% 90%, rgba(120, 0, 80, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(201, 168, 76, 0.04) 0%, transparent 70%),
+    linear-gradient(180deg, #05000f 0%, #0a0020 40%, #05000f 100%);
+}
+
+/* ── Stars layer ── */
+.bg-stars {
+  background-image:
+    radial-gradient(1px 1px at 15% 20%, rgba(255, 255, 255, 0.6) 0%, transparent 100%),
+    radial-gradient(1px 1px at 35% 55%, rgba(255, 255, 255, 0.4) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 55% 10%, rgba(201, 168, 76, 0.7) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 40%, rgba(255, 255, 255, 0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 70%, rgba(255, 255, 255, 0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 25% 85%, rgba(255, 255, 255, 0.4) 0%, transparent 100%),
+    radial-gradient(1.5px 1.5px at 65% 75%, rgba(201, 168, 76, 0.5) 0%, transparent 100%),
+    radial-gradient(1px 1px at 45% 35%, rgba(255, 255, 255, 0.35) 0%, transparent 100%);
+}
+
+/* ── Gold gradient (CTAs, dividers, premium accents) ── */
+.bg-gold-gradient {
+  background-image: linear-gradient(90deg, #8b6914 0%, #c9a84c 25%, #f0d080 50%, #c9a84c 75%, #8b6914 100%);
+}
+
+.text-gold-gradient {
+  background-image: linear-gradient(90deg, #8b6914 0%, #c9a84c 25%, #f0d080 50%, #c9a84c 75%, #8b6914 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.border-gold-gradient {
+  border-image: linear-gradient(90deg, #8b6914 0%, #c9a84c 25%, #f0d080 50%, #c9a84c 75%, #8b6914 100%) 1;
+}
+
+/* ── Glass card ── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+}
+
+.glass-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(201, 168, 76, 0.35);
+}
+
+/* ── Gold divider ── */
+.gold-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(201, 168, 76, 0.5) 50%, transparent 100%);
+}
+
+/* ── Focus ring (golden glow for accessibility) ── */
+*:focus-visible {
+  outline: 2px solid #c9a84c;
+  outline-offset: 2px;
+}
+
+/* ── Skip to content (a11y) ── */
+.skip-to-content {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 1rem 1.5rem;
+  background: #c9a84c;
+  color: #05000f;
+  font-weight: 700;
+  font-size: 0.875rem;
+  text-decoration: none;
+  border-radius: 0 0 0.5rem 0;
+}
+
+.skip-to-content:focus {
+  left: 0;
+}
+
+/* ── Scrollbar styling (dark theme) ── */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: #0a0020; }
+::-webkit-scrollbar-thumb { background: rgba(201, 168, 76, 0.3); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(201, 168, 76, 0.5); }
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── Selection ── */
+::selection {
+  background: rgba(201, 168, 76, 0.3);
+  color: #ffffff;
 }
