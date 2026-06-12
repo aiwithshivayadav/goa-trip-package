@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Phone, Mail, MapPin } from "lucide-react";
 
 const quickLinks = [
@@ -32,7 +33,14 @@ export function Footer() {
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand column */}
           <div>
-            <Link href="/" className="inline-block">
+            <Link href="/" className="inline-flex items-center gap-3">
+              <Image
+                src="/logo-mark.svg"
+                alt="Goa Trip Package"
+                width={40}
+                height={40}
+                className="h-10 w-10"
+              />
               <span className="font-display text-2xl font-bold text-white">
                 Goa Trip <span className="text-gold">Package</span>
               </span>

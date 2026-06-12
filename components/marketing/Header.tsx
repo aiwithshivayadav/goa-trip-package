@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X, Phone } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -35,8 +36,16 @@ export function Header() {
     >
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 md:h-20 md:px-8">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2">
-          <span className="font-display text-xl font-bold text-white">
+        <Link href="/" className="flex items-center gap-2.5">
+          <Image
+            src="/logo-mark.svg"
+            alt="Goa Trip Package"
+            width={36}
+            height={36}
+            className="h-9 w-9"
+            priority
+          />
+          <span className="font-display text-lg font-bold text-white leading-tight">
             Goa Trip <span className="text-gold">Package</span>
           </span>
         </Link>

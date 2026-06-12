@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
   LayoutDashboard, Users, FileText, CalendarDays, Package,
   CreditCard, Tag, BarChart3, Settings, LogOut, Menu, X,
-  ChevronRight, Inbox, Ship,
+  ChevronRight, Inbox,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -54,8 +55,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       >
         {/* Brand */}
         <div className="flex h-16 items-center justify-between px-5 border-b border-border-gold/20">
-          <Link href="/admin" className="flex items-center gap-2">
-            <Ship className="h-5 w-5 text-gold" />
+          <Link href="/admin" className="flex items-center gap-2.5">
+            <Image
+              src="/logo-mark.svg"
+              alt="GTP Admin"
+              width={32}
+              height={32}
+              className="h-8 w-8"
+            />
             <span className="font-display text-base font-bold text-white">
               GTP <span className="text-gold">Admin</span>
             </span>
