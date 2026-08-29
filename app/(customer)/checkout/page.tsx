@@ -8,6 +8,7 @@ import { Shield, ArrowLeft, Check, Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { getProductBySlug } from "@/lib/data/products";
 import { formatINR } from "@/lib/utils";
+import { trackBeginCheckout } from "@/lib/tracking";
 
 declare global {
   interface Window {
@@ -51,6 +52,20 @@ function CheckoutContent() {
   const [phone, setPhone] = useState("");
   const [specialRequests, setSpecialRequests] = useState("");
   const [boltReady, setBoltReady] = useState(false);
+  const [tracked, setTracked] = useState(false);
+
+  useEffect(() => {
+    if (product && !tracked) {
+      trackBeginCheckout({
+        id: product.slug,
+        name: product.name,
+        category: product.type,
+        price: Number(product.basePrice),
+        quantity: 1,
+      });
+      setTracked(true);
+    }
+  }, [product, tracked]);
 
   if (!product) {
     return (

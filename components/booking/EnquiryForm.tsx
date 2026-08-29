@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { X, Send, MessageCircle, User, Phone, Mail, Calendar, Users, MessageSquare } from "lucide-react";
 import { toast } from "sonner";
+import { trackLead } from "@/lib/tracking";
 
 interface EnquiryFormProps {
   productName?: string;
@@ -90,6 +91,12 @@ export function EnquiryForm({
 
       const waMessage = lines.join("\n");
       const waUrl = `https://wa.me/919890830249?text=${encodeURIComponent(waMessage)}`;
+
+      trackLead({
+        productName: productName || "Goa Trip Package",
+        productId: productSlug || "general",
+        value: productPrice,
+      });
 
       toast.success("Enquiry sent! Opening WhatsApp...");
 

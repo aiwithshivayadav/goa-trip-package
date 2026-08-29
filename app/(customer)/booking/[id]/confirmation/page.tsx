@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import { Check, Download, MessageCircle, Mail, Calendar } from "lucide-react";
 import { formatINR } from "@/lib/utils";
+import { trackPurchase } from "@/lib/tracking";
 
 interface BookingData {
   bookingId: string;
@@ -30,16 +31,28 @@ export default function BookingConfirmationPage() {
 
   const [booking, setBooking] = useState<BookingData | null>(null);
 
+  const purchaseTracked = useRef(false);
+
   useEffect(() => {
-    // Recover booking data from sessionStorage
     const stored = sessionStorage.getItem("pendingBooking");
     if (stored) {
       const data = JSON.parse(stored);
       setBooking(data);
-      // Clear after reading
       sessionStorage.removeItem("pendingBooking");
+
+      if (!purchaseTracked.current) {
+        purchaseTracked.current = true;
+        trackPurchase({
+          transactionId: txnid || bookingId,
+          value: data.payableNow,
+          itemId: data.productSlug,
+          itemName: data.productName,
+          category: "booking",
+          quantity: (data.adults || 1) + (data.children || 0),
+        });
+      }
     }
-  }, []);
+  }, [txnid, bookingId]);
 
   const displayName = booking?.customerName || "Guest";
   const displayAmount = booking ? formatINR(booking.payableNow) : amount ? formatINR(parseFloat(amount)) : "—";
