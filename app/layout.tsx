@@ -4,6 +4,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { MetaPixel } from "@/components/tracking/MetaPixel";
+import { GoogleAds } from "@/components/tracking/GoogleAds";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -83,6 +84,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full bg-cosmic-950 text-white font-sans antialiased">
         <MetaPixel />
+        <GoogleAds />
         <a href="#main-content" className="skip-to-content">
           Skip to content
         </a>
