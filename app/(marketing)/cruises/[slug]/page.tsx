@@ -7,6 +7,7 @@ import { formatINR } from "@/lib/utils";
 import { ImageGallery } from "@/components/marketing/ImageGallery";
 import { EnquiryButton } from "@/components/booking/EnquiryButton";
 import { ProductCard } from "@/components/marketing/ProductCard";
+import { GoogleReviews } from "@/components/marketing/GoogleReviews";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -219,6 +220,9 @@ export default async function CruiseDetailPage({ params }: PageProps) {
                 </div>
               </div>
             )}
+
+            {/* Google Reviews */}
+            <GoogleReviews />
 
             {/* Similar Products */}
             {similarProducts.length > 0 && (
