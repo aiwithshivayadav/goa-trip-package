@@ -132,7 +132,7 @@ export default function OGImage() {
             display: "flex",
           }}
         >
-          goatrippackage.in
+          goatrippackage.com
         </div>
       </div>
     ),

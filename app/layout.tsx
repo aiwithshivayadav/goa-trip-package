@@ -24,7 +24,7 @@ const fraunces = Fraunces({
 
 // ── Metadata ──
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://goatrippackage.in"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://goatrippackage.com"),
   title: {
     default: "Goa Trip Package — Your Royal Goa Experience",
     template: "%s | Goa Trip Package",
