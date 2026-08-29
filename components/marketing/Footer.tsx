@@ -187,10 +187,10 @@ export function Footer() {
       <div className="border-t border-border-gold bg-cosmic-900/50">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 px-4 py-4 text-xs text-text-dim md:flex-row md:px-8">
           <p>
-            &copy; {new Date().getFullYear()} Goa Trip Package. All rights reserved. | This website is operated by Shivendra Yadav.
+            &copy; {new Date().getFullYear()} Dream Tour Planner OPC Pvt Ltd. All rights reserved.
           </p>
-          <p>
-            Built with intention.
+          <p className="text-text-dim/60">
+            CIN: Pending | Panjim, Goa 403001, India
           </p>
         </div>
       </div>

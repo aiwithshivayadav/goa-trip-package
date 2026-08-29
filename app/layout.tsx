@@ -3,6 +3,7 @@ import { Inter, Fraunces, Geist } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { cn } from "@/lib/utils";
+import { MetaPixel } from "@/components/tracking/MetaPixel";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -81,7 +82,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#05000F" />
       </head>
       <body className="min-h-full bg-cosmic-950 text-white font-sans antialiased">
-        {/* Skip to content — accessibility */}
+        <MetaPixel />
         <a href="#main-content" className="skip-to-content">
           Skip to content
         </a>
