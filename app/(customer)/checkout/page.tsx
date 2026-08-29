@@ -1,12 +1,27 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import Script from "next/script";
 import { Shield, ArrowLeft, Check, Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
 import { getProductBySlug } from "@/lib/data/products";
 import { formatINR } from "@/lib/utils";
+
+declare global {
+  interface Window {
+    bolt?: {
+      launch: (
+        data: Record<string, string>,
+        handlers: {
+          responseHandler: (response: { response: Record<string, string> }) => void;
+          catchException: (response: { message: string }) => void;
+        }
+      ) => void;
+    };
+  }
+}
 
 export default function CheckoutPage() {
   return (
@@ -35,6 +50,7 @@ function CheckoutContent() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [specialRequests, setSpecialRequests] = useState("");
+  const [boltReady, setBoltReady] = useState(false);
 
   if (!product) {
     return (
@@ -66,13 +82,16 @@ function CheckoutContent() {
       return;
     }
 
+    if (!boltReady || !window.bolt) {
+      toast.error("Payment gateway loading. Please wait a moment.");
+      return;
+    }
+
     setLoading(true);
     try {
-      // Generate booking ID
       const bookingId = `GTP-${new Date().getFullYear()}-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
       const txnid = `${bookingId}_${Date.now()}`;
 
-      // Get hash from our API
       const hashRes = await fetch("/api/payu/hash", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -90,46 +109,12 @@ function CheckoutContent() {
 
       if (!hashRes.ok) {
         toast.error("Payment service unavailable. Try WhatsApp booking.");
+        setLoading(false);
         return;
       }
 
-      const { key, hash, action } = await hashRes.json();
+      const { key, hash } = await hashRes.json();
 
-      // Build and submit PayU form
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = action;
-
-      const fields: Record<string, string> = {
-        key,
-        txnid,
-        amount: payableNow.toFixed(2),
-        productinfo: p.name,
-        firstname: name.split(" ")[0] ?? name,
-        lastname: name.split(" ").slice(1).join(" ") || "",
-        email,
-        phone: phone.replace(/\D/g, ""),
-        surl: `${window.location.origin}/api/payu/success`,
-        furl: `${window.location.origin}/api/payu/failure`,
-        hash,
-        udf1: bookingId,
-        udf2: travelDate,
-        udf3: `${adults}+${children}`,
-        udf4: "",
-        udf5: "",
-      };
-
-      Object.entries(fields).forEach(([k, v]) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = k;
-        input.value = v;
-        form.appendChild(input);
-      });
-
-      document.body.appendChild(form);
-
-      // Store booking data in sessionStorage for post-payment recovery
       sessionStorage.setItem("pendingBooking", JSON.stringify({
         bookingId,
         productName: p.name,
@@ -146,11 +131,43 @@ function CheckoutContent() {
         specialRequests,
       }));
 
-      form.submit();
+      window.bolt.launch(
+        {
+          key,
+          txnid,
+          hash,
+          amount: payableNow.toFixed(2),
+          firstname: name.split(" ")[0] ?? name,
+          lastname: name.split(" ").slice(1).join(" ") || "",
+          email,
+          phone: phone.replace(/\D/g, ""),
+          productinfo: p.name,
+          surl: `${window.location.origin}/api/payu/success`,
+          furl: `${window.location.origin}/api/payu/failure`,
+          udf1: bookingId,
+          udf2: travelDate,
+          udf3: `${adults}+${children}`,
+          udf4: "",
+          udf5: "",
+        },
+        {
+          responseHandler: (BOLT) => {
+            const txnStatus = BOLT.response.txnStatus ?? BOLT.response.status;
+            if (txnStatus === "SUCCESS") {
+              window.location.href = `/booking/${bookingId}/confirmation?txnid=${BOLT.response.txnid || txnid}&amount=${payableNow}&verified=1`;
+            } else {
+              window.location.href = `/booking/${bookingId}/failed?reason=${txnStatus || "cancelled"}&txnid=${BOLT.response.txnid || txnid}`;
+            }
+          },
+          catchException: () => {
+            toast.error("Payment was cancelled or interrupted.");
+            setLoading(false);
+          },
+        }
+      );
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
       console.error(error);
-    } finally {
       setLoading(false);
     }
   }
@@ -346,6 +363,11 @@ function CheckoutContent() {
           </div>
         </div>
       </div>
+      <Script
+        src="https://checkout-static.citruspay.com/bolt/run/bolt.min.js"
+        strategy="afterInteractive"
+        onLoad={() => setBoltReady(true)}
+      />
     </div>
   );
 }
