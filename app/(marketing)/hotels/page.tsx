@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { hotels } from "@/lib/data/products";
-import { ProductCard } from "@/components/marketing/ProductCard";
+import { ProductListingFilters } from "@/components/marketing/ProductListingFilters";
 
 export const metadata: Metadata = {
   title: "Hotels in Goa — Luxury Resorts to Budget Stays",
@@ -27,30 +27,7 @@ export default function HotelsPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-12 md:px-8 md:py-16">
-        <div className="mb-8 flex items-center justify-between">
-          <p className="text-sm text-text-muted">
-            Showing <span className="text-white font-medium">{hotels.length}</span> hotels
-          </p>
-          <div className="text-sm text-text-dim">Sort: Rating (high → low)</div>
-        </div>
-
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {hotels.map((hotel) => (
-            <ProductCard
-              key={hotel.slug}
-              slug={hotel.slug}
-              type={hotel.type}
-              name={hotel.name}
-              shortDesc={hotel.shortDesc}
-              basePrice={hotel.basePrice}
-              priceUnit={hotel.priceUnit}
-              location={hotel.location}
-              rating={hotel.rating}
-              isFeatured={hotel.isFeatured}
-              imageUrl={hotel.imageUrl}
-            />
-          ))}
-        </div>
+        <ProductListingFilters products={hotels} categoryLabel="All Hotels" />
       </section>
     </div>
   );

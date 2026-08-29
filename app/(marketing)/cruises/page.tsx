@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cruises } from "@/lib/data/products";
-import { ProductCard } from "@/components/marketing/ProductCard";
 import { WhyChooseUs } from "@/components/marketing/WhyChooseUs";
+import { ProductListingFilters } from "@/components/marketing/ProductListingFilters";
 
 export const metadata: Metadata = {
   title: "Goa Cruises — Sunset, Dinner, Party, Dolphin, Private",
@@ -28,42 +28,7 @@ export default function CruisesPage() {
       <WhyChooseUs />
 
       <section className="mx-auto max-w-7xl px-4 py-10 md:px-8">
-        <div className="mb-6 flex items-center justify-between">
-          <p className="text-sm text-text-muted">
-            <span className="text-white font-bold">ALL CRUISES</span>
-            <span className="text-gold ml-1">({cruises.length})</span>
-          </p>
-          <select className="bg-surface border border-border-gold rounded-lg px-3 py-1.5 text-sm text-text-muted focus:border-gold">
-            <option>Recommended</option>
-            <option>Price: Low → High</option>
-            <option>Price: High → Low</option>
-            <option>Rating</option>
-          </select>
-        </div>
-
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {cruises.map((cruise) => (
-            <ProductCard
-              key={cruise.slug}
-              slug={cruise.slug}
-              type={cruise.type}
-              name={cruise.name}
-              shortDesc={cruise.shortDesc}
-              basePrice={cruise.basePrice}
-              originalPrice={cruise.originalPrice}
-              priceUnit={cruise.priceUnit}
-              duration={cruise.duration}
-              capacity={cruise.capacity}
-              location={cruise.location}
-              rating={cruise.rating}
-              isFeatured={cruise.isFeatured}
-              isSelfServe={cruise.isSelfServe}
-              imageUrl={cruise.imageUrl}
-              inclusions={cruise.inclusions}
-              highlights={cruise.highlights}
-            />
-          ))}
-        </div>
+        <ProductListingFilters products={cruises} categoryLabel="All Cruises" />
       </section>
     </div>
   );

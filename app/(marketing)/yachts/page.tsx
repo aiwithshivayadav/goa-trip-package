@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { yachts } from "@/lib/data/products";
-import { ProductCard } from "@/components/marketing/ProductCard";
+import { ProductListingFilters } from "@/components/marketing/ProductListingFilters";
 
 export const metadata: Metadata = {
   title: "Yacht Charter Goa — Luxury Yachts for Parties & Celebrations",
@@ -27,32 +27,7 @@ export default function YachtsPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-12 md:px-8 md:py-16">
-        <div className="mb-8 flex items-center justify-between">
-          <p className="text-sm text-text-muted">
-            Showing <span className="text-white font-medium">{yachts.length}</span> yachts
-          </p>
-          <div className="text-sm text-text-dim">Sort: Price (low → high)</div>
-        </div>
-
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {yachts.map((yacht) => (
-            <ProductCard
-              key={yacht.slug}
-              slug={yacht.slug}
-              type={yacht.type}
-              name={yacht.name}
-              shortDesc={yacht.shortDesc}
-              basePrice={yacht.basePrice}
-              priceUnit={yacht.priceUnit}
-              duration={yacht.duration}
-              capacity={yacht.capacity}
-              location={yacht.location}
-              rating={yacht.rating}
-              isFeatured={yacht.isFeatured}
-              imageUrl={yacht.imageUrl}
-            />
-          ))}
-        </div>
+        <ProductListingFilters products={yachts} categoryLabel="All Yachts" />
       </section>
     </div>
   );

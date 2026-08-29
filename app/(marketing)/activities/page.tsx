@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { activities } from "@/lib/data/products";
-import { ProductCard } from "@/components/marketing/ProductCard";
+import { ProductListingFilters } from "@/components/marketing/ProductListingFilters";
 
 export const metadata: Metadata = {
   title: "Water Activities & Adventures in Goa — Scuba, Parasailing, Bungee",
@@ -27,31 +27,7 @@ export default function ActivitiesPage() {
       </section>
 
       <section className="mx-auto max-w-7xl px-4 py-12 md:px-8 md:py-16">
-        <div className="mb-8 flex items-center justify-between">
-          <p className="text-sm text-text-muted">
-            Showing <span className="text-white font-medium">{activities.length}</span> activities
-          </p>
-          <div className="text-sm text-text-dim">Sort: Popular first</div>
-        </div>
-
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {activities.map((activity) => (
-            <ProductCard
-              key={activity.slug}
-              slug={activity.slug}
-              type={activity.type}
-              name={activity.name}
-              shortDesc={activity.shortDesc}
-              basePrice={activity.basePrice}
-              priceUnit={activity.priceUnit}
-              duration={activity.duration}
-              location={activity.location}
-              rating={activity.rating}
-              isFeatured={activity.isFeatured}
-              imageUrl={activity.imageUrl}
-            />
-          ))}
-        </div>
+        <ProductListingFilters products={activities} categoryLabel="All Activities" />
       </section>
     </div>
   );
