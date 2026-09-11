@@ -1,15 +1,21 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Clock, Users, MapPin, Star, Check, X, ArrowLeft, Shield, Zap, Calendar, ChevronDown, HelpCircle, Info } from "lucide-react";
 import { getProductBySlug, getSlugsByType, getProductsByType } from "@/lib/data/db-products";
-import { formatINR } from "@/lib/utils";
+import { ProductDetailLayout, type ProductTypeConfig } from "@/components/marketing/ProductDetailLayout";
 
 export const dynamic = "force-dynamic";
-import { ImageGallery } from "@/components/marketing/ImageGallery";
-import { EnquiryButton } from "@/components/booking/EnquiryButton";
-import { ProductCard } from "@/components/marketing/ProductCard";
-import { GoogleReviews } from "@/components/marketing/GoogleReviews";
+
+const CONFIG: ProductTypeConfig = {
+  typeLabel: "Hotel",
+  featuredLabel: "Top Pick",
+  categoryHref: "/hotels",
+  categoryLabel: "All Hotels",
+  productType: "hotel",
+  similarLabel: "Similar Hotels",
+  primaryCtaLabel: "Check Availability",
+  overviewLabel: "About This Hotel",
+  featuresLabel: "Property Details",
+};
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -38,170 +44,8 @@ export default async function HotelDetailPage({ params }: PageProps) {
   const p = await getProductBySlug(slug);
   if (!p) notFound();
 
-  const galleryImages = p.images?.length ? p.images : (p.imageUrl ? [p.imageUrl] : []);
   const allOfType = await getProductsByType("hotel");
-  const similarHotels = allOfType.filter((h) => h.slug !== slug).slice(0, 3);
+  const similarProducts = allOfType.filter((h) => h.slug !== slug).slice(0, 3);
 
-  return (
-    <div className="min-h-screen pb-20 lg:pb-0">
-      <div className="mx-auto max-w-7xl px-4 pt-4 md:px-8">
-        <Link href="/hotels" className="inline-flex items-center gap-2 text-xs text-gray-500 hover:text-lagoon transition-colors">
-          <ArrowLeft className="h-3.5 w-3.5" /> All Hotels
-        </Link>
-      </div>
-
-      <section className="mx-auto max-w-7xl px-4 py-6 md:px-8">
-        <div className="grid gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-2 space-y-8">
-            <ImageGallery images={galleryImages} alt={p.name} />
-
-            <div className="lg:hidden">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="rounded-md bg-lagoon-50 px-2 py-0.5 text-[10px] font-bold text-amber uppercase tracking-wider">Hotel</span>
-                {p.isFeatured && <span className="rounded-md bg-lagoon px-2 py-0.5 text-[10px] font-bold text-white">Top Pick</span>}
-              </div>
-              <h1 className="font-display text-2xl font-bold text-ink">{p.name}</h1>
-              {p.rating && (
-                <div className="flex items-center gap-2 mt-2">
-                  <span className="flex items-center gap-1 rounded bg-green-500/20 px-2 py-0.5 text-sm font-bold text-green-400">
-                    <Star className="h-3.5 w-3.5 fill-green-400" /> {p.rating}
-                  </span>
-                  {p.reviewCount && <span className="text-xs text-gray-500">({p.reviewCount}+ reviews)</span>}
-                </div>
-              )}
-            </div>
-
-            <div className="flex flex-wrap gap-3">
-              <span className="flex items-center gap-1.5 rounded-lg bg-white border border-border-warm px-3 py-2 text-xs text-gray-500"><Shield className="h-3.5 w-3.5 text-green-400" /> Free Cancellation</span>
-              <span className="flex items-center gap-1.5 rounded-lg bg-white border border-border-warm px-3 py-2 text-xs text-gray-500"><Zap className="h-3.5 w-3.5 text-lagoon" /> Best Rate Guaranteed</span>
-              <span className="flex items-center gap-1.5 rounded-lg bg-white border border-border-warm px-3 py-2 text-xs text-gray-500"><Shield className="h-3.5 w-3.5 text-blue-400" /> Verified Property</span>
-            </div>
-
-            {p.longDesc && (
-              <div>
-                <h2 className="text-lg font-bold text-ink mb-3">About This Hotel</h2>
-                <p className="text-sm text-gray-500 leading-relaxed">{p.longDesc}</p>
-              </div>
-            )}
-
-            {p.keyFeatures && p.keyFeatures.length > 0 && (
-              <div>
-                <h2 className="text-lg font-bold text-ink mb-3">Property Details</h2>
-                <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                  {p.keyFeatures.map((f) => (
-                    <div key={f.label} className="rounded-lg border border-border-warm bg-white p-3 flex items-center gap-3">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-lagoon-50"><Info className="h-4 w-4 text-lagoon" /></div>
-                      <div>
-                        <p className="text-[10px] text-gray-400 uppercase tracking-wider">{f.label}</p>
-                        <p className="text-sm font-medium text-ink">{f.value}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {p.highlights && p.highlights.length > 0 && (
-              <div>
-                <h2 className="text-lg font-bold text-ink mb-3">Highlights</h2>
-                <div className="space-y-2">
-                  {p.highlights.map((h) => (
-                    <div key={h} className="flex items-center gap-2 rounded-lg bg-green-500/5 border border-green-500/20 px-4 py-2.5">
-                      <Check className="h-4 w-4 shrink-0 text-green-400" />
-                      <span className="text-sm font-medium text-green-400">{h}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {p.inclusions && (
-              <div className="rounded-xl border border-border-warm bg-white p-5">
-                <h2 className="text-sm font-bold text-ink mb-3 flex items-center gap-2"><Check className="h-4 w-4 text-green-400" /> Amenities & Facilities</h2>
-                <div className="grid gap-2 sm:grid-cols-2">
-                  {p.inclusions.map((item) => (
-                    <span key={item} className="flex items-center gap-2 text-xs text-gray-500"><Check className="h-3.5 w-3.5 shrink-0 text-green-400" />{item}</span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {p.faq && p.faq.length > 0 && (
-              <div>
-                <h2 className="text-lg font-bold text-ink mb-4 flex items-center gap-2"><HelpCircle className="h-5 w-5 text-lagoon" /> FAQs</h2>
-                <div className="space-y-2">
-                  {p.faq.map((item) => (
-                    <details key={item.q} className="rounded-xl border border-border-warm bg-white group">
-                      <summary className="flex items-center justify-between px-5 py-4 text-sm font-medium text-ink cursor-pointer list-none">{item.q}<ChevronDown className="h-4 w-4 text-lagoon shrink-0 transition-transform group-open:rotate-180" /></summary>
-                      <div className="px-5 pb-4 border-t border-border-warm pt-3"><p className="text-sm text-gray-500 leading-relaxed">{item.a}</p></div>
-                    </details>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Google Reviews */}
-            <GoogleReviews />
-
-            {similarHotels.length > 0 && (
-              <div>
-                <h2 className="text-lg font-bold text-ink mb-4">Similar Hotels</h2>
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {similarHotels.map((s) => (
-                    <ProductCard key={s.slug} slug={s.slug} type={s.type} name={s.name} basePrice={s.basePrice} priceUnit={s.priceUnit} location={s.location} rating={s.rating} imageUrl={s.imageUrl} />
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Sticky pricing card */}
-          <div className="hidden lg:block">
-            <div className="sticky top-24 space-y-4">
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="rounded-md bg-lagoon-50 px-2 py-0.5 text-[10px] font-bold text-amber uppercase tracking-wider">Hotel</span>
-                  {p.isFeatured && <span className="rounded-md bg-lagoon px-2 py-0.5 text-[10px] font-bold text-white">Top Pick</span>}
-                </div>
-                <h1 className="font-display text-2xl font-bold text-ink">{p.name}</h1>
-                {p.rating && (
-                  <div className="flex items-center gap-2 mt-2">
-                    <span className="flex items-center gap-1 rounded bg-green-500/20 px-2 py-0.5 text-sm font-bold text-green-400"><Star className="h-3.5 w-3.5 fill-green-400" /> {p.rating}</span>
-                    {p.reviewCount && <span className="text-xs text-gray-500">({p.reviewCount}+ reviews)</span>}
-                  </div>
-                )}
-                {p.location && <p className="mt-2 text-sm text-gray-500 flex items-center gap-1"><MapPin className="h-3.5 w-3.5 text-lagoon" /> {p.location}</p>}
-                <p className="mt-2 text-sm text-gray-500">{p.shortDesc}</p>
-              </div>
-
-              <div className="rounded-2xl border border-border-warm bg-white p-6">
-                <div className="text-center mb-4">
-                  <p className="text-xs text-gray-500">Starting from</p>
-                  <span className="text-3xl font-bold text-ink">{formatINR(p.basePrice)}</span>
-                  <p className="text-xs text-gray-400 mt-0.5">/ {p.priceUnit}</p>
-                </div>
-                <div className="section-divider my-4" />
-                <div className="space-y-3">
-                  <EnquiryButton productName={p.name} productSlug={p.slug} productType="hotel" productPrice={p.basePrice} variant="gold" label="Check Availability" />
-                  <EnquiryButton productName={p.name} productSlug={p.slug} productType="hotel" productPrice={p.basePrice} label="WhatsApp Enquiry" />
-                </div>
-                <div className="mt-4 flex items-center justify-center gap-1.5 text-[10px] text-gray-400"><Shield className="h-3 w-3 text-lagoon" /> Best rate guaranteed · Free cancellation</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Mobile CTA */}
-      <div className="fixed inset-x-0 bottom-0 z-50 border-t border-border-warm bg-white/95 backdrop-blur-lg p-4 lg:hidden">
-        <div className="flex items-center gap-3">
-          <div className="flex-1">
-            <p className="text-lg font-bold text-ink">{formatINR(p.basePrice)}<span className="text-xs text-gray-400 font-normal ml-1">/{p.priceUnit}</span></p>
-          </div>
-          <EnquiryButton productName={p.name} productSlug={p.slug} productType="hotel" productPrice={p.basePrice} variant="outline" label="Check Availability" />
-          <EnquiryButton productName={p.name} productSlug={p.slug} productType="hotel" productPrice={p.basePrice} variant="compact" />
-        </div>
-      </div>
-    </div>
-  );
+  return <ProductDetailLayout product={p} similarProducts={similarProducts} config={CONFIG} />;
 }
