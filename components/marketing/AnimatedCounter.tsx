@@ -7,22 +7,17 @@ interface AnimatedCounterProps {
   className?: string;
 }
 
-/**
- * AnimatedCounter — counts up to the target number when scrolled into view
- * Handles formats: "10,000+", "4.8", "50+", "9 Years"
- */
 export function AnimatedCounter({ value, className = "" }: AnimatedCounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
   const [display, setDisplay] = useState(value);
-  const [hasAnimated, setHasAnimated] = useState(false);
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el || hasAnimated) return;
+    if (!el || hasAnimated.current) return;
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    // Extract numeric part
     const numMatch = value.match(/[\d,.]+/);
     if (!numMatch) return;
 
@@ -38,19 +33,19 @@ export function AnimatedCounter({ value, className = "" }: AnimatedCounterProps)
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !hasAnimated) {
-            setHasAnimated(true);
+          if (entry.isIntersecting && !hasAnimated.current) {
+            hasAnimated.current = true;
             observer.unobserve(el);
 
-            const duration = 1500;
-            const steps = 40;
-            const increment = target / steps;
-            let current = 0;
+            const duration = 2000;
+            const steps = 60;
             let step = 0;
 
             const timer = setInterval(() => {
               step++;
-              current = Math.min(current + increment, target);
+              const t = step / steps;
+              const eased = 1 - Math.pow(1 - t, 3);
+              const current = target * eased;
 
               let formatted: string;
               if (hasDecimal) {
@@ -71,12 +66,12 @@ export function AnimatedCounter({ value, className = "" }: AnimatedCounterProps)
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: 0.3 }
     );
 
     observer.observe(el);
     return () => observer.disconnect();
-  }, [value, hasAnimated]);
+  }, [value]);
 
   return (
     <span ref={ref} className={className}>
