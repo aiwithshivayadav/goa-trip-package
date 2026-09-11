@@ -7,6 +7,8 @@ import {
   getHotels,
 } from "@/lib/data/db-products";
 
+export const dynamic = "force-dynamic";
+
 /**
  * Dynamic sitemap — regenerated on every build
  * Covers all static + dynamic product pages

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { getPackages } from "@/lib/data/db-products";
+
+export const dynamic = "force-dynamic";
 import { WhyChooseUs } from "@/components/marketing/WhyChooseUs";
 import { ProductListingFilters } from "@/components/marketing/ProductListingFilters";
 

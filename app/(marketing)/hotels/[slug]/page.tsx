@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { Clock, Users, MapPin, Star, Check, X, ArrowLeft, Shield, Zap, Calendar, ChevronDown, HelpCircle, Info } from "lucide-react";
 import { getProductBySlug, getSlugsByType, getProductsByType } from "@/lib/data/db-products";
 import { formatINR } from "@/lib/utils";
+
+export const dynamic = "force-dynamic";
 import { ImageGallery } from "@/components/marketing/ImageGallery";
 import { EnquiryButton } from "@/components/booking/EnquiryButton";
 import { ProductCard } from "@/components/marketing/ProductCard";

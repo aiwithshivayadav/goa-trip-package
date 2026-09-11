@@ -6,6 +6,8 @@ import { ProductCard } from "@/components/marketing/ProductCard";
 import { ScrollReveal } from "@/components/marketing/ScrollReveal";
 import { AnimatedCounter } from "@/components/marketing/AnimatedCounter";
 import { getCruises, getYachts, getPackages, getActivities } from "@/lib/data/db-products";
+
+export const dynamic = "force-dynamic";
 import { HeroSlideshow } from "@/components/marketing/HeroSlideshow";
 import {
   ArrowRight,

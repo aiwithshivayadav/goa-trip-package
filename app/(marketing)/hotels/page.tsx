@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { getHotels } from "@/lib/data/db-products";
+
+export const dynamic = "force-dynamic";
 import { ProductListingFilters } from "@/components/marketing/ProductListingFilters";
 
 export const metadata: Metadata = {
