@@ -1,0 +1,18 @@
+# Goa Trip Package — production stack for Hostinger VPS (srv1807055).
+# Joins the shared "unimail_web" network that Caddy sits on,
+# so Caddy can reach this app as  gtp-app:5176  (see deploy/gtp.Caddyfile).
+#
+#   cd /opt/gtp && docker compose up -d --build
+#
+services:
+  app:
+    build: .
+    container_name: gtp-app
+    restart: unless-stopped
+    env_file: .env.production
+    networks: [edge]
+
+networks:
+  edge:
+    external: true
+    name: unimail_web

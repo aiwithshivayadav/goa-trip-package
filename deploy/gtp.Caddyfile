@@ -1,0 +1,13 @@
+# Goa Trip Package — Caddy site block.
+# APPEND these blocks to the shared Caddyfile at /opt/unimail/Caddyfile
+# (mounted into the caddy container), then reload Caddy:
+#     docker exec caddy caddy reload --config /etc/caddy/Caddyfile
+# Caddy auto-issues a Let's Encrypt cert (DNS must already point here).
+
+goatrippackage.in {
+	reverse_proxy gtp-app:5176
+}
+
+www.goatrippackage.in {
+	redir https://goatrippackage.in{uri} permanent
+}
