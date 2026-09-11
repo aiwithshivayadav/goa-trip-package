@@ -21,9 +21,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-  const slugs = await getSlugsByType("yacht");
-  return slugs.map((slug) => ({ slug }));
+  try {
+    const slugs = await getSlugsByType("yacht");
+    return slugs.map((slug) => ({ slug }));
+  } catch {
+    return [];
+  }
 }
+
+export const dynamicParams = true;
 
 export default async function YachtDetailPage({ params }: PageProps) {
   const { slug } = await params;

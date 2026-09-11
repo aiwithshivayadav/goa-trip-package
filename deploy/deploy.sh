@@ -21,6 +21,7 @@ tar czf "$TARBALL" \
   --exclude=.git \
   --exclude=.claude \
   --exclude=.env.local \
+  --exclude="$TARBALL" \
   .
 
 echo "==> Uploading to VPS..."

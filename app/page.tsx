@@ -72,12 +72,20 @@ const whyUs = [
 ];
 
 export default async function HomePage() {
-  const [cruises, yachts, packages, activities] = await Promise.all([
-    getCruises(),
-    getYachts(),
-    getPackages(),
-    getActivities(),
-  ]);
+  let cruises: Awaited<ReturnType<typeof getCruises>> = [];
+  let yachts: Awaited<ReturnType<typeof getYachts>> = [];
+  let packages: Awaited<ReturnType<typeof getPackages>> = [];
+  let activities: Awaited<ReturnType<typeof getActivities>> = [];
+  try {
+    [cruises, yachts, packages, activities] = await Promise.all([
+      getCruises(),
+      getYachts(),
+      getPackages(),
+      getActivities(),
+    ]);
+  } catch {
+    // DB unavailable at build time — render with empty arrays
+  }
 
   return (
     <div className="flex min-h-screen flex-col">

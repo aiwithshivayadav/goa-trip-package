@@ -14,13 +14,22 @@ import {
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://goa-trip-package.vercel.app";
 
-  const [packages, cruises, yachts, activities, hotels] = await Promise.all([
-    getPackages(),
-    getCruises(),
-    getYachts(),
-    getActivities(),
-    getHotels(),
-  ]);
+  let packages: Awaited<ReturnType<typeof getPackages>> = [];
+  let cruises: Awaited<ReturnType<typeof getCruises>> = [];
+  let yachts: Awaited<ReturnType<typeof getYachts>> = [];
+  let activities: Awaited<ReturnType<typeof getActivities>> = [];
+  let hotels: Awaited<ReturnType<typeof getHotels>> = [];
+  try {
+    [packages, cruises, yachts, activities, hotels] = await Promise.all([
+      getPackages(),
+      getCruises(),
+      getYachts(),
+      getActivities(),
+      getHotels(),
+    ]);
+  } catch {
+    // DB unavailable at build time — return only static pages
+  }
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [
