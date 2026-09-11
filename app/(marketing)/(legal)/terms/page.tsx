@@ -12,19 +12,18 @@ export default function TermsPage() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative bg-cosmic-scene py-20 text-center md:py-28">
-        <div className="bg-stars absolute inset-0" />
+      <section className="relative bg-hero-gradient py-20 text-center md:py-28">
         <div className="relative z-10 mx-auto max-w-3xl px-6">
-          <p className="text-sm uppercase tracking-[0.15em] text-gold mb-3">
+          <p className="text-sm uppercase tracking-[0.15em] text-amber mb-3">
             Legal
           </p>
           <h1 className="font-display text-4xl font-bold text-white md:text-5xl">
-            Terms &amp; <span className="text-gold-gradient">Conditions</span>
+            Terms &amp; <span className="text-lagoon-100">Conditions</span>
           </h1>
-          <p className="mt-4 text-lg text-text-muted">
+          <p className="mt-4 text-lg text-gray-500">
             Please read these terms carefully before using our services.
           </p>
-          <p className="mt-3 text-xs text-text-dim">
+          <p className="mt-3 text-xs text-gray-400">
             Last updated: June 2026
           </p>
         </div>
@@ -33,14 +32,14 @@ export default function TermsPage() {
       {/* Content */}
       <section className="mx-auto max-w-4xl px-4 py-16 md:px-8 space-y-8">
         {/* Introduction */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
           <div className="flex items-center gap-3 mb-4">
-            <FileText className="h-5 w-5 text-gold" />
-            <h2 className="font-display text-xl font-bold text-white">
+            <FileText className="h-5 w-5 text-lagoon" />
+            <h2 className="font-display text-xl font-bold text-ink">
               Introduction
             </h2>
           </div>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               These Terms &amp; Conditions (&quot;Terms&quot;) govern your use
               of the website goatrippackage.com (&quot;Website&quot;) and all
@@ -57,11 +56,11 @@ export default function TermsPage() {
         </div>
 
         {/* Booking Terms */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             1. Booking Terms
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <ul className="list-disc pl-5 space-y-2">
               <li>
                 All bookings are subject to availability and confirmation by Goa
@@ -97,11 +96,11 @@ export default function TermsPage() {
         </div>
 
         {/* Payment Terms */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             2. Payment Terms
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <ul className="list-disc pl-5 space-y-2">
               <li>
                 All payments are processed securely through PayU, which supports
@@ -137,24 +136,24 @@ export default function TermsPage() {
         </div>
 
         {/* Cancellation Policy */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             3. Cancellation Policy
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               Cancellations are subject to the following terms. Please refer to
               our detailed{" "}
               <Link
                 href="/cancellation"
-                className="text-gold underline underline-offset-2 hover:text-gold-300"
+                className="text-lagoon underline underline-offset-2 hover:text-lagoon"
               >
                 Cancellation Policy
               </Link>{" "}
               and{" "}
               <Link
                 href="/refund"
-                className="text-gold underline underline-offset-2 hover:text-gold-300"
+                className="text-lagoon underline underline-offset-2 hover:text-lagoon"
               >
                 Refund Policy
               </Link>{" "}
@@ -184,11 +183,11 @@ export default function TermsPage() {
         </div>
 
         {/* Liability */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             4. Limitation of Liability
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <ul className="list-disc pl-5 space-y-2">
               <li>
                 Goa Trip Package acts as an intermediary between customers and
@@ -221,11 +220,11 @@ export default function TermsPage() {
         </div>
 
         {/* Intellectual Property */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             5. Intellectual Property
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <ul className="list-disc pl-5 space-y-2">
               <li>
                 All content on the Website, including text, images,
@@ -253,16 +252,16 @@ export default function TermsPage() {
         </div>
 
         {/* Privacy */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             6. Privacy
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               Your privacy is important to us. Please review our{" "}
               <Link
                 href="/privacy"
-                className="text-gold underline underline-offset-2 hover:text-gold-300"
+                className="text-lagoon underline underline-offset-2 hover:text-lagoon"
               >
                 Privacy Policy
               </Link>{" "}
@@ -274,11 +273,11 @@ export default function TermsPage() {
         </div>
 
         {/* Governing Law */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             7. Governing Law &amp; Jurisdiction
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <ul className="list-disc pl-5 space-y-2">
               <li>
                 These Terms shall be governed by and construed in accordance with
@@ -299,11 +298,11 @@ export default function TermsPage() {
         </div>
 
         {/* Changes */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             8. Changes to These Terms
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               We reserve the right to update these Terms at any time. Changes
               will be posted on this page with a revised &quot;Last updated&quot;
@@ -314,35 +313,35 @@ export default function TermsPage() {
         </div>
 
         {/* Contact */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             9. Contact Us
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               If you have questions about these Terms, please reach out:
             </p>
             <ul className="list-none space-y-2 pl-0">
               <li>
-                <span className="text-gold font-medium">WhatsApp:</span>{" "}
+                <span className="text-lagoon font-medium">WhatsApp:</span>{" "}
                 <a
                   href="https://wa.me/919890830249"
-                  className="text-white hover:text-gold transition-colors"
+                  className="text-ink hover:text-lagoon transition-colors"
                 >
                   +91 98908 30249
                 </a>
               </li>
               <li>
-                <span className="text-gold font-medium">Email:</span>{" "}
+                <span className="text-lagoon font-medium">Email:</span>{" "}
                 <a
                   href="mailto:info@goatrippackage.com"
-                  className="text-white hover:text-gold transition-colors"
+                  className="text-ink hover:text-lagoon transition-colors"
                 >
                   info@goatrippackage.com
                 </a>
               </li>
               <li>
-                <span className="text-gold font-medium">Address:</span> Panaji,
+                <span className="text-lagoon font-medium">Address:</span> Panaji,
                 North Goa, India 403001
               </li>
             </ul>
@@ -353,19 +352,19 @@ export default function TermsPage() {
         <div className="flex flex-wrap justify-center gap-4 pt-4">
           <Link
             href="/privacy"
-            className="text-sm text-gold underline underline-offset-2 hover:text-gold-300"
+            className="text-sm text-lagoon underline underline-offset-2 hover:text-lagoon"
           >
             Privacy Policy
           </Link>
           <Link
             href="/refund"
-            className="text-sm text-gold underline underline-offset-2 hover:text-gold-300"
+            className="text-sm text-lagoon underline underline-offset-2 hover:text-lagoon"
           >
             Refund Policy
           </Link>
           <Link
             href="/cancellation"
-            className="text-sm text-gold underline underline-offset-2 hover:text-gold-300"
+            className="text-sm text-lagoon underline underline-offset-2 hover:text-lagoon"
           >
             Cancellation Policy
           </Link>

@@ -61,14 +61,13 @@ const parties = [
 export default function PartiesPage() {
   return (
     <div className="min-h-screen">
-      <section className="relative bg-cosmic-scene py-16 text-center md:py-24">
-        <div className="bg-stars absolute inset-0" />
+      <section className="relative bg-hero-gradient py-16 text-center md:py-24">
         <div className="relative z-10 mx-auto max-w-4xl px-6">
-          <p className="text-sm uppercase tracking-[0.15em] text-gold mb-3">Premium Nightlife</p>
+          <p className="text-sm uppercase tracking-[0.15em] text-amber mb-3">Premium Nightlife</p>
           <h1 className="font-display text-3xl font-bold text-white md:text-5xl lg:text-6xl">
-            Goa <span className="text-gold-gradient">Parties</span>
+            Goa <span className="text-lagoon-100">Parties</span>
           </h1>
-          <p className="mt-4 text-lg text-text-muted max-w-lg mx-auto">
+          <p className="mt-4 text-lg text-gray-500 max-w-lg mx-auto">
             Nightlife, casino, yacht birthday, bachelorette — {parties.length} premium experiences.
           </p>
         </div>
@@ -78,9 +77,9 @@ export default function PartiesPage() {
 
       <section className="mx-auto max-w-7xl px-4 py-10 md:px-8">
         <div className="mb-6">
-          <p className="text-sm text-text-muted">
-            <span className="text-white font-bold">ALL PARTIES</span>
-            <span className="text-gold ml-1">({parties.length})</span>
+          <p className="text-sm text-gray-500">
+            <span className="text-ink font-bold">ALL PARTIES</span>
+            <span className="text-lagoon ml-1">({parties.length})</span>
           </p>
         </div>
 
@@ -89,32 +88,32 @@ export default function PartiesPage() {
             <Link
               key={party.slug}
               href={`/custom-trip?package=${party.slug}`}
-              className="group glass-card rounded-2xl overflow-hidden transition-all hover:border-gold/50 hover:shadow-gold hover:-translate-y-1"
+              className="group rounded-2xl border border-border-warm bg-white overflow-hidden transition-all hover:border-lagoon hover:shadow-lagoon hover:-translate-y-1"
             >
               <div className="flex flex-col sm:flex-row">
                 <div className="relative w-full sm:w-48 h-48 sm:h-auto shrink-0 overflow-hidden">
                   <Image src={party.image} alt={party.name} fill sizes="(max-width: 640px) 100vw, 192px" className="object-cover transition-transform duration-500 group-hover:scale-105" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent to-cosmic-950/30 sm:block hidden" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent to-black/50 sm:block hidden" />
                 </div>
                 <div className="flex-1 p-5">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-[10px] font-medium uppercase tracking-wider text-gold/70">Party</span>
+                    <span className="text-[10px] font-medium uppercase tracking-wider text-lagoon">Party</span>
                     <span className="flex items-center gap-1 rounded bg-green-500/20 px-1.5 py-0.5 text-[11px] font-bold text-green-400">
                       <Star className="h-3 w-3 fill-green-400" /> {party.rating}
                     </span>
                   </div>
-                  <h3 className="text-lg font-bold text-white group-hover:text-gold transition-colors">{party.name}</h3>
-                  <p className="mt-1.5 text-sm text-text-muted line-clamp-2">{party.desc}</p>
-                  <div className="mt-3 flex flex-wrap items-center gap-3 text-[11px] text-text-dim">
+                  <h3 className="text-lg font-bold text-ink group-hover:text-lagoon transition-colors">{party.name}</h3>
+                  <p className="mt-1.5 text-sm text-gray-500 line-clamp-2">{party.desc}</p>
+                  <div className="mt-3 flex flex-wrap items-center gap-3 text-[11px] text-gray-400">
                     <span className="flex items-center gap-1"><MapPin className="h-3 w-3" /> {party.location}</span>
                     <span className="flex items-center gap-1"><Users className="h-3 w-3" /> {party.capacity}</span>
                   </div>
-                  <div className="mt-4 flex items-center justify-between border-t border-border-gold/30 pt-3">
+                  <div className="mt-4 flex items-center justify-between border-t border-border-warm pt-3">
                     <div>
-                      <span className="text-xl font-bold text-white">{formatINR(party.price)}</span>
-                      <span className="text-[11px] text-text-dim ml-1">/ {party.priceUnit}</span>
+                      <span className="text-xl font-bold text-ink">{formatINR(party.price)}</span>
+                      <span className="text-[11px] text-gray-400 ml-1">/ {party.priceUnit}</span>
                     </div>
-                    <span className="rounded-lg border border-gold/60 bg-gold/10 px-3 py-1.5 text-[11px] font-bold text-gold group-hover:bg-gold/20 transition-colors">
+                    <span className="rounded-lg border border-border-warm bg-lagoon-50 px-3 py-1.5 text-[11px] font-bold text-lagoon group-hover:bg-lagoon-50 transition-colors">
                       Enquire Now <ArrowRight className="inline h-3 w-3 ml-1" />
                     </span>
                   </div>

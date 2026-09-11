@@ -10,17 +10,17 @@ export const metadata: Metadata = {
 
 export default function ActivitiesPage() {
   return (
-    <div className="min-h-screen">
-      <section className="relative bg-cosmic-scene py-20 text-center md:py-28">
-        <div className="bg-stars absolute inset-0" />
+    <div className="min-h-screen bg-ground">
+      <section className="relative bg-hero-gradient py-20 text-center md:py-28">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_50%,rgba(26,142,125,0.12),transparent_60%)]" />
         <div className="relative z-10 mx-auto max-w-4xl px-6">
-          <p className="text-sm uppercase tracking-[0.15em] text-gold mb-3">
+          <p className="text-sm uppercase tracking-[0.15em] text-amber mb-3">
             Thrill & Adventure
           </p>
           <h1 className="font-display text-4xl font-bold text-white md:text-5xl lg:text-6xl">
-            Adventures & <span className="text-gold-gradient">Activities</span>
+            Adventures & <span className="text-lagoon-100">Activities</span>
           </h1>
-          <p className="mt-4 text-lg text-text-muted max-w-lg mx-auto">
+          <p className="mt-4 text-lg text-white/70 max-w-lg mx-auto">
             {activities.length}+ experiences — scuba, parasail, bungee, kayak, jet ski, helicopter, and more.
           </p>
         </div>

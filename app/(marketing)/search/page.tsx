@@ -29,7 +29,7 @@ export default function SearchPage() {
 function SearchSkeleton() {
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-pulse text-text-muted">Loading search...</div>
+      <div className="animate-pulse text-gray-500">Loading search...</div>
     </div>
   );
 }
@@ -47,27 +47,26 @@ function SearchContent() {
   return (
     <div className="min-h-screen">
       {/* Search hero */}
-      <section className="relative bg-cosmic-scene py-16 md:py-20">
-        <div className="bg-stars absolute inset-0" />
+      <section className="relative bg-hero-gradient py-16 md:py-20">
         <div className="relative z-10 mx-auto max-w-3xl px-4 text-center">
           <h1 className="font-display text-3xl font-bold text-white md:text-4xl mb-8">
-            Search <span className="text-gold-gradient">Experiences</span>
+            Search <span className="text-lagoon-100">Experiences</span>
           </h1>
 
           {/* Search input */}
           <div className="relative">
-            <SearchIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-text-dim" />
+            <SearchIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search packages, cruises, yachts, activities..."
-              className="w-full h-14 rounded-xl bg-surface border border-border-gold pl-12 pr-4 text-white placeholder:text-text-dim focus:outline-none focus:border-gold focus:ring-1 focus:ring-gold transition-colors text-base"
+              className="w-full h-14 rounded-xl bg-white border border-border-warm pl-12 pr-4 text-ink placeholder:text-gray-400 focus:outline-none focus:border-lagoon focus:ring-1 focus:ring-lagoon transition-colors text-base"
               autoFocus
             />
           </div>
 
-          <p className="mt-4 text-sm text-text-dim">
+          <p className="mt-4 text-sm text-gray-400">
             {query.trim()
               ? `${results.length} result${results.length !== 1 ? "s" : ""} for "${query}"`
               : `${allProducts.length} experiences available`}
@@ -99,8 +98,8 @@ function SearchContent() {
           </div>
         ) : (
           <div className="text-center py-16">
-            <p className="text-2xl text-text-muted mb-4">No results found</p>
-            <p className="text-sm text-text-dim">Try a different search term, or browse our categories above.</p>
+            <p className="text-2xl text-gray-500 mb-4">No results found</p>
+            <p className="text-sm text-gray-400">Try a different search term, or browse our categories above.</p>
           </div>
         )}
       </section>

@@ -10,21 +10,21 @@ const offers = [
     discount: "15% OFF",
     description: "First booking discount — up to ₹2,000 off",
     validTill: "30 Jun 2026",
-    color: "from-gold-600 to-gold",
+    color: "from-lagoon to-lagoon-600",
   },
   {
     code: "MONSOON26",
     discount: "20% OFF",
     description: "Monsoon special — all packages, cruises & yachts",
     validTill: "31 Aug 2026",
-    color: "from-emerald-600 to-emerald-400",
+    color: "from-emerald-500 to-emerald-600",
   },
   {
     code: "GROUP10",
     discount: "₹1,000 OFF",
     description: "Groups of 10+ — flat discount per person",
     validTill: "31 Dec 2026",
-    color: "from-violet-600 to-violet-400",
+    color: "from-amber to-amber-600",
   },
 ];
 
@@ -40,44 +40,41 @@ export function OffersStrip() {
   }
 
   return (
-    <section className="py-10 bg-cosmic-950">
+    <section className="py-10 bg-ground">
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-2">
-            <Tag className="h-5 w-5 text-gold" />
-            <h2 className="text-lg font-bold text-white">Offers & Deals</h2>
+            <Tag className="h-5 w-5 text-amber" />
+            <h2 className="text-lg font-bold text-ink">Offers & Deals</h2>
           </div>
-          <span className="text-xs text-text-dim">Limited time</span>
+          <span className="text-xs text-gray-400">Limited time</span>
         </div>
 
         <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
           {offers.map((offer) => (
             <div
               key={offer.code}
-              className="glass-card flex-shrink-0 w-80 rounded-xl overflow-hidden transition-all hover:border-gold/50"
+              className="flex-shrink-0 w-80 rounded-xl border border-border-warm bg-white overflow-hidden transition-all hover:shadow-elevated"
             >
-              {/* Gradient header */}
               <div className={`bg-gradient-to-r ${offer.color} px-5 py-3 flex items-center justify-between`}>
                 <span className="text-lg font-black text-white">{offer.discount}</span>
                 <span className="text-[10px] font-medium text-white/80">Valid till {offer.validTill}</span>
               </div>
-              {/* Body */}
               <div className="p-4">
-                <p className="text-sm text-text-muted mb-3">{offer.description}</p>
+                <p className="text-sm text-gray-500 mb-3">{offer.description}</p>
                 <div className="flex items-center justify-between">
-                  {/* Code pill with copy */}
                   <button
                     onClick={(e) => { e.preventDefault(); copyCode(offer.code); }}
-                    className="flex items-center gap-2 rounded-lg border border-dashed border-gold/50 bg-gold/5 px-3 py-1.5 text-xs font-mono font-bold text-gold hover:bg-gold/10 transition-colors"
+                    className="flex items-center gap-2 rounded-lg border border-dashed border-lagoon/40 bg-lagoon-50 px-3 py-1.5 text-xs font-mono font-bold text-lagoon hover:bg-lagoon-100 transition-colors"
                   >
                     {offer.code}
                     {copied === offer.code ? (
-                      <Check className="h-3 w-3 text-green-400" />
+                      <Check className="h-3 w-3 text-emerald-500" />
                     ) : (
                       <Copy className="h-3 w-3" />
                     )}
                   </button>
-                  <span className="text-[11px] text-gold flex items-center gap-1">
+                  <span className="text-[11px] text-lagoon flex items-center gap-1">
                     Apply at checkout <ArrowRight className="h-3 w-3" />
                   </span>
                 </div>

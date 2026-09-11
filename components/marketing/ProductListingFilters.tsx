@@ -69,22 +69,21 @@ export function ProductListingFilters({ products, categoryLabel }: Props) {
 
   return (
     <>
-      {/* Search + Sort bar */}
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-text-dim" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder={`Search ${categoryLabel.toLowerCase()}...`}
-            className="w-full h-10 rounded-lg bg-surface border border-border-gold pl-10 pr-8 text-sm text-white placeholder:text-text-dim focus:outline-none focus:border-gold transition-colors"
+            className="w-full h-10 rounded-lg bg-white border border-border-warm pl-10 pr-8 text-sm text-ink placeholder:text-gray-400 focus:outline-none focus:border-lagoon transition-colors"
           />
           {query && (
             <button
               type="button"
               onClick={() => setQuery("")}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-text-dim hover:text-white"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-ink"
             >
               <X className="h-3.5 w-3.5" />
             </button>
@@ -97,14 +96,14 @@ export function ProductListingFilters({ products, categoryLabel }: Props) {
             onClick={() => setShowFilters((v) => !v)}
             className={`flex items-center gap-1.5 rounded-lg border px-3 py-2 text-xs font-medium transition-colors ${
               showFilters || priceFilter
-                ? "border-gold bg-gold/10 text-gold"
-                : "border-border-gold bg-surface text-text-muted hover:border-gold/50"
+                ? "border-lagoon bg-lagoon-50 text-lagoon"
+                : "border-border-warm bg-white text-gray-500 hover:border-lagoon/40"
             }`}
           >
             <SlidersHorizontal className="h-3.5 w-3.5" />
             Filters
             {priceFilter && (
-              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-gold text-[9px] font-bold text-cosmic-950">
+              <span className="flex h-4 w-4 items-center justify-center rounded-full bg-lagoon text-[9px] font-bold text-white">
                 1
               </span>
             )}
@@ -113,7 +112,7 @@ export function ProductListingFilters({ products, categoryLabel }: Props) {
           <select
             value={sort}
             onChange={(e) => setSort(e.target.value as SortOption)}
-            className="bg-surface border border-border-gold rounded-lg px-3 py-2 text-xs text-text-muted focus:border-gold"
+            className="bg-white border border-border-warm rounded-lg px-3 py-2 text-xs text-gray-500 focus:border-lagoon"
           >
             <option value="recommended">Recommended</option>
             <option value="price-low">Price: Low → High</option>
@@ -123,10 +122,9 @@ export function ProductListingFilters({ products, categoryLabel }: Props) {
         </div>
       </div>
 
-      {/* Filter chips */}
       {showFilters && (
         <div className="mb-5 flex flex-wrap items-center gap-2">
-          <span className="text-xs text-text-dim mr-1">Price:</span>
+          <span className="text-xs text-gray-400 mr-1">Price:</span>
           {PRICE_RANGES.map((range) => (
             <button
               key={range.label}
@@ -138,8 +136,8 @@ export function ProductListingFilters({ products, categoryLabel }: Props) {
               }
               className={`rounded-full border px-3 py-1 text-xs font-medium transition-colors ${
                 priceFilter?.label === range.label
-                  ? "border-gold bg-gold/15 text-gold"
-                  : "border-border-gold/50 bg-surface text-text-muted hover:border-gold/40 hover:text-white"
+                  ? "border-lagoon bg-lagoon-50 text-lagoon"
+                  : "border-border-warm bg-white text-gray-500 hover:border-lagoon/40 hover:text-ink"
               }`}
             >
               {range.label}
@@ -152,7 +150,7 @@ export function ProductListingFilters({ products, categoryLabel }: Props) {
                 setQuery("");
                 setPriceFilter(null);
               }}
-              className="ml-1 flex items-center gap-1 text-[10px] text-rose hover:text-rose/80"
+              className="ml-1 flex items-center gap-1 text-[10px] text-rose-500 hover:text-rose-400"
             >
               <X className="h-3 w-3" /> Clear all
             </button>
@@ -160,20 +158,18 @@ export function ProductListingFilters({ products, categoryLabel }: Props) {
         </div>
       )}
 
-      {/* Results count */}
       <div className="mb-5 flex items-center justify-between">
-        <p className="text-sm text-text-muted">
-          <span className="text-white font-bold">{categoryLabel.toUpperCase()}</span>
-          <span className="text-gold ml-1">({filtered.length})</span>
+        <p className="text-sm text-gray-500">
+          <span className="text-ink font-bold">{categoryLabel.toUpperCase()}</span>
+          <span className="text-lagoon ml-1">({filtered.length})</span>
         </p>
         {hasActiveFilters && filtered.length !== products.length && (
-          <p className="text-xs text-text-dim">
+          <p className="text-xs text-gray-400">
             Showing {filtered.length} of {products.length}
           </p>
         )}
       </div>
 
-      {/* Product grid */}
       {filtered.length > 0 ? (
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((p) => (
@@ -200,8 +196,8 @@ export function ProductListingFilters({ products, categoryLabel }: Props) {
         </div>
       ) : (
         <div className="text-center py-16">
-          <p className="text-lg text-text-muted mb-2">No matches found</p>
-          <p className="text-sm text-text-dim">
+          <p className="text-lg text-gray-500 mb-2">No matches found</p>
+          <p className="text-sm text-gray-400">
             Try a different search term or adjust filters.
           </p>
         </div>

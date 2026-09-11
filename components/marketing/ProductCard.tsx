@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, Users, MapPin, Star, Check, Zap } from "lucide-react";
+import { Users, MapPin, Star, Check, Zap } from "lucide-react";
 import { cn, formatINR } from "@/lib/utils";
 
 interface ProductCardProps {
@@ -10,7 +10,7 @@ interface ProductCardProps {
   shortDesc?: string;
   imageUrl?: string;
   basePrice: number;
-  originalPrice?: number; // For strikethrough was/now
+  originalPrice?: number;
   priceUnit?: string;
   duration?: string;
   capacity?: string;
@@ -19,8 +19,8 @@ interface ProductCardProps {
   isFeatured?: boolean;
   isSelfServe?: boolean;
   inclusions?: string[];
-  highlights?: string[]; // Green highlighted special experiences
-  bookingsToday?: number; // Social proof: "X booked today"
+  highlights?: string[];
+  bookingsToday?: number;
   className?: string;
 }
 
@@ -42,16 +42,10 @@ const typeLabels: Record<string, string> = {
   party: "Party",
 };
 
-/**
- * ProductCard v2 — Inspired by MakeMyTrip card density + EaseMyTrip trust cues
- * Shows: image, duration badge, title, inclusions preview, green highlights,
- * was/now pricing, EMI mention, "Book @ ₹X" low anchor, social proof
- */
 export function ProductCard({
   slug,
   type,
   name,
-  shortDesc,
   imageUrl,
   basePrice,
   originalPrice,
@@ -73,21 +67,19 @@ export function ProductCard({
     : null;
   const emiAmount = basePrice > 3000 ? Math.round(basePrice / 3) : null;
   const bookDeposit = basePrice > 2000 ? Math.min(2000, Math.round(basePrice * 0.25)) : null;
-
-  // Simulated social proof (will come from DB later)
-  const bookedCount = bookingsToday || (isFeatured ? Math.floor(Math.random() * 15) + 8 : 0);
+  const bookedCount = bookingsToday ?? 0;
 
   return (
     <Link
       href={href}
       className={cn(
-        "group relative flex flex-col overflow-hidden rounded-2xl border border-border-gold/50 bg-cosmic-900/80 transition-all duration-300",
-        "hover:border-gold/60 hover:shadow-gold hover:-translate-y-1",
+        "group relative flex flex-col overflow-hidden rounded-2xl bg-white border border-border-warm transition-all duration-300",
+        "hover:shadow-elevated hover:-translate-y-1",
         className
       )}
     >
-      {/* Image section */}
-      <div className="relative aspect-[16/9] w-full overflow-hidden bg-cosmic-800">
+      {/* Image */}
+      <div className="relative aspect-[16/9] w-full overflow-hidden bg-gray-100">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -97,63 +89,62 @@ export function ProductCard({
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="absolute inset-0 bg-gradient-to-br from-cosmic-800 via-cosmic-900 to-gold-800/20" />
+          <div className="absolute inset-0 bg-gradient-to-br from-lagoon-50 via-ground to-amber-50" />
         )}
 
-        {/* Gradient overlay for badges */}
-        <div className="absolute inset-0 bg-gradient-to-t from-cosmic-950/70 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
 
         {/* Top-left badges */}
         <div className="absolute left-3 top-3 flex flex-col gap-1.5">
           {isFeatured && (
-            <span className="rounded-md bg-gold-gradient px-2.5 py-1 text-[10px] font-bold text-cosmic-950 uppercase tracking-wider">
+            <span className="rounded-md bg-amber px-2.5 py-1 text-[10px] font-bold text-white uppercase tracking-wider">
               Best Seller
             </span>
           )}
           {discount && (
-            <span className="rounded-md bg-green-500/90 px-2.5 py-1 text-[10px] font-bold text-white">
+            <span className="rounded-md bg-emerald-500 px-2.5 py-1 text-[10px] font-bold text-white">
               {discount}% OFF
             </span>
           )}
         </div>
 
-        {/* Duration badge (top-right, MMT-style pill) */}
+        {/* Duration badge top-right */}
         {duration && (
-          <span className="absolute right-3 top-3 rounded-md border border-white/30 bg-cosmic-950/70 backdrop-blur-sm px-2.5 py-1 text-[11px] font-bold text-white">
+          <span className="absolute right-3 top-3 rounded-md bg-white/90 backdrop-blur-sm px-2.5 py-1 text-[11px] font-bold text-ink">
             {duration.split("(")[0]?.trim()}
           </span>
         )}
 
-        {/* Bottom-left: social proof */}
+        {/* Social proof */}
         {bookedCount > 0 && (
-          <div className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-md bg-cosmic-950/80 backdrop-blur-sm px-2.5 py-1">
-            <Zap className="h-3 w-3 text-gold fill-gold" />
+          <div className="absolute bottom-3 left-3 flex items-center gap-1.5 rounded-md bg-black/60 backdrop-blur-sm px-2.5 py-1">
+            <Zap className="h-3 w-3 text-amber fill-amber" />
             <span className="text-[10px] font-medium text-white">{bookedCount} booked today</span>
           </div>
         )}
       </div>
 
-      {/* Content section */}
+      {/* Content */}
       <div className="flex flex-1 flex-col p-4">
-        {/* Type label + rating */}
+        {/* Type + rating */}
         <div className="flex items-center justify-between mb-1.5">
-          <span className="text-[10px] font-medium uppercase tracking-wider text-gold/70">
+          <span className="text-[10px] font-medium uppercase tracking-wider text-lagoon">
             {typeLabels[type]}
           </span>
           {rating && (
-            <span className="flex items-center gap-1 rounded bg-green-500/20 px-1.5 py-0.5 text-[11px] font-bold text-green-400">
-              <Star className="h-3 w-3 fill-green-400" /> {rating}
+            <span className="flex items-center gap-1 rounded bg-amber-50 px-1.5 py-0.5 text-[11px] font-bold text-amber-600">
+              <Star className="h-3 w-3 fill-amber-600" /> {rating}
             </span>
           )}
         </div>
 
         {/* Title */}
-        <h3 className="text-[15px] font-bold text-white leading-snug line-clamp-2 group-hover:text-gold transition-colors">
+        <h3 className="text-[15px] font-bold text-ink leading-snug line-clamp-2 group-hover:text-lagoon transition-colors">
           {name}
         </h3>
 
-        {/* Location + meta */}
-        <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-text-dim">
+        {/* Location + capacity */}
+        <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-gray-400">
           {location && (
             <span className="flex items-center gap-1">
               <MapPin className="h-3 w-3" /> {location}
@@ -166,68 +157,65 @@ export function ProductCard({
           )}
         </div>
 
-        {/* Inclusions preview (bullet list, MMT-style) */}
+        {/* Inclusions */}
         {inclusions && inclusions.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1">
             {inclusions.slice(0, 3).map((item) => (
-              <span key={item} className="flex items-center gap-1 text-[11px] text-text-muted">
-                <span className="h-1 w-1 rounded-full bg-text-dim shrink-0" />
+              <span key={item} className="flex items-center gap-1 text-[11px] text-gray-500">
+                <span className="h-1 w-1 rounded-full bg-gray-300 shrink-0" />
                 {item.length > 25 ? item.slice(0, 25) + "..." : item}
               </span>
             ))}
             {inclusions.length > 3 && (
-              <span className="text-[11px] text-gold">+{inclusions.length - 3} more</span>
+              <span className="text-[11px] text-lagoon font-medium">+{inclusions.length - 3} more</span>
             )}
           </div>
         )}
 
-        {/* Green highlighted experiences */}
+        {/* Green highlights */}
         {highlights && highlights.length > 0 && (
           <div className="mt-2 space-y-0.5">
             {highlights.slice(0, 2).map((h) => (
-              <span key={h} className="flex items-center gap-1 text-[11px] font-medium text-green-400">
+              <span key={h} className="flex items-center gap-1 text-[11px] font-medium text-emerald-600">
                 <Check className="h-3 w-3 shrink-0" /> {h}
               </span>
             ))}
           </div>
         )}
 
-        {/* Pricing section — pushes to bottom */}
+        {/* Pricing — pushed to bottom */}
         <div className="mt-auto pt-3">
-          <div className="border-t border-border-gold/40 pt-3">
-            {/* EMI mention */}
+          <div className="border-t border-border-warm pt-3">
             {emiAmount && (
-              <div className="mb-1.5 rounded bg-surface px-2 py-1 text-[10px] text-text-dim inline-block">
-                No Cost EMI at <span className="font-bold text-white">{formatINR(emiAmount)}</span>/month
+              <div className="mb-1.5 rounded bg-lagoon-50 px-2 py-1 text-[10px] text-gray-500 inline-block">
+                No Cost EMI at <span className="font-bold text-ink">{formatINR(emiAmount)}</span>/month
               </div>
             )}
 
-            {/* Price row */}
             <div className="flex items-end justify-between">
               <div>
                 {originalPrice && (
-                  <span className="text-xs text-text-dim line-through mr-1.5">
+                  <span className="text-xs text-gray-400 line-through mr-1.5">
                     {formatINR(originalPrice)}
                   </span>
                 )}
-                <span className="text-xl font-bold text-white">
+                <span className="text-xl font-bold text-ink">
                   {formatINR(basePrice)}
                 </span>
-                <span className="text-[11px] text-text-dim ml-1">/{priceUnit}</span>
+                <span className="text-[11px] text-gray-400 ml-1">/{priceUnit}</span>
               </div>
 
-              {/* CTA */}
               {isSelfServe ? (
-                <span className="rounded-lg bg-gold-gradient px-3 py-1.5 text-[11px] font-bold text-cosmic-950 transition-transform group-hover:scale-105">
+                <span className="rounded-lg bg-lagoon px-3.5 py-1.5 text-[11px] font-bold text-white transition-all group-hover:bg-lagoon-600 group-hover:shadow-lagoon">
                   Book Now
                 </span>
               ) : bookDeposit ? (
-                <span className="rounded-lg border border-gold/60 bg-gold/10 px-3 py-1.5 text-[11px] font-bold text-gold transition-colors group-hover:bg-gold/20">
+                <span className="rounded-lg border border-lagoon/40 bg-lagoon-50 px-3 py-1.5 text-[11px] font-bold text-lagoon transition-colors group-hover:bg-lagoon group-hover:text-white">
                   Book @ {formatINR(bookDeposit)}
                 </span>
               ) : (
-                <span className="text-[11px] font-medium text-gold group-hover:text-gold-200 transition-colors">
-                  View Details →
+                <span className="text-[11px] font-medium text-lagoon group-hover:text-lagoon-600 transition-colors">
+                  View Details &rarr;
                 </span>
               )}
             </div>

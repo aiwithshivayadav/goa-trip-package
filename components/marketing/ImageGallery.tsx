@@ -10,10 +10,6 @@ interface ImageGalleryProps {
   alt: string;
 }
 
-/**
- * Image Gallery — hero image + thumbnails + lightbox
- * Inspired by Thrillophilia / goatrippackage.com product pages
- */
 export function ImageGallery({ images, alt }: ImageGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -26,11 +22,9 @@ export function ImageGallery({ images, alt }: ImageGalleryProps) {
 
   return (
     <>
-      {/* Main gallery */}
       <div className="space-y-3">
-        {/* Hero image */}
         <div
-          className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-cosmic-800 cursor-pointer group"
+          className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-gray-100 cursor-pointer group"
           onClick={() => setLightboxOpen(true)}
         >
           <Image
@@ -41,26 +35,23 @@ export function ImageGallery({ images, alt }: ImageGalleryProps) {
             className="object-cover transition-transform duration-500 group-hover:scale-105"
             priority={activeIndex === 0}
           />
-          {/* Overlay on hover */}
           <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
             <ZoomIn className="h-8 w-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
           </div>
-          {/* Photo count badge */}
-          <div className="absolute bottom-3 right-3 rounded-lg bg-cosmic-950/80 backdrop-blur-sm px-3 py-1.5 text-xs font-medium text-white">
+          <div className="absolute bottom-3 right-3 rounded-lg bg-black/60 backdrop-blur-sm px-3 py-1.5 text-xs font-medium text-white">
             {activeIndex + 1} / {images.length}
           </div>
-          {/* Nav arrows */}
           {images.length > 1 && (
             <>
               <button
                 onClick={(e) => { e.stopPropagation(); goTo(activeIndex - 1); }}
-                className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-cosmic-950/60 backdrop-blur-sm text-white hover:bg-cosmic-950/80 transition-colors"
+                className="absolute left-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white hover:bg-black/60 transition-colors"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
               <button
                 onClick={(e) => { e.stopPropagation(); goTo(activeIndex + 1); }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-cosmic-950/60 backdrop-blur-sm text-white hover:bg-cosmic-950/80 transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white hover:bg-black/60 transition-colors"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
@@ -68,7 +59,6 @@ export function ImageGallery({ images, alt }: ImageGalleryProps) {
           )}
         </div>
 
-        {/* Thumbnails */}
         {images.length > 1 && (
           <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
             {images.map((img, i) => (
@@ -78,7 +68,7 @@ export function ImageGallery({ images, alt }: ImageGalleryProps) {
                 className={cn(
                   "relative h-16 w-24 shrink-0 overflow-hidden rounded-lg transition-all",
                   i === activeIndex
-                    ? "ring-2 ring-gold ring-offset-2 ring-offset-cosmic-950"
+                    ? "ring-2 ring-lagoon ring-offset-2 ring-offset-ground"
                     : "opacity-60 hover:opacity-100"
                 )}
               >
@@ -89,7 +79,6 @@ export function ImageGallery({ images, alt }: ImageGalleryProps) {
         )}
       </div>
 
-      {/* Lightbox */}
       {lightboxOpen && (
         <div className="fixed inset-0 z-[70] flex items-center justify-center bg-black/95" onClick={() => setLightboxOpen(false)}>
           <button
@@ -126,7 +115,6 @@ export function ImageGallery({ images, alt }: ImageGalleryProps) {
             </>
           )}
 
-          {/* Bottom thumbnails in lightbox */}
           <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
             {images.map((_, i) => (
               <button
@@ -134,7 +122,7 @@ export function ImageGallery({ images, alt }: ImageGalleryProps) {
                 onClick={(e) => { e.stopPropagation(); setActiveIndex(i); }}
                 className={cn(
                   "h-2 w-2 rounded-full transition-all",
-                  i === activeIndex ? "bg-gold w-6" : "bg-white/40 hover:bg-white/70"
+                  i === activeIndex ? "bg-lagoon w-6" : "bg-white/40 hover:bg-white/70"
                 )}
               />
             ))}

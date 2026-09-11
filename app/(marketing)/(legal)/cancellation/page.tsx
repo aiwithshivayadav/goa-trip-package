@@ -12,20 +12,19 @@ export default function CancellationPage() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative bg-cosmic-scene py-20 text-center md:py-28">
-        <div className="bg-stars absolute inset-0" />
+      <section className="relative bg-hero-gradient py-20 text-center md:py-28">
         <div className="relative z-10 mx-auto max-w-3xl px-6">
-          <p className="text-sm uppercase tracking-[0.15em] text-gold mb-3">
+          <p className="text-sm uppercase tracking-[0.15em] text-amber mb-3">
             Legal
           </p>
           <h1 className="font-display text-4xl font-bold text-white md:text-5xl">
             Cancellation{" "}
-            <span className="text-gold-gradient">Policy</span>
+            <span className="text-lagoon-100">Policy</span>
           </h1>
-          <p className="mt-4 text-lg text-text-muted">
+          <p className="mt-4 text-lg text-gray-500">
             Plans change. We get it. Here&apos;s how cancellations work.
           </p>
-          <p className="mt-3 text-xs text-text-dim">
+          <p className="mt-3 text-xs text-gray-400">
             Last updated: June 2026
           </p>
         </div>
@@ -34,47 +33,47 @@ export default function CancellationPage() {
       {/* Content */}
       <section className="mx-auto max-w-4xl px-4 py-16 md:px-8 space-y-8">
         {/* How to Cancel */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
           <div className="flex items-center gap-3 mb-4">
-            <XCircle className="h-5 w-5 text-gold" />
-            <h2 className="font-display text-xl font-bold text-white">
+            <XCircle className="h-5 w-5 text-lagoon" />
+            <h2 className="font-display text-xl font-bold text-ink">
               How to Cancel a Booking
             </h2>
           </div>
-          <div className="space-y-4 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-4 text-sm text-gray-500 leading-relaxed">
             <p>
               Cancellation requests can be submitted through the following
               channels:
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
-              <div className="glass-card rounded-xl p-5">
+              <div className="rounded-xl border border-border-warm bg-white p-5">
                 <div className="flex items-center gap-2 mb-2">
-                  <MessageCircle className="h-4 w-4 text-gold" />
-                  <h3 className="text-sm font-bold text-white">
+                  <MessageCircle className="h-4 w-4 text-lagoon" />
+                  <h3 className="text-sm font-bold text-ink">
                     WhatsApp (Fastest)
                   </h3>
                 </div>
-                <p className="text-xs text-text-muted">
+                <p className="text-xs text-gray-500">
                   Send your booking ID and cancellation request to{" "}
                   <a
                     href="https://wa.me/919890830249"
-                    className="text-gold hover:text-gold-300"
+                    className="text-lagoon hover:text-lagoon"
                   >
                     +91 98908 30249
                   </a>
                   . Average processing time: 30 minutes during business hours.
                 </p>
               </div>
-              <div className="glass-card rounded-xl p-5">
+              <div className="rounded-xl border border-border-warm bg-white p-5">
                 <div className="flex items-center gap-2 mb-2">
-                  <Mail className="h-4 w-4 text-gold" />
-                  <h3 className="text-sm font-bold text-white">Email</h3>
+                  <Mail className="h-4 w-4 text-lagoon" />
+                  <h3 className="text-sm font-bold text-ink">Email</h3>
                 </div>
-                <p className="text-xs text-text-muted">
+                <p className="text-xs text-gray-500">
                   Email{" "}
                   <a
                     href="mailto:info@goatrippackage.com"
-                    className="text-gold hover:text-gold-300"
+                    className="text-lagoon hover:text-lagoon"
                   >
                     info@goatrippackage.com
                   </a>{" "}
@@ -83,8 +82,8 @@ export default function CancellationPage() {
                 </p>
               </div>
             </div>
-            <div className="mt-2 rounded-xl border border-border-gold/30 bg-gold/5 p-4">
-              <p className="text-xs text-gold">
+            <div className="mt-2 rounded-xl border border-border-warm bg-lagoon-50 p-4">
+              <p className="text-xs text-lagoon">
                 <span className="font-bold">Important:</span> Cancellation
                 time is calculated from the moment we receive and acknowledge
                 your request, not from when you send it. We recommend using
@@ -95,11 +94,11 @@ export default function CancellationPage() {
         </div>
 
         {/* Cancellation Windows */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             Cancellation Windows &amp; Refunds
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               The refund you receive depends on when you cancel relative to
               your scheduled experience. All times are in IST.
@@ -112,23 +111,23 @@ export default function CancellationPage() {
                   </span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-white">
+                  <p className="text-sm font-medium text-ink">
                     48+ hours before experience
                   </p>
-                  <p className="text-xs text-text-muted mt-0.5">
+                  <p className="text-xs text-gray-500 mt-0.5">
                     Full refund processed within 24 hours
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-4 rounded-xl border border-gold/20 bg-gold/5 p-4">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gold/10">
-                  <span className="text-sm font-bold text-gold">75%</span>
+              <div className="flex items-center gap-4 rounded-xl border border-border-warm bg-lagoon-50 p-4">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-lagoon-50">
+                  <span className="text-sm font-bold text-lagoon">75%</span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-white">
+                  <p className="text-sm font-medium text-ink">
                     24 to 48 hours before experience
                   </p>
-                  <p className="text-xs text-text-muted mt-0.5">
+                  <p className="text-xs text-gray-500 mt-0.5">
                     25% retained as processing fee
                   </p>
                 </div>
@@ -138,10 +137,10 @@ export default function CancellationPage() {
                   <span className="text-sm font-bold text-amber-400">50%</span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-white">
+                  <p className="text-sm font-medium text-ink">
                     12 to 24 hours before experience
                   </p>
-                  <p className="text-xs text-text-muted mt-0.5">
+                  <p className="text-xs text-gray-500 mt-0.5">
                     50% retained as late cancellation fee
                   </p>
                 </div>
@@ -151,10 +150,10 @@ export default function CancellationPage() {
                   <span className="text-sm font-bold text-rose">0%</span>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-white">
+                  <p className="text-sm font-medium text-ink">
                     Less than 12 hours or no-show
                   </p>
-                  <p className="text-xs text-text-muted mt-0.5">
+                  <p className="text-xs text-gray-500 mt-0.5">
                     No refund applicable
                   </p>
                 </div>
@@ -164,7 +163,7 @@ export default function CancellationPage() {
               For detailed refund processing timelines, see our{" "}
               <Link
                 href="/refund"
-                className="text-gold underline underline-offset-2 hover:text-gold-300"
+                className="text-lagoon underline underline-offset-2 hover:text-lagoon"
               >
                 Refund Policy
               </Link>
@@ -174,37 +173,37 @@ export default function CancellationPage() {
         </div>
 
         {/* Partial Payments */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             Partial Payment Bookings
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               If you booked with a 25% advance payment and wish to cancel:
             </p>
             <ul className="list-disc pl-5 space-y-2">
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   48+ hours before:
                 </span>{" "}
                 Your full advance (25%) is refunded. No further charges.
               </li>
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   24&ndash;48 hours before:
                 </span>{" "}
                 75% of the advance amount is refunded. No obligation to pay the
                 remaining balance.
               </li>
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   12&ndash;24 hours before:
                 </span>{" "}
                 50% of the advance amount is refunded. No obligation to pay the
                 remaining balance.
               </li>
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Less than 12 hours:
                 </span>{" "}
                 The advance payment is forfeited. No additional charges.
@@ -218,23 +217,23 @@ export default function CancellationPage() {
         </div>
 
         {/* Group Cancellations */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             Group Cancellation Rules
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               For group bookings (10 or more guests), the following additional
               rules apply:
             </p>
             <ul className="list-disc pl-5 space-y-2">
               <li>
-                <span className="text-white font-medium">Full group cancellation:</span>{" "}
+                <span className="text-ink font-medium">Full group cancellation:</span>{" "}
                 The standard cancellation windows apply. The group lead or
                 booking contact must initiate the cancellation.
               </li>
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Partial group reduction:
                 </span>{" "}
                 If reducing group size by fewer than 30% of total guests, the
@@ -242,7 +241,7 @@ export default function CancellationPage() {
                 only above the 30% threshold).
               </li>
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Reducing group size by 30% or more:
                 </span>{" "}
                 This is treated as a cancellation and rebooking. The original
@@ -250,7 +249,7 @@ export default function CancellationPage() {
                 created at the revised group rate.
               </li>
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Corporate/event bookings:
                 </span>{" "}
                 May have custom cancellation terms as specified in the quotation
@@ -261,11 +260,11 @@ export default function CancellationPage() {
         </div>
 
         {/* Force Majeure */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             Force Majeure
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               Neither Goa Trip Package nor the customer shall be held liable
               for failure to perform obligations under a booking when such
@@ -289,8 +288,8 @@ export default function CancellationPage() {
             </ul>
             <p className="mt-3">
               In force majeure situations, we offer a{" "}
-              <span className="text-gold font-medium">full refund</span> or a{" "}
-              <span className="text-gold font-medium">
+              <span className="text-lagoon font-medium">full refund</span> or a{" "}
+              <span className="text-lagoon font-medium">
                 booking credit valid for 12 months
               </span>
               , at your choice.
@@ -299,11 +298,11 @@ export default function CancellationPage() {
         </div>
 
         {/* Cancellations by Us */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             Cancellations by Goa Trip Package
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               In rare cases, we may need to cancel a booking due to:
             </p>
@@ -315,7 +314,7 @@ export default function CancellationPage() {
             </ul>
             <p className="mt-3">
               In all such cases, you will receive a{" "}
-              <span className="text-gold font-medium">full refund</span>{" "}
+              <span className="text-lagoon font-medium">full refund</span>{" "}
               within 24 hours, or we will offer an equivalent alternative
               experience at no extra cost. We will notify you as early as
               possible via WhatsApp and email.
@@ -324,11 +323,11 @@ export default function CancellationPage() {
         </div>
 
         {/* Contact */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             Need Help with a Cancellation?
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               Our team is available to assist with cancellations and answer any
               questions:
@@ -343,7 +342,7 @@ export default function CancellationPage() {
               </a>
               <a
                 href="mailto:info@goatrippackage.com?subject=Booking%20Cancellation"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-border-gold px-6 text-sm text-gold transition-colors hover:bg-surface-hover"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-full border border-border-warm px-6 text-sm text-lagoon transition-colors hover:bg-lagoon-50"
               >
                 <Mail className="h-4 w-4" />
                 Email Us
@@ -356,19 +355,19 @@ export default function CancellationPage() {
         <div className="flex flex-wrap justify-center gap-4 pt-4">
           <Link
             href="/refund"
-            className="text-sm text-gold underline underline-offset-2 hover:text-gold-300"
+            className="text-sm text-lagoon underline underline-offset-2 hover:text-lagoon"
           >
             Refund Policy
           </Link>
           <Link
             href="/terms"
-            className="text-sm text-gold underline underline-offset-2 hover:text-gold-300"
+            className="text-sm text-lagoon underline underline-offset-2 hover:text-lagoon"
           >
             Terms &amp; Conditions
           </Link>
           <Link
             href="/privacy"
-            className="text-sm text-gold underline underline-offset-2 hover:text-gold-300"
+            className="text-sm text-lagoon underline underline-offset-2 hover:text-lagoon"
           >
             Privacy Policy
           </Link>

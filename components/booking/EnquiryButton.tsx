@@ -10,17 +10,11 @@ interface EnquiryButtonProps {
   productSlug?: string;
   productType?: string;
   productPrice?: number;
-  /** Button style variant */
   variant?: "default" | "outline" | "compact" | "gold";
-  /** Custom label */
   label?: string;
   className?: string;
 }
 
-/**
- * EnquiryButton — click opens the EnquiryForm modal
- * Use this anywhere you previously had a raw WhatsApp link
- */
 export function EnquiryButton({
   productName,
   productSlug,
@@ -41,13 +35,13 @@ export function EnquiryButton({
         className={cn(
           "transition-all",
           variant === "default" &&
-            "flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border-gold text-sm font-medium text-gold hover:bg-surface",
+            "flex h-12 w-full items-center justify-center gap-2 rounded-xl border border-border-warm text-sm font-medium text-lagoon hover:bg-lagoon-50",
           variant === "outline" &&
-            "flex h-11 items-center justify-center gap-2 rounded-xl border border-border-gold px-5 text-sm font-medium text-gold hover:bg-surface",
+            "flex h-11 items-center justify-center gap-2 rounded-xl border border-border-warm px-5 text-sm font-medium text-lagoon hover:bg-lagoon-50",
           variant === "compact" &&
-            "flex h-11 w-11 items-center justify-center rounded-xl border border-border-gold text-gold hover:bg-surface",
+            "flex h-11 w-11 items-center justify-center rounded-xl border border-border-warm text-lagoon hover:bg-lagoon-50",
           variant === "gold" &&
-            "flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gold-gradient text-sm font-bold text-cosmic-950 hover:scale-[1.02] active:scale-[0.98]",
+            "flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-lagoon text-sm font-bold text-white hover:bg-lagoon-600 hover:scale-[1.02] active:scale-[0.98]",
           className
         )}
         aria-label={buttonText}

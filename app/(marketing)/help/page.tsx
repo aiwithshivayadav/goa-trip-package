@@ -40,14 +40,13 @@ export default function HelpPage() {
 
   return (
     <div className="min-h-screen">
-      <section className="relative bg-cosmic-scene py-20 text-center md:py-28">
-        <div className="bg-stars absolute inset-0" />
+      <section className="relative bg-hero-gradient py-20 text-center md:py-28">
         <div className="relative z-10 mx-auto max-w-3xl px-6">
-          <p className="text-sm uppercase tracking-[0.15em] text-gold mb-3">Support</p>
-          <h1 className="font-display text-4xl font-bold text-white md:text-5xl">Help & <span className="text-gold-gradient">FAQ</span></h1>
+          <p className="text-sm uppercase tracking-[0.15em] text-amber mb-3">Support</p>
+          <h1 className="font-display text-4xl font-bold text-white md:text-5xl">Help & <span className="text-lagoon-100">FAQ</span></h1>
           <div className="relative mt-8 max-w-md mx-auto">
-            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-text-dim" />
-            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search for answers..." className="w-full h-12 rounded-xl bg-surface border border-border-gold pl-12 pr-4 text-white placeholder:text-text-dim focus:border-gold focus:ring-1 focus:ring-gold transition-colors" />
+            <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+            <input type="text" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search for answers..." className="w-full h-12 rounded-xl bg-white border border-border-warm pl-12 pr-4 text-ink placeholder:text-gray-400 focus:border-lagoon focus:ring-1 focus:ring-lagoon transition-colors" />
           </div>
         </div>
       </section>
@@ -55,20 +54,20 @@ export default function HelpPage() {
       <section className="mx-auto max-w-3xl px-4 py-12 md:px-8">
         {filteredFaqs.map((cat) => (
           <div key={cat.category} className="mb-8">
-            <h2 className="text-sm font-bold text-gold uppercase tracking-wider mb-4">{cat.category}</h2>
+            <h2 className="text-sm font-bold text-lagoon uppercase tracking-wider mb-4">{cat.category}</h2>
             <div className="space-y-2">
               {cat.items.map((item) => {
                 const key = `${cat.category}-${item.q}`;
                 const isOpen = openItem === key;
                 return (
-                  <div key={key} className="glass-card rounded-xl overflow-hidden">
+                  <div key={key} className="rounded-xl border border-border-warm bg-white overflow-hidden">
                     <button onClick={() => setOpenItem(isOpen ? null : key)} className="flex w-full items-center justify-between px-5 py-4 text-left">
-                      <span className="text-sm font-medium text-white pr-4">{item.q}</span>
-                      <ChevronDown className={cn("h-4 w-4 text-gold shrink-0 transition-transform", isOpen && "rotate-180")} />
+                      <span className="text-sm font-medium text-ink pr-4">{item.q}</span>
+                      <ChevronDown className={cn("h-4 w-4 text-lagoon shrink-0 transition-transform", isOpen && "rotate-180")} />
                     </button>
                     {isOpen && (
-                      <div className="px-5 pb-4 border-t border-border-gold/20 pt-3">
-                        <p className="text-sm text-text-muted leading-relaxed">{item.a}</p>
+                      <div className="px-5 pb-4 border-t border-border-warm pt-3">
+                        <p className="text-sm text-gray-500 leading-relaxed">{item.a}</p>
                       </div>
                     )}
                   </div>
@@ -80,31 +79,31 @@ export default function HelpPage() {
 
         {filteredFaqs.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-text-muted mb-4">No results found for &ldquo;{search}&rdquo;</p>
-            <a href="https://wa.me/919890830249" className="text-sm text-gold hover:text-gold-200">Ask us on WhatsApp →</a>
+            <p className="text-gray-500 mb-4">No results found for &ldquo;{search}&rdquo;</p>
+            <a href="https://wa.me/919890830249" className="text-sm text-lagoon hover:text-lagoon">Ask us on WhatsApp →</a>
           </div>
         )}
       </section>
 
       {/* Still need help? */}
-      <section className="border-t border-border-gold/20 bg-cosmic-900/30 py-12">
+      <section className="border-t border-border-warm bg-ground py-12">
         <div className="mx-auto max-w-3xl px-6 text-center">
-          <h2 className="text-lg font-bold text-white mb-6">Still need help?</h2>
+          <h2 className="text-lg font-bold text-ink mb-6">Still need help?</h2>
           <div className="grid gap-4 sm:grid-cols-3">
-            <a href="https://wa.me/919890830249" className="glass-card rounded-xl p-5 text-center hover:border-gold/50 transition-all">
-              <MessageCircle className="h-6 w-6 text-gold mx-auto mb-2" />
-              <p className="text-sm font-medium text-white">WhatsApp</p>
-              <p className="text-xs text-text-dim mt-0.5">Avg. 15 min response</p>
+            <a href="https://wa.me/919890830249" className="rounded-xl border border-border-warm bg-white p-5 text-center hover:border-lagoon transition-all">
+              <MessageCircle className="h-6 w-6 text-lagoon mx-auto mb-2" />
+              <p className="text-sm font-medium text-ink">WhatsApp</p>
+              <p className="text-xs text-gray-400 mt-0.5">Avg. 15 min response</p>
             </a>
-            <a href="tel:+919890830249" className="glass-card rounded-xl p-5 text-center hover:border-gold/50 transition-all">
-              <Phone className="h-6 w-6 text-gold mx-auto mb-2" />
-              <p className="text-sm font-medium text-white">Call Us</p>
-              <p className="text-xs text-text-dim mt-0.5">8 AM — 11 PM IST</p>
+            <a href="tel:+919890830249" className="rounded-xl border border-border-warm bg-white p-5 text-center hover:border-lagoon transition-all">
+              <Phone className="h-6 w-6 text-lagoon mx-auto mb-2" />
+              <p className="text-sm font-medium text-ink">Call Us</p>
+              <p className="text-xs text-gray-400 mt-0.5">8 AM — 11 PM IST</p>
             </a>
-            <a href="mailto:info@goatrippackage.com" className="glass-card rounded-xl p-5 text-center hover:border-gold/50 transition-all">
-              <Mail className="h-6 w-6 text-gold mx-auto mb-2" />
-              <p className="text-sm font-medium text-white">Email</p>
-              <p className="text-xs text-text-dim mt-0.5">Within 4 hours</p>
+            <a href="mailto:info@goatrippackage.com" className="rounded-xl border border-border-warm bg-white p-5 text-center hover:border-lagoon transition-all">
+              <Mail className="h-6 w-6 text-lagoon mx-auto mb-2" />
+              <p className="text-sm font-medium text-ink">Email</p>
+              <p className="text-xs text-gray-400 mt-0.5">Within 4 hours</p>
             </a>
           </div>
         </div>

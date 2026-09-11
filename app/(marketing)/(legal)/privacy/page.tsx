@@ -12,19 +12,18 @@ export default function PrivacyPage() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative bg-cosmic-scene py-20 text-center md:py-28">
-        <div className="bg-stars absolute inset-0" />
+      <section className="relative bg-hero-gradient py-20 text-center md:py-28">
         <div className="relative z-10 mx-auto max-w-3xl px-6">
-          <p className="text-sm uppercase tracking-[0.15em] text-gold mb-3">
+          <p className="text-sm uppercase tracking-[0.15em] text-amber mb-3">
             Legal
           </p>
           <h1 className="font-display text-4xl font-bold text-white md:text-5xl">
-            Privacy <span className="text-gold-gradient">Policy</span>
+            Privacy <span className="text-lagoon-100">Policy</span>
           </h1>
-          <p className="mt-4 text-lg text-text-muted">
+          <p className="mt-4 text-lg text-gray-500">
             Your privacy matters to us. Here&apos;s how we handle your data.
           </p>
-          <p className="mt-3 text-xs text-text-dim">
+          <p className="mt-3 text-xs text-gray-400">
             Last updated: June 2026
           </p>
         </div>
@@ -33,14 +32,14 @@ export default function PrivacyPage() {
       {/* Content */}
       <section className="mx-auto max-w-4xl px-4 py-16 md:px-8 space-y-8">
         {/* Introduction */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
           <div className="flex items-center gap-3 mb-4">
-            <Shield className="h-5 w-5 text-gold" />
-            <h2 className="font-display text-xl font-bold text-white">
+            <Shield className="h-5 w-5 text-lagoon" />
+            <h2 className="font-display text-xl font-bold text-ink">
               Introduction
             </h2>
           </div>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               Goa Trip Package, operated by Shivendra Yadav (&quot;we&quot;,
               &quot;us&quot;, &quot;our&quot;), is committed to protecting your
@@ -56,13 +55,13 @@ export default function PrivacyPage() {
         </div>
 
         {/* Information We Collect */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             1. Information We Collect
           </h2>
-          <div className="space-y-4 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-4 text-sm text-gray-500 leading-relaxed">
             <div>
-              <h3 className="text-sm font-bold text-white mb-2">
+              <h3 className="text-sm font-bold text-ink mb-2">
                 Personal Information You Provide
               </h3>
               <ul className="list-disc pl-5 space-y-1.5">
@@ -85,7 +84,7 @@ export default function PrivacyPage() {
               </ul>
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white mb-2">
+              <h3 className="text-sm font-bold text-ink mb-2">
                 Information Collected Automatically
               </h3>
               <ul className="list-disc pl-5 space-y-1.5">
@@ -106,11 +105,11 @@ export default function PrivacyPage() {
         </div>
 
         {/* How We Use It */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             2. How We Use Your Information
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>We use the information we collect to:</p>
             <ul className="list-disc pl-5 space-y-1.5">
               <li>
@@ -144,52 +143,52 @@ export default function PrivacyPage() {
         </div>
 
         {/* Data Sharing */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             3. Data Sharing &amp; Third Parties
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               We do not sell your personal data. We share information only with
               the following trusted partners, strictly for service delivery:
             </p>
             <ul className="list-disc pl-5 space-y-2">
               <li>
-                <span className="text-white font-medium">PayU</span> &mdash;
+                <span className="text-ink font-medium">PayU</span> &mdash;
                 Payment processing. PayU receives your payment details to
                 process transactions securely under PCI DSS compliance. See{" "}
                 <a
                   href="https://payu.in/privacy-policy"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gold underline underline-offset-2 hover:text-gold-300"
+                  className="text-lagoon underline underline-offset-2 hover:text-lagoon"
                 >
                   PayU&apos;s Privacy Policy
                 </a>
                 .
               </li>
               <li>
-                <span className="text-white font-medium">n8n</span> &mdash;
+                <span className="text-ink font-medium">n8n</span> &mdash;
                 Workflow automation. Used internally to automate booking
                 confirmations, follow-ups, and notifications. Your data is
                 processed on our self-hosted instance and not shared further.
               </li>
               <li>
-                <span className="text-white font-medium">Interakt</span>{" "}
+                <span className="text-ink font-medium">Interakt</span>{" "}
                 &mdash; WhatsApp Business API. Used to send booking
                 confirmations, reminders, and support messages via WhatsApp. See{" "}
                 <a
                   href="https://www.interakt.shop/privacy-policy"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gold underline underline-offset-2 hover:text-gold-300"
+                  className="text-lagoon underline underline-offset-2 hover:text-lagoon"
                 >
                   Interakt&apos;s Privacy Policy
                 </a>
                 .
               </li>
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Service Providers
                 </span>{" "}
                 &mdash; Cruise operators, yacht owners, hotels, and activity
@@ -206,29 +205,29 @@ export default function PrivacyPage() {
         </div>
 
         {/* Cookies */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             4. Cookies &amp; Tracking
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>We use cookies and similar technologies to:</p>
             <ul className="list-disc pl-5 space-y-1.5">
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Essential cookies:
                 </span>{" "}
                 Maintain your session, remember your cart, and ensure the website
                 functions properly.
               </li>
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Analytics cookies:
                 </span>{" "}
                 Understand how visitors use our website so we can improve
                 content, navigation, and performance.
               </li>
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Marketing cookies:
                 </span>{" "}
                 Deliver relevant advertisements and track campaign effectiveness
@@ -245,11 +244,11 @@ export default function PrivacyPage() {
         </div>
 
         {/* Data Retention */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             5. Data Retention
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <ul className="list-disc pl-5 space-y-1.5">
               <li>
                 Booking records and transaction data are retained for 5 years
@@ -276,36 +275,36 @@ export default function PrivacyPage() {
         </div>
 
         {/* Your Rights */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             6. Your Rights
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               You have the following rights regarding your personal data:
             </p>
             <ul className="list-disc pl-5 space-y-1.5">
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Right to Access:
                 </span>{" "}
                 Request a copy of the personal data we hold about you.
               </li>
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Right to Correction:
                 </span>{" "}
                 Request correction of inaccurate or incomplete data.
               </li>
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Right to Deletion:
                 </span>{" "}
                 Request deletion of your personal data, subject to legal
                 retention requirements.
               </li>
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Right to Opt Out:
                 </span>{" "}
                 Unsubscribe from marketing communications at any time by
@@ -313,13 +312,13 @@ export default function PrivacyPage() {
                 emails.
               </li>
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Right to Portability:
                 </span>{" "}
                 Request your data in a machine-readable format.
               </li>
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Right to Object:
                 </span>{" "}
                 Object to the processing of your data for specific purposes.
@@ -333,11 +332,11 @@ export default function PrivacyPage() {
         </div>
 
         {/* Data Security */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             7. Data Security
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               We implement appropriate technical and organisational measures to
               protect your personal data, including:
@@ -357,43 +356,43 @@ export default function PrivacyPage() {
         </div>
 
         {/* Contact for Privacy */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             8. Contact for Privacy Queries
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               For any privacy-related questions, data access requests, or
               concerns about how your data is being handled, please contact:
             </p>
-            <div className="mt-4 glass-card rounded-xl p-5">
-              <p className="text-white font-medium text-sm">
+            <div className="mt-4 rounded-xl border border-border-warm bg-white p-5">
+              <p className="text-ink font-medium text-sm">
                 Shivendra Yadav
               </p>
-              <p className="text-text-dim text-xs mt-1">
+              <p className="text-gray-400 text-xs mt-1">
                 Data Controller, Goa Trip Package
               </p>
               <ul className="list-none space-y-1.5 pl-0 mt-3">
                 <li>
-                  <span className="text-gold font-medium">Email:</span>{" "}
+                  <span className="text-lagoon font-medium">Email:</span>{" "}
                   <a
                     href="mailto:privacy@goatrippackage.com"
-                    className="text-white hover:text-gold transition-colors"
+                    className="text-ink hover:text-lagoon transition-colors"
                   >
                     privacy@goatrippackage.com
                   </a>
                 </li>
                 <li>
-                  <span className="text-gold font-medium">WhatsApp:</span>{" "}
+                  <span className="text-lagoon font-medium">WhatsApp:</span>{" "}
                   <a
                     href="https://wa.me/919890830249"
-                    className="text-white hover:text-gold transition-colors"
+                    className="text-ink hover:text-lagoon transition-colors"
                   >
                     +91 98908 30249
                   </a>
                 </li>
                 <li>
-                  <span className="text-gold font-medium">Address:</span>{" "}
+                  <span className="text-lagoon font-medium">Address:</span>{" "}
                   Panaji, North Goa, India 403001
                 </li>
               </ul>
@@ -405,19 +404,19 @@ export default function PrivacyPage() {
         <div className="flex flex-wrap justify-center gap-4 pt-4">
           <Link
             href="/terms"
-            className="text-sm text-gold underline underline-offset-2 hover:text-gold-300"
+            className="text-sm text-lagoon underline underline-offset-2 hover:text-lagoon"
           >
             Terms &amp; Conditions
           </Link>
           <Link
             href="/refund"
-            className="text-sm text-gold underline underline-offset-2 hover:text-gold-300"
+            className="text-sm text-lagoon underline underline-offset-2 hover:text-lagoon"
           >
             Refund Policy
           </Link>
           <Link
             href="/cancellation"
-            className="text-sm text-gold underline underline-offset-2 hover:text-gold-300"
+            className="text-sm text-lagoon underline underline-offset-2 hover:text-lagoon"
           >
             Cancellation Policy
           </Link>

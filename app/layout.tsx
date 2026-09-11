@@ -1,36 +1,33 @@
 import type { Metadata } from "next";
-import { Inter, Fraunces, Geist } from "next/font/google";
+import { Outfit, Cormorant_Garamond } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { MetaPixel } from "@/components/tracking/MetaPixel";
 import { GoogleAds } from "@/components/tracking/GoogleAds";
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
-
-
-// ── Fonts (next/font/google auto-downloads + self-hosts at build time) ──
-const inter = Inter({
+const outfit = Outfit({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-outfit",
   display: "swap",
 });
 
-const fraunces = Fraunces({
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  variable: "--font-fraunces",
+  weight: ["400", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
   display: "swap",
 });
 
-// ── Metadata ──
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://goatrippackage.com"),
   title: {
-    default: "Goa Trip Package — Your Royal Goa Experience",
+    default: "Goa Trip Package — Premium Goa Experiences",
     template: "%s | Goa Trip Package",
   },
   description:
-    "Book premium Goa packages, cruises, yachts, activities & hotels. 1,200+ happy guests. Best prices guaranteed. 24/7 concierge support.",
+    "Book premium Goa packages, cruises, yachts, activities & hotels. 10,000+ happy travellers. Best prices guaranteed. 24/7 concierge support.",
   keywords: [
     "Goa trip package",
     "Goa tour packages",
@@ -47,13 +44,13 @@ export const metadata: Metadata = {
     type: "website",
     locale: "en_IN",
     siteName: "Goa Trip Package",
-    title: "Goa Trip Package — Your Royal Goa Experience",
+    title: "Goa Trip Package — Premium Goa Experiences",
     description:
-      "Book premium Goa packages, cruises, yachts, activities & hotels. 1,200+ happy guests.",
+      "Book premium Goa packages, cruises, yachts, activities & hotels. 10,000+ happy travellers.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Goa Trip Package — Your Royal Goa Experience",
+    title: "Goa Trip Package — Premium Goa Experiences",
     description:
       "Book premium Goa packages, cruises, yachts, activities & hotels.",
   },
@@ -76,33 +73,30 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", inter.variable, fraunces.variable, "font-sans", geist.variable)}
+      className={cn("h-full", outfit.variable, cormorant.variable, "font-sans")}
       suppressHydrationWarning
     >
       <head>
-        <meta name="theme-color" content="#05000F" />
+        <meta name="theme-color" content="#FBFAF8" />
       </head>
-      <body className="min-h-full bg-cosmic-950 text-white font-sans antialiased">
+      <body className="min-h-full bg-ground text-ink font-sans antialiased">
         <MetaPixel />
         <GoogleAds />
         <a href="#main-content" className="skip-to-content">
           Skip to content
         </a>
 
-        {/* Main content */}
         <div id="main-content" className="flex min-h-screen flex-col">
           {children}
         </div>
 
-        {/* Toast notifications */}
         <Toaster
           position="top-right"
           toastOptions={{
             style: {
-              background: "rgba(10, 0, 32, 0.95)",
-              border: "1px solid rgba(201, 168, 76, 0.25)",
-              color: "#ffffff",
-              backdropFilter: "blur(16px)",
+              background: "#ffffff",
+              border: "1px solid #E8E6E1",
+              color: "#1F2937",
             },
           }}
           richColors

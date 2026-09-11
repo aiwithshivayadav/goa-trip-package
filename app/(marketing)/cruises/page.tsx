@@ -11,15 +11,15 @@ export const metadata: Metadata = {
 
 export default function CruisesPage() {
   return (
-    <div className="min-h-screen">
-      <section className="relative bg-cosmic-scene py-16 text-center md:py-24">
-        <div className="bg-stars absolute inset-0" />
+    <div className="min-h-screen bg-ground">
+      <section className="relative bg-hero-gradient py-16 text-center md:py-24">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_20%,rgba(26,142,125,0.15),transparent_60%)]" />
         <div className="relative z-10 mx-auto max-w-4xl px-6">
-          <p className="text-sm uppercase tracking-[0.15em] text-gold mb-3">On the Mandovi</p>
+          <p className="text-sm uppercase tracking-[0.15em] text-amber mb-3">On the Mandovi</p>
           <h1 className="font-display text-3xl font-bold text-white md:text-5xl lg:text-6xl">
-            Goa <span className="text-gold-gradient">Cruises</span>
+            Goa <span className="text-lagoon-100">Cruises</span>
           </h1>
-          <p className="mt-4 text-lg text-text-muted max-w-lg mx-auto">
+          <p className="mt-4 text-lg text-white/70 max-w-lg mx-auto">
             Sunset dinners, night parties, dolphin sightseeing, private charters — {cruises.length} experiences on the river.
           </p>
         </div>

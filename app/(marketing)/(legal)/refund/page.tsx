@@ -35,19 +35,18 @@ export default function RefundPage() {
   return (
     <div className="min-h-screen">
       {/* Hero */}
-      <section className="relative bg-cosmic-scene py-20 text-center md:py-28">
-        <div className="bg-stars absolute inset-0" />
+      <section className="relative bg-hero-gradient py-20 text-center md:py-28">
         <div className="relative z-10 mx-auto max-w-3xl px-6">
-          <p className="text-sm uppercase tracking-[0.15em] text-gold mb-3">
+          <p className="text-sm uppercase tracking-[0.15em] text-amber mb-3">
             Legal
           </p>
           <h1 className="font-display text-4xl font-bold text-white md:text-5xl">
-            Refund <span className="text-gold-gradient">Policy</span>
+            Refund <span className="text-lagoon-100">Policy</span>
           </h1>
-          <p className="mt-4 text-lg text-text-muted">
+          <p className="mt-4 text-lg text-gray-500">
             Transparent refund terms. No hidden clauses.
           </p>
-          <p className="mt-3 text-xs text-text-dim">
+          <p className="mt-3 text-xs text-gray-400">
             Last updated: June 2026
           </p>
         </div>
@@ -56,14 +55,14 @@ export default function RefundPage() {
       {/* Content */}
       <section className="mx-auto max-w-4xl px-4 py-16 md:px-8 space-y-8">
         {/* Overview */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
           <div className="flex items-center gap-3 mb-4">
-            <IndianRupee className="h-5 w-5 text-gold" />
-            <h2 className="font-display text-xl font-bold text-white">
+            <IndianRupee className="h-5 w-5 text-lagoon" />
+            <h2 className="font-display text-xl font-bold text-ink">
               Refund Overview
             </h2>
           </div>
-          <p className="text-sm text-text-muted leading-relaxed">
+          <p className="text-sm text-gray-500 leading-relaxed">
             At Goa Trip Package, operated by Shivendra Yadav, we believe in
             fair and transparent refund practices. Your refund amount depends on
             when you cancel relative to the scheduled experience. All refunds
@@ -72,21 +71,21 @@ export default function RefundPage() {
         </div>
 
         {/* Refund Table */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-6">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-6">
             Refund Schedule
           </h2>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-border-gold/30">
-                  <th className="py-3 pr-4 text-left font-bold text-gold">
+                <tr className="border-b border-border-warm">
+                  <th className="py-3 pr-4 text-left font-bold text-lagoon">
                     Cancellation Window
                   </th>
-                  <th className="py-3 px-4 text-center font-bold text-gold">
+                  <th className="py-3 px-4 text-center font-bold text-lagoon">
                     Refund
                   </th>
-                  <th className="py-3 pl-4 text-left font-bold text-gold">
+                  <th className="py-3 pl-4 text-left font-bold text-lagoon">
                     Details
                   </th>
                 </tr>
@@ -95,9 +94,9 @@ export default function RefundPage() {
                 {refundTiers.map((tier, i) => (
                   <tr
                     key={i}
-                    className="border-b border-border-gold/10 last:border-0"
+                    className="border-b border-border-warm last:border-0"
                   >
-                    <td className="py-4 pr-4 text-white font-medium">
+                    <td className="py-4 pr-4 text-ink font-medium">
                       {tier.window}
                     </td>
                     <td className="py-4 px-4 text-center">
@@ -106,7 +105,7 @@ export default function RefundPage() {
                           tier.refund === "100%"
                             ? "bg-emerald-500/10 text-emerald-400"
                             : tier.refund === "75%"
-                              ? "bg-gold/10 text-gold"
+                              ? "bg-lagoon-50 text-lagoon"
                               : tier.refund === "50%"
                                 ? "bg-amber-500/10 text-amber-400"
                                 : "bg-rose/10 text-rose"
@@ -115,7 +114,7 @@ export default function RefundPage() {
                         {tier.refund}
                       </span>
                     </td>
-                    <td className="py-4 pl-4 text-text-muted">{tier.note}</td>
+                    <td className="py-4 pl-4 text-gray-500">{tier.note}</td>
                   </tr>
                 ))}
               </tbody>
@@ -124,42 +123,42 @@ export default function RefundPage() {
         </div>
 
         {/* PayU Refund Timeline */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             PayU Refund Timeline
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <p>
               Once a refund is approved by Goa Trip Package, the following
               processing timelines apply:
             </p>
             <ul className="list-disc pl-5 space-y-2">
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Refund initiation:
                 </span>{" "}
                 Within 24 hours of cancellation approval.
               </li>
               <li>
-                <span className="text-white font-medium">
+                <span className="text-ink font-medium">
                   Credit/Debit Cards:
                 </span>{" "}
                 5&ndash;7 business days to reflect in your account.
               </li>
               <li>
-                <span className="text-white font-medium">UPI:</span>{" "}
+                <span className="text-ink font-medium">UPI:</span>{" "}
                 2&ndash;4 business days.
               </li>
               <li>
-                <span className="text-white font-medium">Net Banking:</span>{" "}
+                <span className="text-ink font-medium">Net Banking:</span>{" "}
                 5&ndash;7 business days.
               </li>
               <li>
-                <span className="text-white font-medium">Wallets:</span>{" "}
+                <span className="text-ink font-medium">Wallets:</span>{" "}
                 1&ndash;3 business days.
               </li>
               <li>
-                <span className="text-white font-medium">Bank Transfer:</span>{" "}
+                <span className="text-ink font-medium">Bank Transfer:</span>{" "}
                 3&ndash;5 business days after initiating NEFT/RTGS.
               </li>
             </ul>
@@ -171,38 +170,38 @@ export default function RefundPage() {
         </div>
 
         {/* Special Cases */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             Special Cases
           </h2>
-          <div className="space-y-4 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-4 text-sm text-gray-500 leading-relaxed">
             <div>
-              <h3 className="text-sm font-bold text-white mb-2">
+              <h3 className="text-sm font-bold text-ink mb-2">
                 Weather-Related Cancellations
               </h3>
               <p>
                 If an experience is cancelled due to adverse weather conditions
                 (heavy rain, high seas, storms, or government weather
                 advisories), you will receive a{" "}
-                <span className="text-gold font-medium">full refund</span> or
+                <span className="text-lagoon font-medium">full refund</span> or
                 the option to reschedule at no extra cost, at your choice.
               </p>
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white mb-2">
+              <h3 className="text-sm font-bold text-ink mb-2">
                 Operator Cancellations
               </h3>
               <p>
                 If a cruise operator, yacht owner, or activity vendor cancels
                 the experience for any reason (mechanical issues, overbooking,
                 crew unavailability), you will receive a{" "}
-                <span className="text-gold font-medium">full refund</span>{" "}
+                <span className="text-lagoon font-medium">full refund</span>{" "}
                 within 24 hours. We will also attempt to offer an equivalent
                 alternative at no additional cost.
               </p>
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white mb-2">
+              <h3 className="text-sm font-bold text-ink mb-2">
                 Partial Service Delivery
               </h3>
               <p>
@@ -213,7 +212,7 @@ export default function RefundPage() {
               </p>
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white mb-2">
+              <h3 className="text-sm font-bold text-ink mb-2">
                 Government Restrictions or Force Majeure
               </h3>
               <p>
@@ -226,11 +225,11 @@ export default function RefundPage() {
         </div>
 
         {/* Non-Refundable */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             Non-Refundable Items
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <ul className="list-disc pl-5 space-y-1.5">
               <li>No-shows without prior cancellation communication</li>
               <li>
@@ -249,24 +248,24 @@ export default function RefundPage() {
         </div>
 
         {/* How to Request */}
-        <div className="glass-card rounded-2xl p-8 md:p-10">
-          <h2 className="font-display text-xl font-bold text-white mb-4">
+        <div className="rounded-xl border border-border-warm bg-white p-8 md:p-10">
+          <h2 className="font-display text-xl font-bold text-ink mb-4">
             How to Request a Refund
           </h2>
-          <div className="space-y-3 text-sm text-text-muted leading-relaxed">
+          <div className="space-y-3 text-sm text-gray-500 leading-relaxed">
             <ol className="list-decimal pl-5 space-y-2">
               <li>
                 Contact us on{" "}
                 <a
                   href="https://wa.me/919890830249"
-                  className="text-gold underline underline-offset-2 hover:text-gold-300"
+                  className="text-lagoon underline underline-offset-2 hover:text-lagoon"
                 >
                   WhatsApp (+91 98908 30249)
                 </a>{" "}
                 or email{" "}
                 <a
                   href="mailto:info@goatrippackage.com"
-                  className="text-gold underline underline-offset-2 hover:text-gold-300"
+                  className="text-lagoon underline underline-offset-2 hover:text-lagoon"
                 >
                   info@goatrippackage.com
                 </a>{" "}
@@ -292,19 +291,19 @@ export default function RefundPage() {
         <div className="flex flex-wrap justify-center gap-4 pt-4">
           <Link
             href="/cancellation"
-            className="text-sm text-gold underline underline-offset-2 hover:text-gold-300"
+            className="text-sm text-lagoon underline underline-offset-2 hover:text-lagoon"
           >
             Cancellation Policy
           </Link>
           <Link
             href="/terms"
-            className="text-sm text-gold underline underline-offset-2 hover:text-gold-300"
+            className="text-sm text-lagoon underline underline-offset-2 hover:text-lagoon"
           >
             Terms &amp; Conditions
           </Link>
           <Link
             href="/privacy"
-            className="text-sm text-gold underline underline-offset-2 hover:text-gold-300"
+            className="text-sm text-lagoon underline underline-offset-2 hover:text-lagoon"
           >
             Privacy Policy
           </Link>

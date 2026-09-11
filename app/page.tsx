@@ -2,22 +2,27 @@ import Link from "next/link";
 import Image from "next/image";
 import { Header } from "@/components/marketing/Header";
 import { Footer } from "@/components/marketing/Footer";
-import { WhyChooseUs } from "@/components/marketing/WhyChooseUs";
-import { OffersStrip } from "@/components/marketing/OffersStrip";
 import { ProductCard } from "@/components/marketing/ProductCard";
 import { ScrollReveal } from "@/components/marketing/ScrollReveal";
 import { AnimatedCounter } from "@/components/marketing/AnimatedCounter";
-import { cruises, yachts, packages, activities, hotels } from "@/lib/data/products";
-import { Anchor, Sailboat, Waves, Mountain, Hotel, PartyPopper, ArrowRight, Star, Shield, Headphones, Users, MapPin, Bike, Ship, Palmtree, Camera, Globe, Gem, Clock, Search, ChevronRight, Calendar } from "lucide-react";
+import { cruises, yachts, packages, activities } from "@/lib/data/products";
+import { HeroSlideshow } from "@/components/marketing/HeroSlideshow";
+import {
+  ArrowRight,
+  Star,
+  Shield,
+  Headphones,
+  MapPin,
+  Ship,
+  Search,
+  ChevronRight,
+  Calendar,
+  CheckCircle2,
+  Award,
+  Clock,
+  Heart,
+} from "lucide-react";
 
-/**
- * Homepage — rebuilt to match goatrippackage.com section flow
- * Hero → WhyChooseUs → Quick Find → Cruises → Yachts → Packages →
- * Activities → Popular Destinations → Offers → How It Works →
- * Testimonials → CTA → Footer
- */
-
-// Quick find shortcuts (from goatrippackage.com)
 const quickFinds = [
   { href: "/cruises/sunset-dinner-cruise", label: "Sunset Cruise", icon: "🌅" },
   { href: "/yachts/maxum-luxury-yacht", label: "Private Yacht", icon: "🛥️" },
@@ -29,7 +34,6 @@ const quickFinds = [
   { href: "/hotels", label: "Hotels & Villas", icon: "🏨" },
 ];
 
-// Popular destinations (from goatrippackage.com)
 const destinations = [
   { name: "Calangute & Baga", count: 24, desc: "Beach belt, nightlife, water sports", image: "https://goatrippackage.com/wp-content/uploads/2026/05/North-Goa-Tour-3.jpg" },
   { name: "Panaji & Old Goa", count: 18, desc: "Heritage, churches, river cruises", image: "https://goatrippackage.com/wp-content/uploads/2026/05/South-Goa-Tour-4.jpg" },
@@ -39,12 +43,11 @@ const destinations = [
   { name: "Dudhsagar Falls", count: 6, desc: "Waterfall trek, spice plantation", image: "https://goatrippackage.com/wp-content/uploads/2026/05/Dudh-7.jpg" },
 ];
 
-// How it works steps
 const steps = [
   { step: 1, title: "Browse Experiences", desc: "Explore 100+ curated packages, cruises, yachts & activities", icon: Search },
   { step: 2, title: "Personalise Your Trip", desc: "Pick dates, choose add-ons, or request a custom quote", icon: Calendar },
   { step: 3, title: "Pay Securely", desc: "PayU encrypted payment — full or 25% advance", icon: Shield },
-  { step: 4, title: "Enjoy Goa!", desc: "WhatsApp confirmation, pickup details & 24/7 support", icon: Palmtree },
+  { step: 4, title: "Enjoy Goa!", desc: "WhatsApp confirmation, pickup details & 24/7 support", icon: Heart },
 ];
 
 const stats = [
@@ -63,87 +66,67 @@ const testimonials = [
   { name: "Meera", location: "Chennai", text: "Solo trip to Goa was stress-free thanks to their planning. Scuba diving at Grande Island was life-changing. Thank you GTP!", rating: 5 },
 ];
 
+const whyUs = [
+  { icon: Award, title: "Verified & Trusted", desc: "9 years in Goa. 10,000+ travellers. 4.8-star average rating on Google." },
+  { icon: Shield, title: "Secure Payments", desc: "PayU-encrypted checkout with full or 25% advance. Zero-risk booking." },
+  { icon: Headphones, title: "24/7 Concierge", desc: "Dedicated WhatsApp support from booking to drop-off. Real humans, always." },
+  { icon: Clock, title: "30-Min Custom Quotes", desc: "Tell us your dates and budget — get a tailored itinerary within 30 minutes." },
+];
+
 export default function HomePage() {
   return (
     <div className="flex min-h-screen flex-col">
       <Header />
 
       {/* ═══ HERO ═══ */}
-      <section className="relative flex min-h-[85vh] items-center justify-center overflow-hidden pt-20">
-        <div className="absolute inset-0 -z-30">
-          <Image
-            src="https://goatrippackage.com/wp-content/uploads/2026/05/15-luxury-escape-featured-800x600.jpg"
-            alt="Luxury Goa beach resort at sunset"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-        </div>
-        <div className="absolute inset-0 -z-20 bg-gradient-to-b from-cosmic-950/80 via-cosmic-950/50 to-cosmic-950/90" />
-        <div className="bg-stars absolute inset-0 -z-10 opacity-50" />
+      <section className="relative flex min-h-[600px] items-end overflow-hidden">
+        <HeroSlideshow />
 
-        <div className="relative z-10 mx-auto max-w-4xl px-6 text-center">
-          <div className="gold-divider mx-auto mb-4 w-16" />
-          <p className="text-xs uppercase tracking-[0.25em] text-gold mb-4 font-medium">
-            Goa&apos;s #1 Trip Planner — Since 2017
-          </p>
+        <div className="relative z-10 mx-auto w-full max-w-[1200px] px-5 pb-16 pt-28 md:px-8 md:pb-20">
+          {/* Eyebrow */}
+          <div className="mb-5 flex items-center gap-2.5">
+            <span className="h-px w-6 bg-amber" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-amber" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.5)" }}>
+              Goa&apos;s #1 Trip Planner — Since 2017
+            </span>
+          </div>
 
-          <h1 className="font-display text-4xl font-bold tracking-tight text-white md:text-6xl lg:text-7xl">
-            Your Royal
-            <span className="text-gold-gradient block mt-1">Goa Experience</span>
+          <h1 className="font-display text-[clamp(38px,5.5vw,68px)] font-bold leading-[1.08] text-white max-w-2xl" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.4)" }}>
+            Unforgettable
+            <br />
+            <span className="text-lagoon" style={{ textShadow: "0 2px 12px rgba(0,0,0,0.5), 0 1px 3px rgba(0,0,0,0.4)" }}>Goa Experiences</span>
           </h1>
 
-          <p className="mx-auto mt-5 max-w-lg text-base leading-relaxed text-text-muted md:text-lg">
+          <p className="mt-5 max-w-lg text-base leading-relaxed text-white/70 md:text-lg" style={{ textShadow: "0 1px 6px rgba(0,0,0,0.4)" }}>
             Premium packages, cruises, yachts &amp; adventures — crafted for the moments that matter.
           </p>
 
-          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+          {/* CTA row */}
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
             <Link
               href="/packages"
-              className="inline-flex h-12 items-center justify-center rounded-full bg-gold-gradient px-8 text-sm font-bold text-cosmic-950 shadow-gold transition-transform hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex h-12 items-center justify-center rounded-full bg-lagoon px-8 text-sm font-semibold text-white shadow-lagoon transition-all hover:bg-lagoon-600 hover:-translate-y-px active:translate-y-0"
             >
               Browse All Packages
             </Link>
             <Link
               href="/custom-trip"
-              className="glass-card inline-flex h-12 items-center justify-center rounded-full px-8 text-sm font-medium text-gold transition-all hover:border-gold-400"
+              className="inline-flex h-12 items-center justify-center rounded-full border border-white/20 bg-white/8 px-8 text-sm font-medium text-white backdrop-blur-sm transition-all hover:bg-white/15"
             >
               Get Free Custom Quote
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
           </div>
-        </div>
-      </section>
 
-      {/* ═══ TRUST STRIP (goatrippackage.com stats) ═══ */}
-      <section className="border-y border-border-gold/40 bg-cosmic-900/50 py-6">
-        <div className="mx-auto max-w-5xl px-4 md:px-8">
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            {stats.map((s) => (
-              <div key={s.label} className="text-center">
-                <p className="text-2xl font-bold text-white md:text-3xl"><AnimatedCounter value={s.value} /></p>
-                <p className="mt-0.5 text-[11px] text-text-muted uppercase tracking-wider">{s.label}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ WHY CHOOSE US ═══ */}
-      <WhyChooseUs />
-
-      {/* ═══ QUICK FIND BAR ═══ */}
-      <section className="py-8 bg-cosmic-950">
-        <div className="mx-auto max-w-7xl px-4 md:px-8">
-          <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2">
-            {quickFinds.map((q) => (
+          {/* Quick find chips */}
+          <div className="mt-10 flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+            {quickFinds.slice(0, 6).map((q) => (
               <Link
                 key={q.label}
                 href={q.href}
-                className="glass-card flex shrink-0 items-center gap-2.5 rounded-xl px-4 py-3 text-sm font-medium text-text-muted transition-all hover:text-gold hover:border-gold/50"
+                className="flex shrink-0 items-center gap-2 rounded-full border border-white/15 bg-white/6 px-4 py-2 text-[13px] font-medium text-white/80 backdrop-blur-sm transition-all hover:bg-white/12 hover:text-white"
               >
-                <span className="text-lg">{q.icon}</span>
+                <span className="text-base">{q.icon}</span>
                 {q.label}
               </Link>
             ))}
@@ -151,19 +134,61 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══ CRUISES SECTION ═══ */}
-      <section className="py-14 bg-cosmic-950">
-        <div className="mx-auto max-w-7xl px-4 md:px-8">
+      {/* ═══ TRUST STRIP ═══ */}
+      <section className="border-b border-border-warm bg-white py-6">
+        <div className="mx-auto max-w-5xl px-5 md:px-8">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+            {stats.map((s) => (
+              <div key={s.label} className="text-center">
+                <p className="text-2xl font-bold text-ink md:text-3xl">
+                  <AnimatedCounter value={s.value} />
+                </p>
+                <p className="mt-0.5 text-[11px] text-gray-400 uppercase tracking-wider">{s.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ WHY GOA TRIP PACKAGE ═══ */}
+      <section className="py-16 bg-ground">
+        <div className="mx-auto max-w-7xl px-5 md:px-8">
+          <div className="text-center mb-12">
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-amber mb-2">Why Goa Trip Package</p>
+            <h2 className="font-display text-3xl font-bold text-ink md:text-4xl">
+              Trusted by 10,000+ Travellers
+            </h2>
+          </div>
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {whyUs.map((item) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.title} className="rounded-2xl bg-white border border-border-warm p-6 transition-all hover:shadow-card">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-lagoon-50 mb-4">
+                    <Icon className="h-6 w-6 text-lagoon" />
+                  </div>
+                  <h3 className="text-base font-bold text-ink mb-1.5">{item.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ CRUISES ═══ */}
+      <section className="py-16 bg-white">
+        <div className="mx-auto max-w-7xl px-5 md:px-8">
           <ScrollReveal>
             <div className="flex items-end justify-between mb-8">
               <div>
-                <p className="text-xs uppercase tracking-[0.15em] text-gold mb-1">Mandovi River</p>
-                <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
-                  Unforgettable Goa <span className="text-gold-gradient">Cruise</span> Experiences
+                <p className="text-xs font-semibold uppercase tracking-[0.15em] text-amber mb-1">Mandovi River</p>
+                <h2 className="font-display text-2xl font-bold text-ink md:text-3xl">
+                  Unforgettable Goa Cruise Experiences
                 </h2>
-                <p className="mt-1 text-sm text-text-muted">13 cruises — sunset, dinner, party, dolphin, private</p>
+                <p className="mt-1 text-sm text-gray-400">13 cruises — sunset, dinner, party, dolphin, private</p>
               </div>
-              <Link href="/cruises" className="hidden sm:flex items-center gap-1 text-sm text-gold hover:text-gold-200 transition-colors">
+              <Link href="/cruises" className="hidden sm:flex items-center gap-1 text-sm font-medium text-lagoon hover:text-lagoon-600 transition-colors">
                 View all 13 <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
@@ -173,24 +198,24 @@ export default function HomePage() {
               <ProductCard key={c.slug} slug={c.slug} type={c.type} name={c.name} basePrice={c.basePrice} originalPrice={c.originalPrice} priceUnit={c.priceUnit} duration={c.duration} capacity={c.capacity} location={c.location} rating={c.rating} isFeatured={c.isFeatured} isSelfServe={c.isSelfServe} imageUrl={c.imageUrl} inclusions={c.inclusions} highlights={c.highlights} />
             ))}
           </div>
-          <Link href="/cruises" className="mt-6 flex items-center justify-center gap-1 text-sm text-gold sm:hidden">
+          <Link href="/cruises" className="mt-6 flex items-center justify-center gap-1 text-sm font-medium text-lagoon sm:hidden">
             View all 13 cruises <ChevronRight className="h-4 w-4" />
           </Link>
         </div>
       </section>
 
-      {/* ═══ YACHTS SECTION ═══ */}
-      <section className="py-14 border-t border-border-gold/20 bg-cosmic-900/30">
-        <div className="mx-auto max-w-7xl px-4 md:px-8">
+      {/* ═══ YACHTS ═══ */}
+      <section className="py-16 bg-ground">
+        <div className="mx-auto max-w-7xl px-5 md:px-8">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <p className="text-xs uppercase tracking-[0.15em] text-gold mb-1">Private Luxury</p>
-              <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
-                Sail the Arabian Sea in <span className="text-gold-gradient">Total Privacy</span>
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-amber mb-1">Private Luxury</p>
+              <h2 className="font-display text-2xl font-bold text-ink md:text-3xl">
+                Sail the Arabian Sea in Total Privacy
               </h2>
-              <p className="mt-1 text-sm text-text-muted">23 yachts — celebrations, romance, corporate events</p>
+              <p className="mt-1 text-sm text-gray-400">23 yachts — celebrations, romance, corporate events</p>
             </div>
-            <Link href="/yachts" className="hidden sm:flex items-center gap-1 text-sm text-gold hover:text-gold-200 transition-colors">
+            <Link href="/yachts" className="hidden sm:flex items-center gap-1 text-sm font-medium text-lagoon hover:text-lagoon-600 transition-colors">
               View all 23 <ChevronRight className="h-4 w-4" />
             </Link>
           </div>
@@ -199,24 +224,24 @@ export default function HomePage() {
               <ProductCard key={y.slug} slug={y.slug} type={y.type} name={y.name} basePrice={y.basePrice} priceUnit={y.priceUnit} duration={y.duration} capacity={y.capacity} location={y.location} rating={y.rating} isFeatured={y.isFeatured} isSelfServe={y.isSelfServe} imageUrl={y.imageUrl} inclusions={y.inclusions} />
             ))}
           </div>
-          <Link href="/yachts" className="mt-6 flex items-center justify-center gap-1 text-sm text-gold sm:hidden">
+          <Link href="/yachts" className="mt-6 flex items-center justify-center gap-1 text-sm font-medium text-lagoon sm:hidden">
             View all 23 yachts <ChevronRight className="h-4 w-4" />
           </Link>
         </div>
       </section>
 
-      {/* ═══ PACKAGES SECTION ═══ */}
-      <section className="py-14 border-t border-border-gold/20 bg-cosmic-950">
-        <div className="mx-auto max-w-7xl px-4 md:px-8">
+      {/* ═══ PACKAGES ═══ */}
+      <section className="py-16 bg-white">
+        <div className="mx-auto max-w-7xl px-5 md:px-8">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <p className="text-xs uppercase tracking-[0.15em] text-gold mb-1">All Inclusive</p>
-              <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
-                Complete Goa Holiday <span className="text-gold-gradient">Packages</span>
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-amber mb-1">All Inclusive</p>
+              <h2 className="font-display text-2xl font-bold text-ink md:text-3xl">
+                Complete Goa Holiday Packages
               </h2>
-              <p className="mt-1 text-sm text-text-muted">39 packages — honeymoon, family, group, bachelor, corporate</p>
+              <p className="mt-1 text-sm text-gray-400">39 packages — honeymoon, family, group, bachelor, corporate</p>
             </div>
-            <Link href="/packages" className="hidden sm:flex items-center gap-1 text-sm text-gold hover:text-gold-200 transition-colors">
+            <Link href="/packages" className="hidden sm:flex items-center gap-1 text-sm font-medium text-lagoon hover:text-lagoon-600 transition-colors">
               View all 39 <ChevronRight className="h-4 w-4" />
             </Link>
           </div>
@@ -225,24 +250,24 @@ export default function HomePage() {
               <ProductCard key={p.slug} slug={p.slug} type={p.type} name={p.name} basePrice={p.basePrice} originalPrice={p.originalPrice} priceUnit={p.priceUnit} duration={p.duration} location={p.location} rating={p.rating} isFeatured={p.isFeatured} imageUrl={p.imageUrl} inclusions={p.inclusions} highlights={p.highlights} />
             ))}
           </div>
-          <Link href="/packages" className="mt-6 flex items-center justify-center gap-1 text-sm text-gold sm:hidden">
+          <Link href="/packages" className="mt-6 flex items-center justify-center gap-1 text-sm font-medium text-lagoon sm:hidden">
             View all 39 packages <ChevronRight className="h-4 w-4" />
           </Link>
         </div>
       </section>
 
-      {/* ═══ ACTIVITIES SECTION ═══ */}
-      <section className="py-14 border-t border-border-gold/20 bg-cosmic-900/30">
-        <div className="mx-auto max-w-7xl px-4 md:px-8">
+      {/* ═══ ACTIVITIES ═══ */}
+      <section className="py-16 bg-ground">
+        <div className="mx-auto max-w-7xl px-5 md:px-8">
           <div className="flex items-end justify-between mb-8">
             <div>
-              <p className="text-xs uppercase tracking-[0.15em] text-gold mb-1">Thrill & Adventure</p>
-              <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
-                Dive Into Goa&apos;s Best <span className="text-gold-gradient">Adventures</span>
+              <p className="text-xs font-semibold uppercase tracking-[0.15em] text-amber mb-1">Thrill & Adventure</p>
+              <h2 className="font-display text-2xl font-bold text-ink md:text-3xl">
+                Dive Into Goa&apos;s Best Adventures
               </h2>
-              <p className="mt-1 text-sm text-text-muted">18 activities — scuba, parasail, bungee, kayak, helicopter</p>
+              <p className="mt-1 text-sm text-gray-400">18 activities — scuba, parasail, bungee, kayak, helicopter</p>
             </div>
-            <Link href="/activities" className="hidden sm:flex items-center gap-1 text-sm text-gold hover:text-gold-200 transition-colors">
+            <Link href="/activities" className="hidden sm:flex items-center gap-1 text-sm font-medium text-lagoon hover:text-lagoon-600 transition-colors">
               View all 18 <ChevronRight className="h-4 w-4" />
             </Link>
           </div>
@@ -251,30 +276,30 @@ export default function HomePage() {
               <ProductCard key={a.slug} slug={a.slug} type={a.type} name={a.name} basePrice={a.basePrice} priceUnit={a.priceUnit} duration={a.duration} location={a.location} rating={a.rating} isFeatured={a.isFeatured} isSelfServe={a.isSelfServe} imageUrl={a.imageUrl} inclusions={a.inclusions} />
             ))}
           </div>
-          <Link href="/activities" className="mt-6 flex items-center justify-center gap-1 text-sm text-gold sm:hidden">
+          <Link href="/activities" className="mt-6 flex items-center justify-center gap-1 text-sm font-medium text-lagoon sm:hidden">
             View all 18 activities <ChevronRight className="h-4 w-4" />
           </Link>
         </div>
       </section>
 
       {/* ═══ POPULAR DESTINATIONS ═══ */}
-      <section className="py-14 border-t border-border-gold/20 bg-cosmic-950">
-        <div className="mx-auto max-w-7xl px-4 md:px-8">
+      <section className="py-16 bg-white">
+        <div className="mx-auto max-w-7xl px-5 md:px-8">
           <div className="text-center mb-10">
-            <p className="text-xs uppercase tracking-[0.15em] text-gold mb-1">Explore by Location</p>
-            <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
-              Popular <span className="text-gold-gradient">Destinations</span> in Goa
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] text-amber mb-1">Explore by Location</p>
+            <h2 className="font-display text-2xl font-bold text-ink md:text-3xl">
+              Popular Destinations in Goa
             </h2>
           </div>
           <div className="grid gap-4 grid-cols-2 md:grid-cols-3 lg:grid-cols-6">
             {destinations.map((d) => (
-              <div key={d.name} className="group relative overflow-hidden rounded-xl aspect-[3/4] cursor-pointer">
+              <div key={d.name} className="group relative overflow-hidden rounded-2xl aspect-[3/4] cursor-pointer">
                 <Image src={d.image} alt={d.name} fill sizes="(max-width: 768px) 50vw, 16vw" className="object-cover transition-transform duration-500 group-hover:scale-110" />
-                <div className="absolute inset-0 bg-gradient-to-t from-cosmic-950/90 via-cosmic-950/30 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-abyss/90 via-abyss/30 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 p-3">
                   <h3 className="text-sm font-bold text-white">{d.name}</h3>
-                  <p className="text-[10px] text-text-muted mt-0.5">{d.desc}</p>
-                  <p className="text-[10px] text-gold mt-1 font-medium">{d.count} experiences</p>
+                  <p className="text-[10px] text-white/60 mt-0.5">{d.desc}</p>
+                  <p className="text-[10px] text-lagoon mt-1 font-medium">{d.count} experiences</p>
                 </div>
               </div>
             ))}
@@ -282,68 +307,29 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ═══ OFFERS & DEALS ═══ */}
-      <OffersStrip />
-
       {/* ═══ HOW IT WORKS ═══ */}
-      <section className="py-14 border-t border-border-gold/20 bg-cosmic-900/30">
-        <div className="mx-auto max-w-4xl px-4 md:px-8">
-          <div className="text-center mb-10">
-            <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
-              How It <span className="text-gold-gradient">Works</span>
+      <section className="py-16 bg-ground">
+        <div className="mx-auto max-w-4xl px-5 md:px-8">
+          <div className="text-center mb-12">
+            <h2 className="font-display text-2xl font-bold text-ink md:text-3xl">
+              How It Works
             </h2>
-            <p className="mt-2 text-sm text-text-muted">Book your Goa experience in 4 simple steps</p>
+            <p className="mt-2 text-sm text-gray-400">Book your Goa experience in 4 simple steps</p>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {steps.map((s) => {
               const Icon = s.icon;
               return (
                 <div key={s.step} className="text-center">
-                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-gold/10 mb-4">
-                    <Icon className="h-7 w-7 text-gold" />
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-lagoon-50 mb-4">
+                    <Icon className="h-7 w-7 text-lagoon" />
                   </div>
                   <div className="flex items-center justify-center gap-2 mb-2">
-                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-gold text-xs font-bold text-cosmic-950">{s.step}</span>
-                    <h3 className="text-sm font-bold text-white">{s.title}</h3>
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full bg-lagoon text-xs font-bold text-white">{s.step}</span>
+                    <h3 className="text-sm font-bold text-ink">{s.title}</h3>
                   </div>
-                  <p className="text-xs text-text-muted">{s.desc}</p>
+                  <p className="text-xs text-gray-400">{s.desc}</p>
                 </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ CATEGORIES GRID ═══ */}
-      <section className="py-14 border-t border-border-gold/20 bg-cosmic-950">
-        <div className="mx-auto max-w-7xl px-4 md:px-8">
-          <div className="text-center mb-8">
-            <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
-              Explore All <span className="text-gold-gradient">Categories</span>
-            </h2>
-          </div>
-          <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-8">
-            {[
-              { href: "/packages", label: "Packages", count: "39", icon: Mountain },
-              { href: "/cruises", label: "Cruises", count: "13", icon: Ship },
-              { href: "/yachts", label: "Yachts", count: "23", icon: Anchor },
-              { href: "/activities", label: "Activities", count: "18", icon: Waves },
-              { href: "/hotels", label: "Hotels", count: "50", icon: Hotel },
-              { href: "/parties", label: "Parties", count: "4", icon: PartyPopper },
-              { href: "/search?q=combo", label: "Combos", count: "1", icon: Gem },
-              { href: "/custom-trip", label: "Custom Trip", count: "", icon: Globe },
-            ].map((cat) => {
-              const Icon = cat.icon;
-              return (
-                <Link
-                  key={cat.href}
-                  href={cat.href}
-                  className="glass-card group flex flex-col items-center gap-2 rounded-xl px-3 py-4 text-center transition-all hover:border-gold/50 hover:-translate-y-0.5"
-                >
-                  <Icon className="h-5 w-5 text-gold group-hover:scale-110 transition-transform" />
-                  <span className="text-xs font-bold text-white">{cat.label}</span>
-                  {cat.count && <span className="text-[10px] text-text-dim">{cat.count}</span>}
-                </Link>
               );
             })}
           </div>
@@ -351,32 +337,32 @@ export default function HomePage() {
       </section>
 
       {/* ═══ TESTIMONIALS ═══ */}
-      <section className="py-14 border-t border-border-gold/20 bg-cosmic-900/30">
-        <div className="mx-auto max-w-7xl px-4 md:px-8">
+      <section className="py-16 bg-white">
+        <div className="mx-auto max-w-7xl px-5 md:px-8">
           <div className="text-center mb-10">
-            <h2 className="font-display text-2xl font-bold text-white md:text-3xl">
-              Verified <span className="text-gold-gradient">Reviews</span>
+            <h2 className="font-display text-2xl font-bold text-ink md:text-3xl">
+              Verified Reviews
             </h2>
-            <p className="mt-2 text-sm text-text-muted">From our 10,000+ happy travellers</p>
+            <p className="mt-2 text-sm text-gray-400">From our 10,000+ happy travellers</p>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {testimonials.map((t) => (
-              <div key={t.name} className="glass-card rounded-xl p-5">
+              <div key={t.name} className="rounded-2xl bg-ground border border-border-warm p-6 transition-all hover:shadow-card">
                 <div className="flex gap-0.5 mb-3">
                   {Array.from({ length: t.rating }).map((_, i) => (
-                    <Star key={i} className="h-3.5 w-3.5 fill-gold text-gold" />
+                    <Star key={i} className="h-3.5 w-3.5 fill-amber text-amber" />
                   ))}
                 </div>
-                <p className="text-sm text-text-muted leading-relaxed">
+                <p className="text-sm text-gray-600 leading-relaxed">
                   &ldquo;{t.text}&rdquo;
                 </p>
                 <div className="mt-4 flex items-center gap-3">
-                  <div className="h-8 w-8 rounded-full bg-gold/20 flex items-center justify-center">
-                    <span className="text-xs font-bold text-gold">{t.name[0]}</span>
+                  <div className="h-9 w-9 rounded-full bg-lagoon-50 flex items-center justify-center">
+                    <span className="text-xs font-bold text-lagoon">{t.name[0]}</span>
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-white">{t.name}</p>
-                    <p className="text-[11px] text-text-dim">{t.location}</p>
+                    <p className="text-sm font-semibold text-ink">{t.name}</p>
+                    <p className="text-[11px] text-gray-400">{t.location}</p>
                   </div>
                 </div>
               </div>
@@ -396,25 +382,25 @@ export default function HomePage() {
             className="object-cover"
           />
         </div>
-        <div className="absolute inset-0 -z-10 bg-cosmic-950/85" />
+        <div className="absolute inset-0 -z-10 bg-abyss/85" />
         <div className="relative mx-auto max-w-3xl px-6 text-center">
           <h2 className="font-display text-3xl font-bold text-white md:text-4xl">
             Ready for an Unforgettable
-            <span className="text-gold-gradient block mt-1">Goa Adventure?</span>
+            <span className="block mt-1 text-lagoon">Goa Adventure?</span>
           </h2>
-          <p className="mt-4 text-text-muted text-base max-w-md mx-auto">
+          <p className="mt-4 text-white/60 text-base max-w-md mx-auto">
             Tell us what you want. Our planners craft your perfect itinerary and share a quote within 30 minutes on WhatsApp.
           </p>
           <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
             <Link
               href="/custom-trip"
-              className="inline-flex h-12 items-center justify-center rounded-full bg-gold-gradient px-8 text-sm font-bold text-cosmic-950 shadow-gold transition-transform hover:scale-[1.02] active:scale-[0.98]"
+              className="inline-flex h-12 items-center justify-center rounded-full bg-lagoon px-8 text-sm font-semibold text-white shadow-lagoon transition-all hover:bg-lagoon-600 hover:-translate-y-px"
             >
               Get Free Custom Quote
             </Link>
             <a
               href="https://wa.me/919890830249?text=Hi%2C%20I%20want%20to%20plan%20a%20Goa%20trip"
-              className="glass-card inline-flex h-12 items-center justify-center rounded-full px-8 text-sm font-medium text-gold"
+              className="inline-flex h-12 items-center justify-center rounded-full border border-white/20 bg-white/8 px-8 text-sm font-medium text-white backdrop-blur-sm transition-all hover:bg-white/15"
             >
               WhatsApp Us Directly
             </a>
@@ -424,7 +410,7 @@ export default function HomePage() {
 
       <Footer />
 
-      {/* Floating WhatsApp button */}
+      {/* Floating WhatsApp */}
       <a
         href="https://wa.me/919890830249?text=Hi%2C%20I%27m%20interested%20in%20Goa%20Trip%20Package"
         target="_blank"

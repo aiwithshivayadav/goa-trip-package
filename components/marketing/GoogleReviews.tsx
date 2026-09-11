@@ -84,8 +84,8 @@ function Stars({ count, size = 14 }: { count: number; size?: number }) {
           style={{ width: size, height: size }}
           className={
             i < count
-              ? "fill-amber-400 text-amber-400"
-              : "fill-none text-text-dim"
+              ? "fill-amber text-amber"
+              : "fill-none text-gray-300"
           }
         />
       ))}
@@ -99,7 +99,7 @@ export function GoogleReviews() {
 
   return (
     <div>
-      <h2 className="text-lg font-bold text-white mb-5 flex items-center gap-2">
+      <h2 className="text-lg font-bold text-ink mb-5 flex items-center gap-2">
         <svg className="h-5 w-5" viewBox="0 0 24 24" fill="none">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -109,52 +109,47 @@ export function GoogleReviews() {
         Google Reviews
       </h2>
 
-      {/* Summary bar */}
-      <div className="glass-card rounded-xl p-5 mb-4">
+      <div className="rounded-xl border border-border-warm bg-white p-5 mb-4">
         <div className="flex flex-col sm:flex-row sm:items-center gap-5">
-          {/* Score */}
           <div className="text-center sm:text-left shrink-0">
-            <p className="text-4xl font-bold text-white">{OVERALL.rating}</p>
+            <p className="text-4xl font-bold text-ink">{OVERALL.rating}</p>
             <Stars count={Math.round(OVERALL.rating)} size={16} />
-            <p className="text-xs text-text-muted mt-1">{OVERALL.total.toLocaleString()} reviews</p>
+            <p className="text-xs text-gray-400 mt-1">{OVERALL.total.toLocaleString()} reviews</p>
           </div>
-
-          {/* Distribution */}
           <div className="flex-1 space-y-1.5">
             {OVERALL.distribution.map((d) => (
               <div key={d.stars} className="flex items-center gap-2 text-xs">
-                <span className="w-3 text-text-muted text-right">{d.stars}</span>
-                <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
-                <div className="flex-1 h-2 rounded-full bg-white/5 overflow-hidden">
+                <span className="w-3 text-gray-400 text-right">{d.stars}</span>
+                <Star className="h-3 w-3 fill-amber text-amber" />
+                <div className="flex-1 h-2 rounded-full bg-gray-100 overflow-hidden">
                   <div
-                    className="h-full rounded-full bg-amber-400/80"
+                    className="h-full rounded-full bg-amber"
                     style={{ width: `${d.pct}%` }}
                   />
                 </div>
-                <span className="w-8 text-text-dim text-right">{d.pct}%</span>
+                <span className="w-8 text-gray-400 text-right">{d.pct}%</span>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Review cards */}
       <div className="space-y-3">
         {visible.map((r) => (
-          <div key={r.name} className="glass-card rounded-xl p-4">
+          <div key={r.name} className="rounded-xl border border-border-warm bg-white p-4">
             <div className="flex items-start gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gold/15 text-xs font-bold text-gold">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-lagoon-50 text-xs font-bold text-lagoon">
                 {r.initial}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-white">{r.name}</p>
-                  <span className="text-[10px] text-text-dim shrink-0 ml-2">{r.date}</span>
+                  <p className="text-sm font-medium text-ink">{r.name}</p>
+                  <span className="text-[10px] text-gray-400 shrink-0 ml-2">{r.date}</span>
                 </div>
                 <Stars count={r.rating} size={12} />
-                <p className="mt-2 text-sm text-text-muted leading-relaxed">{r.text}</p>
+                <p className="mt-2 text-sm text-gray-500 leading-relaxed">{r.text}</p>
                 {r.helpful != null && r.helpful > 0 && (
-                  <div className="mt-2 flex items-center gap-1 text-[10px] text-text-dim">
+                  <div className="mt-2 flex items-center gap-1 text-[10px] text-gray-400">
                     <ThumbsUp className="h-3 w-3" /> {r.helpful} found this helpful
                   </div>
                 )}
@@ -164,12 +159,11 @@ export function GoogleReviews() {
         ))}
       </div>
 
-      {/* Show more */}
       {REVIEWS.length > 3 && (
         <button
           type="button"
           onClick={() => setShowAll((v) => !v)}
-          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-border-gold/30 bg-surface py-2.5 text-xs font-medium text-gold transition-colors hover:border-gold/50"
+          className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-border-warm bg-ground py-2.5 text-xs font-medium text-lagoon transition-colors hover:border-lagoon/40"
         >
           {showAll ? "Show less" : `Show all ${REVIEWS.length} reviews`}
           <ChevronDown className={`h-3.5 w-3.5 transition-transform ${showAll ? "rotate-180" : ""}`} />
