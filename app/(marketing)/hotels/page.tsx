@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { hotels } from "@/lib/data/products";
+import { getHotels } from "@/lib/data/db-products";
 import { ProductListingFilters } from "@/components/marketing/ProductListingFilters";
 
 export const metadata: Metadata = {
@@ -8,7 +8,8 @@ export const metadata: Metadata = {
     "Handpicked Goa hotels — The Leela, W Goa, Resort Rio, Crown. 5-star luxury to budget-friendly. Best rates guaranteed through Goa Trip Package.",
 };
 
-export default function HotelsPage() {
+export default async function HotelsPage() {
+  const hotels = await getHotels();
   return (
     <div className="min-h-screen bg-ground">
       <section className="relative bg-hero-gradient py-20 text-center md:py-28">

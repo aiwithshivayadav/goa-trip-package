@@ -320,17 +320,29 @@ model Product {
   shortDesc       String?       @map("short_desc") @db.VarChar(500)
   longDescMd      String?       @map("long_desc_md") @db.LongText
   basePrice       Decimal       @map("base_price") @db.Decimal(10, 2)
+  originalPrice   Decimal?      @map("original_price") @db.Decimal(10, 2)
   priceUnit       String        @default("per_person") @map("price_unit") @db.VarChar(20)
+  duration        String?       @db.VarChar(50)
   durationHrs     Decimal?      @map("duration_hrs") @db.Decimal(5, 1)
   durationDays    Int?          @map("duration_days")
+  capacity        String?       @db.VarChar(100)
   capacityMin     Int?          @map("capacity_min")
   capacityMax     Int?          @map("capacity_max")
   location        String?       @db.VarChar(200)
+  rating          Decimal?      @db.Decimal(2, 1)
+  reviewCount     Int?          @map("review_count")
+  imageUrl        String?       @map("image_url") @db.VarChar(500)
   imagesJson      String?       @map("images_json") @db.LongText
   inclusionsJson  String?       @map("inclusions_json") @db.LongText
   exclusionsJson  String?       @map("exclusions_json") @db.LongText
+  highlightsJson  String?       @map("highlights_json") @db.LongText
   itineraryJson   String?       @map("itinerary_json") @db.LongText
   faqJson         String?       @map("faq_json") @db.LongText
+  keyFeaturesJson String?       @map("key_features_json") @db.LongText
+  meetingPoint    String?       @map("meeting_point") @db.VarChar(200)
+  timing          String?       @db.VarChar(200)
+  whatToBringJson  String?      @map("what_to_bring_json") @db.LongText
+  cancellationPolicy String?    @map("cancellation_policy") @db.Text
   termsMd         String?       @map("terms_md") @db.Text
   status          ProductStatus @default(active)
   isFeatured      Boolean       @default(false) @map("is_featured")

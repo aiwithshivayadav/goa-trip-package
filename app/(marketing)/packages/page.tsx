@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { packages } from "@/lib/data/products";
+import { getPackages } from "@/lib/data/db-products";
 import { WhyChooseUs } from "@/components/marketing/WhyChooseUs";
 import { ProductListingFilters } from "@/components/marketing/ProductListingFilters";
 
@@ -9,7 +9,8 @@ export const metadata: Metadata = {
     "30+ curated Goa tour packages starting ₹3,499/person. Honeymoon, family, bachelor group, corporate offsite. Book with confidence — 1,200+ happy guests.",
 };
 
-export default function PackagesPage() {
+export default async function PackagesPage() {
+  const packages = await getPackages();
   return (
     <div className="min-h-screen bg-ground">
       <section className="relative bg-hero-gradient py-16 text-center md:py-24">

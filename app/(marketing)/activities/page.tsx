@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { activities } from "@/lib/data/products";
+import { getActivities } from "@/lib/data/db-products";
 import { ProductListingFilters } from "@/components/marketing/ProductListingFilters";
 
 export const metadata: Metadata = {
@@ -8,7 +8,8 @@ export const metadata: Metadata = {
     "15+ adventure activities in Goa — scuba diving, parasailing, bungee jumping, kayaking, jet ski, helicopter ride. Starting ₹600. Book instantly.",
 };
 
-export default function ActivitiesPage() {
+export default async function ActivitiesPage() {
+  const activities = await getActivities();
   return (
     <div className="min-h-screen bg-ground">
       <section className="relative bg-hero-gradient py-20 text-center md:py-28">

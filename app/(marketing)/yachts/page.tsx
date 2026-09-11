@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { yachts } from "@/lib/data/products";
+import { getYachts } from "@/lib/data/db-products";
 import { ProductListingFilters } from "@/components/marketing/ProductListingFilters";
 
 export const metadata: Metadata = {
@@ -8,7 +8,8 @@ export const metadata: Metadata = {
     "14 luxury yachts in Goa — parties, birthdays, corporate events, romantic getaways. Starting ₹7,000/hour. Professional crew included.",
 };
 
-export default function YachtsPage() {
+export default async function YachtsPage() {
+  const yachts = await getYachts();
   return (
     <div className="min-h-screen bg-ground">
       <section className="relative bg-hero-gradient py-20 text-center md:py-28">

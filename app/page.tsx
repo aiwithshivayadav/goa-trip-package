@@ -5,7 +5,7 @@ import { Footer } from "@/components/marketing/Footer";
 import { ProductCard } from "@/components/marketing/ProductCard";
 import { ScrollReveal } from "@/components/marketing/ScrollReveal";
 import { AnimatedCounter } from "@/components/marketing/AnimatedCounter";
-import { cruises, yachts, packages, activities } from "@/lib/data/products";
+import { getCruises, getYachts, getPackages, getActivities } from "@/lib/data/db-products";
 import { HeroSlideshow } from "@/components/marketing/HeroSlideshow";
 import {
   ArrowRight,
@@ -71,7 +71,14 @@ const whyUs = [
   { icon: Clock, title: "30-Min Custom Quotes", desc: "Tell us your dates and budget — get a tailored itinerary within 30 minutes." },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const [cruises, yachts, packages, activities] = await Promise.all([
+    getCruises(),
+    getYachts(),
+    getPackages(),
+    getActivities(),
+  ]);
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header />

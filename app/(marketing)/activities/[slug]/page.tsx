@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Clock, Users, MapPin, Star, Check, X, ArrowLeft, Shield, Zap, Calendar, ChevronDown, HelpCircle, Info, Navigation } from "lucide-react";
-import { activities, type ProductData } from "@/lib/data/products";
+import { getProductBySlug, getSlugsByType, getProductsByType, type ProductData } from "@/lib/data/db-products";
 import { formatINR } from "@/lib/utils";
 import { ImageGallery } from "@/components/marketing/ImageGallery";
 import { EnquiryButton } from "@/components/booking/EnquiryButton";
@@ -15,22 +15,24 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const p = activities.find((a) => a.slug === slug);
+  const p = await getProductBySlug(slug);
   if (!p) return { title: "Activity Not Found" };
   return { title: p.name, description: p.shortDesc };
 }
 
 export async function generateStaticParams() {
-  return activities.map((a) => ({ slug: a.slug }));
+  const slugs = await getSlugsByType("activity");
+  return slugs.map((slug) => ({ slug }));
 }
 
 export default async function ActivityDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const p = activities.find((a) => a.slug === slug);
+  const p = await getProductBySlug(slug);
   if (!p) notFound();
 
   const galleryImages = p.images?.length ? p.images : (p.imageUrl ? [p.imageUrl] : []);
-  const similarProducts = activities.filter((a) => a.slug !== slug).slice(0, 3);
+  const allOfType = await getProductsByType("activity");
+  const similarProducts = allOfType.filter((a) => a.slug !== slug).slice(0, 3);
   const isSelfServe = p.isSelfServe;
 
   return (

@@ -1,12 +1,26 @@
 import type { MetadataRoute } from "next";
-import { packages, cruises, yachts, activities, hotels } from "@/lib/data/products";
+import {
+  getPackages,
+  getCruises,
+  getYachts,
+  getActivities,
+  getHotels,
+} from "@/lib/data/db-products";
 
 /**
  * Dynamic sitemap — regenerated on every build
  * Covers all static + dynamic product pages
  */
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://goa-trip-package.vercel.app";
+
+  const [packages, cruises, yachts, activities, hotels] = await Promise.all([
+    getPackages(),
+    getCruises(),
+    getYachts(),
+    getActivities(),
+    getHotels(),
+  ]);
 
   // Static pages
   const staticPages: MetadataRoute.Sitemap = [

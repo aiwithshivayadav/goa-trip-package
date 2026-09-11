@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Clock, Users, MapPin, Star, Check, X, ArrowLeft, Shield, Zap, Calendar, ChevronDown, HelpCircle, Info } from "lucide-react";
-import { hotels } from "@/lib/data/products";
+import { getProductBySlug, getSlugsByType, getProductsByType } from "@/lib/data/db-products";
 import { formatINR } from "@/lib/utils";
 import { ImageGallery } from "@/components/marketing/ImageGallery";
 import { EnquiryButton } from "@/components/booking/EnquiryButton";
@@ -15,22 +15,24 @@ interface PageProps {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const p = hotels.find((h) => h.slug === slug);
+  const p = await getProductBySlug(slug);
   if (!p) return { title: "Hotel Not Found" };
   return { title: p.name, description: p.shortDesc };
 }
 
 export async function generateStaticParams() {
-  return hotels.map((h) => ({ slug: h.slug }));
+  const slugs = await getSlugsByType("hotel");
+  return slugs.map((slug) => ({ slug }));
 }
 
 export default async function HotelDetailPage({ params }: PageProps) {
   const { slug } = await params;
-  const p = hotels.find((h) => h.slug === slug);
+  const p = await getProductBySlug(slug);
   if (!p) notFound();
 
   const galleryImages = p.images?.length ? p.images : (p.imageUrl ? [p.imageUrl] : []);
-  const similarHotels = hotels.filter((h) => h.slug !== slug).slice(0, 3);
+  const allOfType = await getProductsByType("hotel");
+  const similarHotels = allOfType.filter((h) => h.slug !== slug).slice(0, 3);
 
   return (
     <div className="min-h-screen pb-20 lg:pb-0">

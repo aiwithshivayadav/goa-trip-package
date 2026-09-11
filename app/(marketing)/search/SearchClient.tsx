@@ -1,0 +1,112 @@
+"use client";
+
+import { useState, useMemo, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
+import Fuse from "fuse.js";
+import { Search as SearchIcon } from "lucide-react";
+import type { ProductData } from "@/lib/data/db-products";
+import { ProductCard } from "@/components/marketing/ProductCard";
+
+function SearchSkeleton() {
+  return (
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="animate-pulse text-gray-500">Loading search...</div>
+    </div>
+  );
+}
+
+export default function SearchClient({ products }: { products: ProductData[] }) {
+  return (
+    <Suspense fallback={<SearchSkeleton />}>
+      <SearchContent products={products} />
+    </Suspense>
+  );
+}
+
+function SearchContent({ products }: { products: ProductData[] }) {
+  const searchParams = useSearchParams();
+  const initialQuery = searchParams.get("q") || "";
+  const [query, setQuery] = useState(initialQuery);
+
+  const fuse = useMemo(
+    () =>
+      new Fuse(products, {
+        keys: [
+          { name: "name", weight: 0.4 },
+          { name: "shortDesc", weight: 0.3 },
+          { name: "location", weight: 0.15 },
+          { name: "type", weight: 0.15 },
+        ],
+        threshold: 0.4,
+        includeScore: true,
+      }),
+    [products]
+  );
+
+  const results = useMemo(() => {
+    if (!query.trim()) return products;
+    return fuse.search(query).map((result) => result.item);
+  }, [query, fuse, products]);
+
+  return (
+    <div className="min-h-screen">
+      {/* Search hero */}
+      <section className="relative bg-hero-gradient py-16 md:py-20">
+        <div className="relative z-10 mx-auto max-w-3xl px-4 text-center">
+          <h1 className="font-display text-3xl font-bold text-white md:text-4xl mb-8">
+            Search <span className="text-lagoon-100">Experiences</span>
+          </h1>
+
+          {/* Search input */}
+          <div className="relative">
+            <SearchIcon className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search packages, cruises, yachts, activities..."
+              className="w-full h-14 rounded-xl bg-white border border-border-warm pl-12 pr-4 text-ink placeholder:text-gray-400 focus:outline-none focus:border-lagoon focus:ring-1 focus:ring-lagoon transition-colors text-base"
+              autoFocus
+            />
+          </div>
+
+          <p className="mt-4 text-sm text-gray-400">
+            {query.trim()
+              ? `${results.length} result${results.length !== 1 ? "s" : ""} for "${query}"`
+              : `${products.length} experiences available`}
+          </p>
+        </div>
+      </section>
+
+      {/* Results */}
+      <section className="mx-auto max-w-7xl px-4 py-12 md:px-8">
+        {results.length > 0 ? (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {results.map((product: ProductData) => (
+              <ProductCard
+                key={product.slug}
+                slug={product.slug}
+                type={product.type}
+                name={product.name}
+                shortDesc={product.shortDesc}
+                basePrice={product.basePrice}
+                priceUnit={product.priceUnit}
+                duration={product.duration}
+                capacity={product.capacity}
+                location={product.location}
+                rating={product.rating}
+                isFeatured={product.isFeatured}
+                imageUrl={product.imageUrl}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-16">
+            <p className="text-2xl text-gray-500 mb-4">No results found</p>
+            <p className="text-sm text-gray-400">Try a different search term, or browse our categories above.</p>
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}

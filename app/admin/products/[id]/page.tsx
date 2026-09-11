@@ -57,10 +57,10 @@ export default function ProductEditPage() {
             shortDesc: p.shortDesc || "",
             longDesc: p.longDescMd || "",
             basePrice: String(p.basePrice || ""),
-            originalPrice: "",
+            originalPrice: p.originalPrice ? String(p.originalPrice) : "",
             priceUnit: p.priceUnit || "per person",
-            duration: "",
-            capacity: "",
+            duration: p.duration || "",
+            capacity: p.capacity || "",
             location: p.location || "",
             status: p.status || "active",
             isFeatured: p.isFeatured || false,
@@ -70,6 +70,9 @@ export default function ProductEditPage() {
           if (p.imagesJson) setImages(JSON.parse(p.imagesJson));
           if (p.inclusionsJson) setInclusions(JSON.parse(p.inclusionsJson));
           if (p.exclusionsJson) setExclusions(JSON.parse(p.exclusionsJson));
+          if (p.highlightsJson) setHighlights(JSON.parse(p.highlightsJson));
+          if (p.itineraryJson) setItinerary(JSON.parse(p.itineraryJson));
+          if (p.faqJson) setFaq(JSON.parse(p.faqJson));
         }
       }).catch(() => {});
     }

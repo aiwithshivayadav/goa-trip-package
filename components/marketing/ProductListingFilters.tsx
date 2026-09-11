@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { Search, SlidersHorizontal, X } from "lucide-react";
 import { ProductCard } from "./ProductCard";
-import type { ProductData } from "@/lib/data/products";
+import type { ProductData } from "@/lib/data/db-products";
 
 interface PriceRange {
   label: string;

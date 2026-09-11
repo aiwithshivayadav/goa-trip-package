@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { cruises } from "@/lib/data/products";
+import { getCruises } from "@/lib/data/db-products";
 import { WhyChooseUs } from "@/components/marketing/WhyChooseUs";
 import { ProductListingFilters } from "@/components/marketing/ProductListingFilters";
 
@@ -9,7 +9,8 @@ export const metadata: Metadata = {
     "12 premium Goa cruises on the Mandovi River. Sunset dinner, night party, dolphin sightseeing, private charter. Starting ₹399. Book online instantly.",
 };
 
-export default function CruisesPage() {
+export default async function CruisesPage() {
+  const cruises = await getCruises();
   return (
     <div className="min-h-screen bg-ground">
       <section className="relative bg-hero-gradient py-16 text-center md:py-24">

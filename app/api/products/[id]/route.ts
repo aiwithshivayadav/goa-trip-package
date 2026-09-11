@@ -41,15 +41,25 @@ export async function PATCH(
 
     const updateData: Record<string, unknown> = {};
 
-    // Only update fields that are provided
     if (body.name !== undefined) updateData.name = body.name;
     if (body.slug !== undefined) updateData.slug = body.slug;
     if (body.type !== undefined) updateData.type = body.type;
     if (body.shortDesc !== undefined) updateData.shortDesc = body.shortDesc;
     if (body.longDesc !== undefined) updateData.longDescMd = body.longDesc;
     if (body.basePrice !== undefined) updateData.basePrice = parseFloat(body.basePrice);
+    if (body.originalPrice !== undefined) updateData.originalPrice = body.originalPrice ? parseFloat(body.originalPrice) : null;
     if (body.priceUnit !== undefined) updateData.priceUnit = body.priceUnit;
-    if (body.location !== undefined) updateData.location = body.location;
+    if (body.duration !== undefined) updateData.duration = body.duration || null;
+    if (body.durationDays !== undefined) updateData.durationDays = body.durationDays ? parseInt(body.durationDays) : null;
+    if (body.capacity !== undefined) updateData.capacity = body.capacity || null;
+    if (body.location !== undefined) updateData.location = body.location || null;
+    if (body.rating !== undefined) updateData.rating = body.rating ? parseFloat(body.rating) : null;
+    if (body.reviewCount !== undefined) updateData.reviewCount = body.reviewCount ? parseInt(body.reviewCount) : null;
+    if (body.imageUrl !== undefined) updateData.imageUrl = body.imageUrl || null;
+    if (body.meetingPoint !== undefined) updateData.meetingPoint = body.meetingPoint || null;
+    if (body.timing !== undefined) updateData.timing = body.timing || null;
+    if (body.cancellationPolicy !== undefined) updateData.cancellationPolicy = body.cancellationPolicy || null;
+    if (body.sortOrder !== undefined) updateData.sortOrder = parseInt(body.sortOrder) || 0;
     if (body.status !== undefined) updateData.status = body.status;
     if (body.isFeatured !== undefined) updateData.isFeatured = body.isFeatured;
     if (body.isSelfServe !== undefined) updateData.isSelfServe = body.isSelfServe;
@@ -57,6 +67,9 @@ export async function PATCH(
     if (body.images !== undefined) updateData.imagesJson = JSON.stringify(body.images);
     if (body.inclusions !== undefined) updateData.inclusionsJson = JSON.stringify(body.inclusions);
     if (body.exclusions !== undefined) updateData.exclusionsJson = JSON.stringify(body.exclusions);
+    if (body.highlights !== undefined) updateData.highlightsJson = JSON.stringify(body.highlights);
+    if (body.keyFeatures !== undefined) updateData.keyFeaturesJson = JSON.stringify(body.keyFeatures);
+    if (body.whatToBring !== undefined) updateData.whatToBringJson = JSON.stringify(body.whatToBring);
     if (body.itinerary !== undefined) updateData.itineraryJson = JSON.stringify(body.itinerary);
     if (body.faq !== undefined) updateData.faqJson = JSON.stringify(body.faq);
 

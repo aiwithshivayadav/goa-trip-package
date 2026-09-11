@@ -6,7 +6,7 @@ import Link from "next/link";
 import Script from "next/script";
 import { Shield, ArrowLeft, Check, Minus, Plus } from "lucide-react";
 import { toast } from "sonner";
-import { getProductBySlug } from "@/lib/data/products";
+import type { ProductData } from "@/lib/data/db-products";
 import { formatINR } from "@/lib/utils";
 import { trackBeginCheckout } from "@/lib/tracking";
 
@@ -37,8 +37,8 @@ function CheckoutContent() {
   const productSlug = searchParams.get("product") || "";
   const productType = searchParams.get("type") || "";
 
-  const product = getProductBySlug(productSlug);
-
+  const [product, setProduct] = useState<ProductData | null>(null);
+  const [productLoading, setProductLoading] = useState(true);
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [travelDate, setTravelDate] = useState("");
@@ -54,6 +54,19 @@ function CheckoutContent() {
   const [boltReady, setBoltReady] = useState(false);
   const [tracked, setTracked] = useState(false);
 
+  // Fetch product from API
+  useEffect(() => {
+    if (!productSlug) {
+      setProductLoading(false);
+      return;
+    }
+    fetch(`/api/products/by-slug/${encodeURIComponent(productSlug)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => setProduct(data as ProductData | null))
+      .catch(() => setProduct(null))
+      .finally(() => setProductLoading(false));
+  }, [productSlug]);
+
   useEffect(() => {
     if (product && !tracked) {
       trackBeginCheckout({
@@ -66,6 +79,14 @@ function CheckoutContent() {
       setTracked(true);
     }
   }, [product, tracked]);
+
+  if (productLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-cosmic-950">
+        <div className="animate-pulse text-text-muted">Loading product...</div>
+      </div>
+    );
+  }
 
   if (!product) {
     return (
