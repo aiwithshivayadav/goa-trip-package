@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Image optimization — allow WP uploads and Vercel Blob
+  output: "standalone",
+
   images: {
     remotePatterns: [
       {
