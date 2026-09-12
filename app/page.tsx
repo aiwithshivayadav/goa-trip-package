@@ -21,6 +21,11 @@ import {
   Clock,
   Heart,
   Anchor,
+  IndianRupee,
+  Sparkles,
+  MapPin,
+  Users,
+  Compass,
 } from "lucide-react";
 
 const quickFinds = [
@@ -51,10 +56,10 @@ const steps = [
 ];
 
 const stats = [
-  { value: "10,000+", label: "Happy Travellers" },
-  { value: "4.8", label: "Average Rating" },
-  { value: "50+", label: "Curated Experiences" },
-  { value: "9 Years", label: "In Goa" },
+  { value: "10,000+", label: "Happy Travellers", icon: Users },
+  { value: "4.8", label: "Google Rating", icon: Star },
+  { value: "100+", label: "Experiences", icon: Compass },
+  { value: "9 Years", label: "In Goa", icon: Award },
 ];
 
 const testimonials = [
@@ -73,6 +78,24 @@ const whyUs = [
   { icon: Clock, title: "30-Min Custom Quotes", desc: "Tell us your dates and budget — get a tailored itinerary within 30 minutes." },
 ];
 
+const trustBadges = [
+  { icon: IndianRupee, label: "Best Price Guarantee" },
+  { icon: Shield, label: "100% Secure Payments" },
+  { icon: Clock, label: "Instant Confirmation" },
+  { icon: Headphones, label: "24/7 Support" },
+  { icon: Sparkles, label: "Curated by Experts" },
+];
+
+function WaveDivider({ from, to }: { from: string; to: string }) {
+  return (
+    <div className="relative -mt-px">
+      <svg viewBox="0 0 1440 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-8 md:h-12 block" preserveAspectRatio="none">
+        <path d="M0 48V24C240 0 480 0 720 24C960 48 1200 48 1440 24V48H0Z" fill={to} />
+      </svg>
+    </div>
+  );
+}
+
 export default async function HomePage() {
   let cruises: Awaited<ReturnType<typeof getCruises>> = [];
   let yachts: Awaited<ReturnType<typeof getYachts>> = [];
@@ -86,24 +109,36 @@ export default async function HomePage() {
       getActivities(),
     ]);
   } catch {
-    // DB unavailable at build time — render with empty arrays
+    // DB unavailable at build time
   }
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-ground">
       <Header />
 
-      {/* ═══ HERO — full viewport with Ken Burns slideshow ═══ */}
+      {/* ═══ HERO — cinematic Ken Burns with layered overlays ═══ */}
       <section className="relative flex min-h-screen items-end overflow-hidden">
         <HeroSlideshow />
 
+        {/* Decorative grid overlay */}
+        <div className="absolute inset-0 z-[1] opacity-[0.03]" style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px',
+        }} />
+
+        {/* Radial accent glow */}
+        <div className="absolute inset-0 z-[1]" style={{
+          background: 'radial-gradient(ellipse at 70% 20%, rgba(26,142,125,0.12), transparent 60%)',
+        }} />
+        <div className="absolute inset-0 z-[1]" style={{
+          background: 'radial-gradient(ellipse at 20% 80%, rgba(198,139,63,0.06), transparent 50%)',
+        }} />
+
         <div className="relative z-10 mx-auto w-full max-w-[1200px] px-5 pb-40 pt-32 md:px-8 md:pb-48">
-          <div className="mb-6 flex items-center gap-2.5">
-            <span className="h-px w-8 bg-amber" />
-            <span
-              className="text-[11px] font-semibold uppercase tracking-[0.25em] text-amber"
-              style={{ textShadow: "0 1px 8px rgba(0,0,0,0.6)" }}
-            >
+          <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border border-white/12 bg-white/5 px-4 py-1.5 backdrop-blur-sm">
+            <span className="h-1.5 w-1.5 rounded-full bg-lagoon animate-pulse" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-lagoon-100">
               Goa&apos;s #1 Trip Planner — Since 2017
             </span>
           </div>
@@ -114,7 +149,9 @@ export default async function HomePage() {
           >
             Unforgettable
             <br />
-            <span className="text-lagoon">Goa Experiences</span>
+            <span className="bg-gradient-to-r from-lagoon-100 to-lagoon bg-clip-text text-transparent">
+              Goa Experiences
+            </span>
           </h1>
 
           <p
@@ -154,38 +191,78 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
+
+        {/* Bottom wave transition to stats strip */}
+        <div className="absolute bottom-0 left-0 right-0 z-20">
+          <svg viewBox="0 0 1440 48" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-8 md:h-12 block" preserveAspectRatio="none">
+            <path d="M0 48V24C240 0 480 0 720 24C960 48 1200 48 1440 24V48H0Z" fill="var(--color-abyss)" />
+          </svg>
+        </div>
       </section>
 
-      {/* ═══ STATS — floating card overlapping hero bottom ═══ */}
-      <div className="relative z-30 -mt-16">
-        <div className="mx-auto max-w-4xl px-5 md:px-8">
-          <div className="rounded-2xl bg-white shadow-elevated py-6 px-8">
-            <div className="grid grid-cols-2 gap-6 md:grid-cols-4">
-              {stats.map((s) => (
-                <div key={s.label} className="text-center">
-                  <p className="text-2xl font-bold text-ink md:text-3xl">
+      {/* ═══ STATS — abyss strip with glassmorphism cards ═══ */}
+      <section className="relative bg-abyss overflow-hidden">
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(ellipse at 50% 0%, rgba(26,142,125,0.08), transparent 60%)',
+        }} />
+        <div className="relative mx-auto max-w-5xl px-5 py-10 md:px-8 md:py-12">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+            {stats.map((s) => {
+              const Icon = s.icon;
+              return (
+                <div key={s.label} className="flex flex-col items-center gap-2 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm px-4 py-5 text-center">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-lagoon/15">
+                    <Icon className="h-5 w-5 text-lagoon" />
+                  </div>
+                  <p className="text-2xl font-bold text-white md:text-3xl">
                     <AnimatedCounter value={s.value} />
                   </p>
-                  <p className="mt-1 text-[11px] text-gray-400 uppercase tracking-wider">
+                  <p className="text-[11px] text-white/40 uppercase tracking-wider">
                     {s.label}
                   </p>
                 </div>
-              ))}
-            </div>
+              );
+            })}
           </div>
         </div>
-      </div>
+        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-lagoon/20 to-transparent" />
+      </section>
+
+      {/* ═══ TRUST STRIP ═══ */}
+      <section className="border-b border-border-warm bg-ground">
+        <div className="mx-auto max-w-7xl px-4 py-5 md:px-8">
+          <div className="flex items-center justify-center gap-6 overflow-x-auto scrollbar-hide md:gap-10">
+            {trustBadges.map((b) => {
+              const Icon = b.icon;
+              return (
+                <div key={b.label} className="flex shrink-0 items-center gap-2.5">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-lagoon-50">
+                    <Icon className="h-4 w-4 text-lagoon" />
+                  </div>
+                  <span className="text-xs font-semibold text-ink whitespace-nowrap">{b.label}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
 
       {/* ═══ WHY GOA TRIP PACKAGE ═══ */}
-      <section className="pt-20 pb-20 bg-white">
+      <section className="py-20 bg-white">
         <div className="mx-auto max-w-7xl px-5 md:px-8">
           <ScrollReveal>
             <div className="text-center mb-14">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber mb-3">
-                Why Goa Trip Package
-              </p>
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-lagoon/20 bg-lagoon/5 px-4 py-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-lagoon animate-pulse" />
+                <span className="text-xs font-medium uppercase tracking-[0.15em] text-lagoon">
+                  Why Goa Trip Package
+                </span>
+              </div>
               <h2 className="font-display text-3xl font-bold text-ink md:text-5xl">
-                Trusted by 10,000+ Travellers
+                Trusted by 10,000+{" "}
+                <span className="bg-gradient-to-r from-lagoon to-lagoon-700 bg-clip-text text-transparent">
+                  Travellers
+                </span>
               </h2>
             </div>
           </ScrollReveal>
@@ -213,26 +290,35 @@ export default async function HomePage() {
       </section>
 
       {/* ═══ CRUISES ═══ */}
-      <section className="py-20 bg-ground">
-        <div className="mx-auto max-w-7xl px-5 md:px-8">
+      <section className="relative bg-ground overflow-hidden">
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(ellipse at 80% 20%, rgba(26,142,125,0.04), transparent 50%)',
+        }} />
+        <div className="relative mx-auto max-w-7xl px-5 py-20 md:px-8">
           <ScrollReveal>
             <div className="flex items-end justify-between mb-10">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber mb-2">
-                  Mandovi River
-                </p>
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber/20 bg-amber/5 px-3 py-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-amber animate-pulse" />
+                  <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-amber">
+                    Mandovi River
+                  </span>
+                </div>
                 <h2 className="font-display text-2xl font-bold text-ink md:text-4xl">
-                  Unforgettable Cruise Experiences
+                  Unforgettable Cruise{" "}
+                  <span className="bg-gradient-to-r from-lagoon to-lagoon-700 bg-clip-text text-transparent">
+                    Experiences
+                  </span>
                 </h2>
                 <p className="mt-2 text-sm text-gray-400">
-                  13 cruises — sunset, dinner, party, dolphin, private
+                  {cruises.length} cruises — sunset, dinner, party, dolphin, private
                 </p>
               </div>
               <Link
                 href="/cruises"
                 className="hidden sm:flex items-center gap-1 text-sm font-medium text-lagoon hover:text-lagoon-600 transition-colors"
               >
-                View all 13 <ChevronRight className="h-4 w-4" />
+                View all {cruises.length} <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
           </ScrollReveal>
@@ -263,12 +349,12 @@ export default async function HomePage() {
             href="/cruises"
             className="mt-6 flex items-center justify-center gap-1 text-sm font-medium text-lagoon sm:hidden"
           >
-            View all 13 cruises <ChevronRight className="h-4 w-4" />
+            View all {cruises.length} cruises <ChevronRight className="h-4 w-4" />
           </Link>
         </div>
       </section>
 
-      {/* ═══ IMMERSIVE BREAK — full-bleed image with quote ═══ */}
+      {/* ═══ IMMERSIVE BREAK — full-bleed cinematic ═══ */}
       <section className="relative py-28 overflow-hidden md:py-36">
         <div className="absolute inset-0">
           <Image
@@ -281,13 +367,28 @@ export default async function HomePage() {
           />
         </div>
         <div className="absolute inset-0 bg-abyss/65" />
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px',
+        }} />
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(26,142,125,0.1), transparent 60%)',
+        }} />
         <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
           <ScrollReveal>
-            <Anchor className="mx-auto h-8 w-8 text-amber/60 mb-6" />
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-4 py-1.5 backdrop-blur-sm">
+              <Anchor className="h-3.5 w-3.5 text-amber/70" />
+              <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-amber/70">
+                Arabian Sea
+              </span>
+            </div>
             <h2 className="font-display text-3xl font-bold text-white md:text-5xl leading-tight">
               Where Every Sunset
               <br />
-              Tells a Story
+              <span className="bg-gradient-to-r from-lagoon-100 to-lagoon bg-clip-text text-transparent">
+                Tells a Story
+              </span>
             </h2>
             <p className="mt-4 text-white/50 text-base max-w-md mx-auto">
               From intimate yacht charters to celebration cruises — your Arabian
@@ -297,27 +398,44 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ═══ YACHTS — dark immersive section ═══ */}
-      <section className="py-20 bg-abyss">
-        <div className="mx-auto max-w-7xl px-5 md:px-8">
+      {/* ═══ YACHTS — dark cinematic section ═══ */}
+      <section className="relative bg-abyss overflow-hidden">
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(ellipse at 20% 30%, rgba(26,142,125,0.1), transparent 50%)',
+        }} />
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(ellipse at 80% 80%, rgba(198,139,63,0.06), transparent 50%)',
+        }} />
+        <div className="absolute inset-0 opacity-[0.02]" style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px',
+        }} />
+        <div className="relative mx-auto max-w-7xl px-5 py-20 md:px-8">
           <ScrollReveal>
             <div className="flex items-end justify-between mb-10">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber mb-2">
-                  Private Luxury
-                </p>
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-lagoon/30 bg-lagoon/10 px-3 py-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-lagoon animate-pulse" />
+                  <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-lagoon-100">
+                    Private Luxury
+                  </span>
+                </div>
                 <h2 className="font-display text-2xl font-bold text-white md:text-4xl">
-                  Sail in Total Privacy
+                  Sail in Total{" "}
+                  <span className="bg-gradient-to-r from-lagoon-100 to-lagoon bg-clip-text text-transparent">
+                    Privacy
+                  </span>
                 </h2>
                 <p className="mt-2 text-sm text-white/40">
-                  23 yachts — celebrations, romance, corporate events
+                  {yachts.length} yachts — celebrations, romance, corporate events
                 </p>
               </div>
               <Link
                 href="/yachts"
                 className="hidden sm:flex items-center gap-1 text-sm font-medium text-lagoon hover:text-lagoon-100 transition-colors"
               >
-                View all 23 <ChevronRight className="h-4 w-4" />
+                View all {yachts.length} <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
           </ScrollReveal>
@@ -346,32 +464,47 @@ export default async function HomePage() {
             href="/yachts"
             className="mt-6 flex items-center justify-center gap-1 text-sm font-medium text-lagoon sm:hidden"
           >
-            View all 23 yachts <ChevronRight className="h-4 w-4" />
+            View all {yachts.length} yachts <ChevronRight className="h-4 w-4" />
           </Link>
+        </div>
+        {/* Wave transition to white */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-8 md:h-10" preserveAspectRatio="none">
+            <path d="M0 40V20C240 0 480 0 720 20C960 40 1200 40 1440 20V40H0Z" fill="var(--color-ground)" />
+          </svg>
         </div>
       </section>
 
       {/* ═══ PACKAGES ═══ */}
-      <section className="py-20 bg-white">
-        <div className="mx-auto max-w-7xl px-5 md:px-8">
+      <section className="relative bg-white overflow-hidden">
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(ellipse at 30% 80%, rgba(198,139,63,0.04), transparent 50%)',
+        }} />
+        <div className="relative mx-auto max-w-7xl px-5 py-20 md:px-8">
           <ScrollReveal>
             <div className="flex items-end justify-between mb-10">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber mb-2">
-                  All Inclusive
-                </p>
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-amber/20 bg-amber/5 px-3 py-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-amber animate-pulse" />
+                  <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-amber">
+                    All Inclusive
+                  </span>
+                </div>
                 <h2 className="font-display text-2xl font-bold text-ink md:text-4xl">
-                  Complete Goa Holiday Packages
+                  Complete Goa Holiday{" "}
+                  <span className="bg-gradient-to-r from-lagoon to-lagoon-700 bg-clip-text text-transparent">
+                    Packages
+                  </span>
                 </h2>
                 <p className="mt-2 text-sm text-gray-400">
-                  39 packages — honeymoon, family, group, bachelor, corporate
+                  {packages.length} packages — honeymoon, family, group, bachelor, corporate
                 </p>
               </div>
               <Link
                 href="/packages"
                 className="hidden sm:flex items-center gap-1 text-sm font-medium text-lagoon hover:text-lagoon-600 transition-colors"
               >
-                View all 39 <ChevronRight className="h-4 w-4" />
+                View all {packages.length} <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
           </ScrollReveal>
@@ -400,32 +533,41 @@ export default async function HomePage() {
             href="/packages"
             className="mt-6 flex items-center justify-center gap-1 text-sm font-medium text-lagoon sm:hidden"
           >
-            View all 39 packages <ChevronRight className="h-4 w-4" />
+            View all {packages.length} packages <ChevronRight className="h-4 w-4" />
           </Link>
         </div>
       </section>
 
       {/* ═══ ACTIVITIES ═══ */}
-      <section className="py-20 bg-ground">
-        <div className="mx-auto max-w-7xl px-5 md:px-8">
+      <section className="relative bg-ground overflow-hidden">
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(ellipse at 60% 30%, rgba(26,142,125,0.04), transparent 50%)',
+        }} />
+        <div className="relative mx-auto max-w-7xl px-5 py-20 md:px-8">
           <ScrollReveal>
             <div className="flex items-end justify-between mb-10">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber mb-2">
-                  Thrill &amp; Adventure
-                </p>
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full border border-lagoon/20 bg-lagoon/5 px-3 py-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-lagoon animate-pulse" />
+                  <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-lagoon">
+                    Thrill &amp; Adventure
+                  </span>
+                </div>
                 <h2 className="font-display text-2xl font-bold text-ink md:text-4xl">
-                  Dive Into Goa&apos;s Best Adventures
+                  Dive Into Goa&apos;s Best{" "}
+                  <span className="bg-gradient-to-r from-lagoon to-lagoon-700 bg-clip-text text-transparent">
+                    Adventures
+                  </span>
                 </h2>
                 <p className="mt-2 text-sm text-gray-400">
-                  18 activities — scuba, parasail, bungee, kayak, helicopter
+                  {activities.length} activities — scuba, parasail, bungee, kayak, helicopter
                 </p>
               </div>
               <Link
                 href="/activities"
                 className="hidden sm:flex items-center gap-1 text-sm font-medium text-lagoon hover:text-lagoon-600 transition-colors"
               >
-                View all 18 <ChevronRight className="h-4 w-4" />
+                View all {activities.length} <ChevronRight className="h-4 w-4" />
               </Link>
             </div>
           </ScrollReveal>
@@ -453,21 +595,30 @@ export default async function HomePage() {
             href="/activities"
             className="mt-6 flex items-center justify-center gap-1 text-sm font-medium text-lagoon sm:hidden"
           >
-            View all 18 activities <ChevronRight className="h-4 w-4" />
+            View all {activities.length} activities <ChevronRight className="h-4 w-4" />
           </Link>
         </div>
       </section>
 
       {/* ═══ POPULAR DESTINATIONS ═══ */}
-      <section className="py-20 bg-white">
-        <div className="mx-auto max-w-7xl px-5 md:px-8">
+      <section className="relative bg-white overflow-hidden">
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(ellipse at 50% 80%, rgba(198,139,63,0.04), transparent 50%)',
+        }} />
+        <div className="relative mx-auto max-w-7xl px-5 py-20 md:px-8">
           <ScrollReveal>
             <div className="text-center mb-12">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber mb-2">
-                Explore by Location
-              </p>
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-amber/20 bg-amber/5 px-4 py-1.5">
+                <MapPin className="h-3.5 w-3.5 text-amber" />
+                <span className="text-xs font-medium uppercase tracking-[0.15em] text-amber">
+                  Explore by Location
+                </span>
+              </div>
               <h2 className="font-display text-2xl font-bold text-ink md:text-4xl">
-                Popular Destinations in Goa
+                Popular Destinations in{" "}
+                <span className="bg-gradient-to-r from-lagoon to-lagoon-700 bg-clip-text text-transparent">
+                  Goa
+                </span>
               </h2>
             </div>
           </ScrollReveal>
@@ -499,16 +650,33 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ═══ TESTIMONIALS — dark immersive section ═══ */}
-      <section className="py-20 bg-abyss">
-        <div className="mx-auto max-w-7xl px-5 md:px-8">
+      {/* ═══ TESTIMONIALS — cinematic dark section ═══ */}
+      <section className="relative bg-abyss overflow-hidden">
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(ellipse at 30% 20%, rgba(26,142,125,0.1), transparent 50%)',
+        }} />
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(ellipse at 70% 80%, rgba(198,139,63,0.06), transparent 50%)',
+        }} />
+        <div className="absolute inset-0 opacity-[0.02]" style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px',
+        }} />
+        <div className="relative mx-auto max-w-7xl px-5 py-20 md:px-8">
           <ScrollReveal>
             <div className="text-center mb-12">
-              <p className="text-xs font-semibold uppercase tracking-[0.2em] text-amber mb-2">
-                What Travellers Say
-              </p>
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-lagoon/30 bg-lagoon/10 px-4 py-1.5">
+                <Star className="h-3.5 w-3.5 text-lagoon fill-lagoon" />
+                <span className="text-xs font-medium uppercase tracking-[0.15em] text-lagoon-100">
+                  What Travellers Say
+                </span>
+              </div>
               <h2 className="font-display text-2xl font-bold text-white md:text-4xl">
-                Verified Reviews
+                Verified{" "}
+                <span className="bg-gradient-to-r from-lagoon-100 to-lagoon bg-clip-text text-transparent">
+                  Reviews
+                </span>
               </h2>
               <p className="mt-2 text-sm text-white/40">
                 From our 10,000+ happy travellers
@@ -518,7 +686,7 @@ export default async function HomePage() {
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {testimonials.map((t, i) => (
               <ScrollReveal key={t.name} delay={i * 80}>
-                <div className="rounded-2xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm p-6 transition-all duration-300 hover:bg-white/[0.07] hover:border-white/[0.15]">
+                <div className="rounded-2xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm p-6 transition-all duration-300 hover:bg-white/[0.07] hover:border-lagoon/20">
                   <div className="flex gap-0.5 mb-3">
                     {Array.from({ length: t.rating }).map((_, j) => (
                       <Star
@@ -548,37 +716,55 @@ export default async function HomePage() {
             ))}
           </div>
         </div>
+        {/* Wave to ground */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg viewBox="0 0 1440 40" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-8 md:h-10" preserveAspectRatio="none">
+            <path d="M0 40V20C240 0 480 0 720 20C960 40 1200 40 1440 20V40H0Z" fill="var(--color-ground)" />
+          </svg>
+        </div>
       </section>
 
-      {/* ═══ HOW IT WORKS ═══ */}
-      <section className="py-20 bg-ground">
-        <div className="mx-auto max-w-4xl px-5 md:px-8">
+      {/* ═══ HOW IT WORKS — connected timeline ═══ */}
+      <section className="relative bg-ground overflow-hidden">
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(ellipse at 50% 50%, rgba(26,142,125,0.03), transparent 50%)',
+        }} />
+        <div className="relative mx-auto max-w-4xl px-5 py-20 md:px-8">
           <ScrollReveal>
             <div className="text-center mb-14">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-lagoon/20 bg-lagoon/5 px-4 py-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-lagoon animate-pulse" />
+                <span className="text-xs font-medium uppercase tracking-[0.15em] text-lagoon">
+                  Simple Process
+                </span>
+              </div>
               <h2 className="font-display text-2xl font-bold text-ink md:text-4xl">
-                How It Works
+                How It{" "}
+                <span className="bg-gradient-to-r from-lagoon to-lagoon-700 bg-clip-text text-transparent">
+                  Works
+                </span>
               </h2>
               <p className="mt-2 text-sm text-gray-400">
                 Book your Goa experience in 4 simple steps
               </p>
             </div>
           </ScrollReveal>
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="relative grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {/* Connecting line (desktop only) */}
+            <div className="absolute top-7 left-[calc(12.5%+28px)] right-[calc(12.5%+28px)] h-px bg-gradient-to-r from-lagoon/20 via-lagoon/40 to-lagoon/20 hidden lg:block" />
             {steps.map((s, i) => {
               const Icon = s.icon;
               return (
                 <ScrollReveal key={s.step} delay={i * 100}>
-                  <div className="text-center">
-                    <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-lagoon/10 mb-4">
-                      <Icon className="h-7 w-7 text-lagoon" />
-                    </div>
-                    <div className="flex items-center justify-center gap-2 mb-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-full bg-lagoon text-xs font-bold text-white">
+                  <div className="relative text-center">
+                    <div className="relative mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-white border border-border-warm shadow-soft mb-4">
+                      <Icon className="h-6 w-6 text-lagoon" />
+                      <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-lagoon text-[10px] font-bold text-white shadow-lagoon">
                         {s.step}
                       </span>
-                      <h3 className="text-sm font-bold text-ink">{s.title}</h3>
                     </div>
-                    <p className="text-xs text-gray-400">{s.desc}</p>
+                    <h3 className="text-sm font-bold text-ink mb-1">{s.title}</h3>
+                    <p className="text-xs text-gray-400 leading-relaxed">{s.desc}</p>
                   </div>
                 </ScrollReveal>
               );
@@ -587,14 +773,34 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ═══ FINAL CTA ═══ */}
+      {/* ═══ FINAL CTA — cinematic with layered gradients ═══ */}
       <section className="relative py-24 overflow-hidden md:py-32">
-        <div className="absolute inset-0 bg-hero-gradient" />
+        <div className="absolute inset-0 bg-abyss" />
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(ellipse at 50% 30%, rgba(26,142,125,0.15), transparent 50%)',
+        }} />
+        <div className="absolute inset-0" style={{
+          background: 'radial-gradient(ellipse at 20% 80%, rgba(198,139,63,0.08), transparent 50%)',
+        }} />
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: `linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px),
+                            linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)`,
+          backgroundSize: '60px 60px',
+        }} />
+        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-lagoon/30 to-transparent" />
         <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
           <ScrollReveal>
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-lagoon/30 bg-lagoon/10 px-4 py-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-lagoon animate-pulse" />
+              <span className="text-xs font-medium uppercase tracking-[0.15em] text-lagoon-100">
+                Start Planning
+              </span>
+            </div>
             <h2 className="font-display text-3xl font-bold text-white md:text-5xl">
               Ready for an Unforgettable
-              <span className="block mt-2 text-lagoon">Goa Adventure?</span>
+              <span className="block mt-2 bg-gradient-to-r from-lagoon-100 to-lagoon bg-clip-text text-transparent">
+                Goa Adventure?
+              </span>
             </h2>
             <p className="mt-5 text-white/50 text-base max-w-md mx-auto">
               Tell us what you want. Our planners craft your perfect itinerary
