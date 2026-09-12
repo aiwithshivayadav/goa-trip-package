@@ -39,6 +39,10 @@ interface ItineraryItem {
   name: string;
   price: number;
   type: string;
+  imageUrl?: string;
+  duration?: string;
+  location?: string;
+  shortDesc?: string;
 }
 
 interface Day {
@@ -117,6 +121,10 @@ export default function QuoteBuilder({ allProducts }: { allProducts: ProductData
                   name: product.name,
                   price: product.basePrice,
                   type: product.type,
+                  imageUrl: product.imageUrl,
+                  duration: product.duration,
+                  location: product.location,
+                  shortDesc: product.shortDesc,
                 },
               ],
             }

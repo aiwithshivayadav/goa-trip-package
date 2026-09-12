@@ -15,21 +15,50 @@ export async function generateMetadata({ params }: QuotePageProps): Promise<Meta
 
   const quote = await db.quote.findUnique({
     where: { publicToken: token },
-    select: { title: true, quoteCode: true },
+    select: { title: true, quoteCode: true, totalPrice: true },
   });
 
+  const title = quote ? `${quote.title} — ${quote.quoteCode}` : "Quote Not Found";
+  const description = quote
+    ? `Your personalised Goa trip: ${quote.title}. View itinerary, pricing & book instantly.`
+    : "View your personalised Goa trip itinerary and book with one click.";
+
   return {
-    title: quote ? `${quote.title} — ${quote.quoteCode}` : "Quote Not Found",
-    description: "View your personalised Goa trip itinerary and book with one click.",
+    title,
+    description,
     robots: { index: false, follow: false },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      siteName: "Goa Trip Package",
+      images: [{ url: "/og-quote.jpg", width: 1200, height: 630, alt: "Goa Trip Package Quote" }],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 
 /* ── Helpers ── */
 
+interface ItineraryItem {
+  id?: string;
+  name?: string;
+  price?: number;
+  type?: string;
+  imageUrl?: string;
+  duration?: string;
+  location?: string;
+  shortDesc?: string;
+}
+
 interface ItineraryDay {
   day?: number;
   title?: string;
+  items?: ItineraryItem[];
   activities?: string[] | { name?: string; time?: string; description?: string }[];
   description?: string;
   meals?: string[];
@@ -202,7 +231,7 @@ export default async function QuotePage({ params }: QuotePageProps) {
                   <ItineraryIcon />
                   Itinerary
                 </h3>
-                <div className="space-y-5">
+                <div className="space-y-6">
                   {items.map((day, i) => (
                     <div key={i} className="relative pl-7">
                       {/* Timeline dot + line */}
@@ -220,7 +249,47 @@ export default async function QuotePage({ params }: QuotePageProps) {
                         <p className="mt-1 text-sm text-gray-500">{day.description}</p>
                       )}
 
-                      {/* Activities */}
+                      {/* Product items with images */}
+                      {day.items && day.items.length > 0 && (
+                        <div className="mt-3 space-y-3">
+                          {day.items.map((item, j) => (
+                            <div key={j} className="flex gap-3 rounded-xl border border-gray-100 bg-gray-50/50 p-3">
+                              {item.imageUrl && (
+                                <div className="h-16 w-20 flex-shrink-0 overflow-hidden rounded-lg">
+                                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                                  <img
+                                    src={item.imageUrl}
+                                    alt={item.name || ""}
+                                    className="h-full w-full object-cover"
+                                  />
+                                </div>
+                              )}
+                              <div className="min-w-0 flex-1">
+                                <p className="text-sm font-semibold text-[#0B1D26]">{item.name}</p>
+                                {item.shortDesc && (
+                                  <p className="mt-0.5 text-xs text-gray-500 line-clamp-2">{item.shortDesc}</p>
+                                )}
+                                <div className="mt-1 flex flex-wrap gap-2 text-[10px] text-gray-400">
+                                  {item.duration && <span>{item.duration}</span>}
+                                  {item.location && <span>{item.duration ? "·" : ""} {item.location}</span>}
+                                  {item.type && (
+                                    <span className="rounded bg-[#1A8E7D]/10 px-1.5 py-0.5 font-medium capitalize text-[#1A8E7D]">
+                                      {item.type}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                              {item.price !== undefined && item.price > 0 && (
+                                <div className="flex-shrink-0 text-right">
+                                  <p className="text-sm font-bold text-[#0B1D26]">{formatINR(item.price)}</p>
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      {/* Activities (legacy format) */}
                       {day.activities && day.activities.length > 0 && (
                         <ul className="mt-2 space-y-1">
                           {day.activities.map((activity, j) => {
@@ -362,6 +431,58 @@ export default async function QuotePage({ params }: QuotePageProps) {
               </div>
             )}
 
+            {/* Why Book With Us */}
+            <div className="border-b border-gray-100 px-6 py-6 sm:px-8">
+              <h3 className="mb-4 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#C68B3F]">
+                <TrustIcon />
+                Why Book With Us
+              </h3>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="flex items-start gap-2.5 rounded-lg bg-[#1A8E7D]/5 p-3">
+                  <span className="mt-0.5 text-lg">&#9989;</span>
+                  <div>
+                    <p className="text-xs font-semibold text-[#0B1D26]">Verified Operator</p>
+                    <p className="text-[10px] text-gray-500">Government registered & insured</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2.5 rounded-lg bg-[#1A8E7D]/5 p-3">
+                  <span className="mt-0.5 text-lg">&#128274;</span>
+                  <div>
+                    <p className="text-xs font-semibold text-[#0B1D26]">Secure Payments</p>
+                    <p className="text-[10px] text-gray-500">PayU secured gateway</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2.5 rounded-lg bg-[#1A8E7D]/5 p-3">
+                  <span className="mt-0.5 text-lg">&#9733;</span>
+                  <div>
+                    <p className="text-xs font-semibold text-[#0B1D26]">500+ Happy Trips</p>
+                    <p className="text-[10px] text-gray-500">Rated 4.8/5 by travellers</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-2.5 rounded-lg bg-[#1A8E7D]/5 p-3">
+                  <span className="mt-0.5 text-lg">&#128222;</span>
+                  <div>
+                    <p className="text-xs font-semibold text-[#0B1D26]">24/7 Support</p>
+                    <p className="text-[10px] text-gray-500">WhatsApp & phone support</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Countdown timer for near-expiry */}
+            {isNearExpiry && !isExpired && (
+              <div className="border-b border-gray-100 px-6 py-4 sm:px-8">
+                <div className="flex items-center justify-center gap-2 rounded-lg bg-amber-50 px-4 py-3 text-center">
+                  <span className="text-lg">&#9200;</span>
+                  <p className="text-sm font-semibold text-amber-700">
+                    {daysLeft === 0
+                      ? "Offer expires today — book now to lock in this price!"
+                      : `Only ${daysLeft} day${daysLeft > 1 ? "s" : ""} left — prices may change after expiry`}
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Action buttons */}
             <div id="quote-actions" className="px-6 py-6 sm:px-8 no-print">
               <QuoteActions
@@ -487,6 +608,14 @@ function PricingIcon() {
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <line x1="12" y1="1" x2="12" y2="23" />
       <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />
+    </svg>
+  );
+}
+
+function TrustIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
     </svg>
   );
 }

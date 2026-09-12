@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 interface QuoteActionsProps {
   token: string;
@@ -23,9 +24,34 @@ export function QuoteActions({
   const [loading, setLoading] = useState<"accept" | "decline" | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const searchParams = useSearchParams();
 
-  const handleAction = async (action: "accept" | "decline") => {
-    setLoading(action);
+  // Show payment failure message from URL params
+  useEffect(() => {
+    const payment = searchParams.get("payment");
+    if (payment === "failed") {
+      setError("Payment failed. Please try again.");
+    } else if (payment === "expired") {
+      setError("This quote has expired. Please contact us for a revised quote.");
+    } else if (payment === "unavailable") {
+      setError("Payment is not available for this quote. Please contact us.");
+    } else if (payment === "error") {
+      setError("Something went wrong. Please try again.");
+    } else if (payment === "success") {
+      setMessage("Payment successful! Your booking has been confirmed.");
+    }
+  }, [searchParams]);
+
+  const handleAcceptAndPay = () => {
+    setLoading("accept");
+    setError(null);
+    setMessage(null);
+    // Redirect to the PayU payment flow
+    window.location.href = `/api/quotes/public/${token}/pay`;
+  };
+
+  const handleDecline = async () => {
+    setLoading("decline");
     setError(null);
     setMessage(null);
 
@@ -33,7 +59,7 @@ export function QuoteActions({
       const res = await fetch(`/api/quotes/public/${token}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action }),
+        body: JSON.stringify({ action: "decline" }),
       });
 
       const data = await res.json();
@@ -44,7 +70,7 @@ export function QuoteActions({
       }
 
       setMessage(data.message);
-      setCurrentStatus(data.status || action + "ed");
+      setCurrentStatus("declined");
     } catch {
       setError("Network error. Please check your connection and try again.");
     } finally {
@@ -59,17 +85,48 @@ export function QuoteActions({
   const canDecline =
     !["accepted", "declined", "converted", "expired"].includes(currentStatus);
 
-  // Already accepted
+  // Already accepted (but not yet paid — show pay button)
   if (currentStatus === "accepted") {
     return (
       <div className="space-y-4">
+        {/* Feedback messages */}
+        {error && (
+          <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {error}
+          </div>
+        )}
+        {message && (
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+            {message}
+          </div>
+        )}
+
         <div className="rounded-xl border-2 border-emerald-200 bg-emerald-50 px-5 py-4 text-center">
           <div className="mb-1 text-2xl">&#10003;</div>
           <p className="font-semibold text-emerald-800">Quote Accepted</p>
           <p className="mt-1 text-sm text-emerald-600">
-            {message || "Our team will reach out shortly to finalize your booking."}
+            Complete your payment to confirm the booking.
           </p>
         </div>
+
+        {/* Pay now button */}
+        {!isExpired && (
+          <button
+            onClick={handleAcceptAndPay}
+            disabled={loading === "accept"}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#1A8E7D] px-6 py-4 text-base font-bold text-white shadow-lg shadow-[#1A8E7D]/25 transition-all hover:bg-[#158572] hover:shadow-xl hover:shadow-[#1A8E7D]/30 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
+          >
+            {loading === "accept" ? (
+              <Spinner />
+            ) : (
+              <>
+                <LockIcon />
+                Pay {advancePercent}% Advance ({advanceAmount})
+              </>
+            )}
+          </button>
+        )}
+
         <div className="flex gap-3">
           <a
             href={whatsappUrl}
@@ -88,6 +145,35 @@ export function QuoteActions({
             Print
           </button>
         </div>
+      </div>
+    );
+  }
+
+  // Converted — booking already created
+  if (currentStatus === "converted") {
+    return (
+      <div className="space-y-4">
+        {message && (
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+            {message}
+          </div>
+        )}
+        <div className="rounded-xl border-2 border-emerald-200 bg-emerald-50 px-5 py-4 text-center">
+          <div className="mb-1 text-2xl">&#10003;</div>
+          <p className="font-semibold text-emerald-800">Booking Confirmed</p>
+          <p className="mt-1 text-sm text-emerald-600">
+            This quote has been converted to a booking. Check your email for details.
+          </p>
+        </div>
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-[#25D366] bg-[#25D366] px-5 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[#20bd5a]"
+        >
+          <WhatsAppIcon />
+          Chat with Us
+        </a>
       </div>
     );
   }
@@ -129,9 +215,9 @@ export function QuoteActions({
         </div>
       )}
 
-      {/* Primary CTA */}
+      {/* Primary CTA — Accept & Pay */}
       <button
-        onClick={() => handleAction("accept")}
+        onClick={handleAcceptAndPay}
         disabled={!canAccept || loading === "accept"}
         className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#1A8E7D] px-6 py-4 text-base font-bold text-white shadow-lg shadow-[#1A8E7D]/25 transition-all hover:bg-[#158572] hover:shadow-xl hover:shadow-[#1A8E7D]/30 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
       >
@@ -171,7 +257,7 @@ export function QuoteActions({
           <button
             onClick={() => {
               if (window.confirm("Are you sure you want to decline this quote?")) {
-                handleAction("decline");
+                handleDecline();
               }
             }}
             disabled={loading === "decline"}
@@ -210,6 +296,15 @@ function CheckCircleIcon() {
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M22 11.08V12a10 10 0 11-5.93-9.14" />
       <polyline points="22 4 12 14.01 9 11.01" />
+    </svg>
+  );
+}
+
+function LockIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+      <path d="M7 11V7a5 5 0 0110 0v4" />
     </svg>
   );
 }
