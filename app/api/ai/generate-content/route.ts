@@ -68,7 +68,7 @@ function pickRandom<T>(arr: T[], count: number): T[] {
 }
 
 function generateShortDesc(input: GenerateRequest): string {
-  const ctx = typeContext[input.type] || typeContext.package_tour;
+  const ctx = (typeContext[input.type] || typeContext.package_tour)!;
   const location = input.location || "Goa";
   const nameWords = input.name.toLowerCase();
 
@@ -93,7 +93,7 @@ function generateShortDesc(input: GenerateRequest): string {
 }
 
 function generateLongDesc(input: GenerateRequest): string {
-  const ctx = typeContext[input.type] || typeContext.package_tour;
+  const ctx = (typeContext[input.type] || typeContext.package_tour)!;
   const location = input.location || "Goa";
   const duration = input.duration || "";
   const price = input.basePrice ? `₹${input.basePrice.toLocaleString("en-IN")}` : "";
@@ -126,7 +126,7 @@ function generateLongDesc(input: GenerateRequest): string {
 }
 
 function generateHighlights(input: GenerateRequest): string[] {
-  const ctx = typeContext[input.type] || typeContext.package_tour;
+  const ctx = (typeContext[input.type] || typeContext.package_tour)!;
   const nameWords = input.name.toLowerCase();
   const base = [...ctx.sellPoints];
 
@@ -141,7 +141,7 @@ function generateHighlights(input: GenerateRequest): string[] {
 }
 
 function generateInclusions(input: GenerateRequest): string[] {
-  const ctx = typeContext[input.type] || typeContext.package_tour;
+  const ctx = (typeContext[input.type] || typeContext.package_tour)!;
   const nameWords = input.name.toLowerCase();
 
   const inclusions = [...pickRandom(ctx.activities, 4)];
@@ -174,13 +174,13 @@ function generateExclusions(input: GenerateRequest): string[] {
     transfer: ["Toll charges for outstation", "Waiting beyond 30 minutes"],
   };
 
-  return [...common, ...pickRandom(byType[input.type] || byType.package_tour, 3)];
+  return [...common, ...pickRandom((byType[input.type] || byType.package_tour)!, 3)];
 }
 
 function generateMetaSEO(input: GenerateRequest): { metaTitle: string; metaDescription: string } {
   const location = input.location || "Goa";
   const price = input.basePrice ? ` from ₹${input.basePrice.toLocaleString("en-IN")}` : "";
-  const ctx = typeContext[input.type] || typeContext.package_tour;
+  const ctx = (typeContext[input.type] || typeContext.package_tour)!;
 
   return {
     metaTitle: `${input.name} | Best ${ctx.category.charAt(0).toUpperCase() + ctx.category.slice(1)} in ${location}${price}`,
