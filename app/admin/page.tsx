@@ -2,10 +2,7 @@ import { Inbox, FileText, CalendarDays, IndianRupee, TrendingUp, Clock, AlertCir
 import Link from "next/link";
 import { db } from "@/lib/db";
 
-/**
- * Admin Dashboard — Today KPIs + This Month + Pending Actions + Quick Links
- * Fetches real counts from DB; falls back to mock data if DB is empty/unreachable.
- */
+export const dynamic = "force-dynamic";
 
 // Mock data — shown when DB is empty or unreachable
 const mockTodayStats = [
@@ -94,7 +91,9 @@ export default async function AdminDashboardPage() {
     <div className="space-y-6">
       {/* Welcome */}
       <div>
-        <h2 className="text-xl font-bold text-white">Good morning, Shiva</h2>
+        <h2 className="text-xl font-bold text-white">
+          {new Date().getHours() < 12 ? "Good morning" : new Date().getHours() < 17 ? "Good afternoon" : "Good evening"}, Shiva
+        </h2>
         <p className="text-sm text-text-muted mt-0.5">Here&apos;s what&apos;s happening today</p>
       </div>
 
@@ -131,7 +130,9 @@ export default async function AdminDashboardPage() {
           <div className="glass-card rounded-xl p-5">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-bold text-white">This Month</h3>
-              <span className="text-[10px] text-text-dim uppercase tracking-wider">June 2026</span>
+              <span className="text-[10px] text-text-dim uppercase tracking-wider">
+                {new Date().toLocaleDateString("en-IN", { month: "long", year: "numeric" })}
+              </span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               <div>

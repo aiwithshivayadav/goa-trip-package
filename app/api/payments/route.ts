@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { requireAdmin } from "@/lib/api-auth";
 
 export async function GET(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1");
@@ -45,6 +49,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error("[Payments API] GET error:", error);
-    return NextResponse.json({ payments: [], total: 0, page: 1, limit: 50, summary: { collected: 0, pending: 0, refunded: 0 } });
+    return NextResponse.json({ error: "Failed to load payments" }, { status: 500 });
   }
 }

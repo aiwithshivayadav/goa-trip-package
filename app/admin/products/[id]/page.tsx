@@ -23,7 +23,7 @@ export default function ProductEditPage() {
   const [form, setForm] = useState({
     name: "",
     slug: "",
-    type: "package" as string,
+    type: "package_tour" as string,
     shortDesc: "",
     longDesc: "",
     basePrice: "",
@@ -242,12 +242,14 @@ export default function ProductEditPage() {
           <div>
             <label className="block text-xs text-text-muted mb-1.5">Type *</label>
             <select value={form.type} onChange={(e) => updateForm("type", e.target.value)} className="w-full h-10 rounded-lg bg-surface border border-border-gold px-3 text-sm text-white focus:border-gold transition-colors">
-              <option value="package">Package</option>
+              <option value="package_tour">Package</option>
               <option value="cruise">Cruise</option>
               <option value="yacht">Yacht</option>
               <option value="activity">Activity</option>
               <option value="hotel">Hotel</option>
               <option value="party">Party</option>
+              <option value="combo">Combo</option>
+              <option value="transfer">Transfer</option>
             </select>
           </div>
           <div>

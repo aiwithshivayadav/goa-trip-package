@@ -1,11 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-
-/**
- * GET /api/products/[id] — Get single product
- * PATCH /api/products/[id] — Update product
- * DELETE /api/products/[id] — Delete product
- */
+import { requireAdmin } from "@/lib/api-auth";
 
 export async function GET(
   request: NextRequest,
@@ -34,6 +29,9 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const { id } = await params;
     const productId = parseInt(id);
@@ -90,6 +88,9 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const { id } = await params;
     const productId = parseInt(id);

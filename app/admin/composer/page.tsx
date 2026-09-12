@@ -217,7 +217,7 @@ export default function ComposerPage() {
           type: "combo",
           name: packageName,
           shortDesc: packageDesc || `${durationText || days.length + "D"} curated package with ${totalItems} experiences`,
-          longDescMd: packageDesc || "",
+          longDesc: packageDesc || "",
           basePrice: sellingPrice,
           originalPrice: totalWithGST > sellingPrice ? totalWithGST : undefined,
           priceUnit: "per_person",
@@ -229,15 +229,15 @@ export default function ComposerPage() {
           isSelfServe: false,
           isQuoteLed: true,
           status: "active",
-          inclusionsJson: JSON.stringify(inclusions),
-          highlightsJson: JSON.stringify(highlights),
-          itineraryJson: JSON.stringify(itinerary),
-          keyFeaturesJson: JSON.stringify([
+          inclusions,
+          highlights,
+          itinerary,
+          keyFeatures: [
             { icon: "calendar", label: "Duration", value: durationText || `${days.length} Days` },
             { icon: "users", label: "Group Size", value: capacityText || "2-20 pax" },
             { icon: "map-pin", label: "Location", value: location || "Goa" },
             { icon: "indian-rupee", label: "Starting From", value: formatINR(sellingPrice) },
-          ]),
+          ],
         }),
       });
 

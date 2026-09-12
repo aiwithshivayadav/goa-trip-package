@@ -1,10 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
-
-/**
- * GET /api/products — List all products (admin)
- * POST /api/products — Create a new product (admin)
- */
+import { requireAdmin } from "@/lib/api-auth";
 
 export async function GET(request: NextRequest) {
   try {
@@ -36,6 +32,9 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const body = await request.json();
 

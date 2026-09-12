@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { requireAdmin } from "@/lib/api-auth";
 import { notifyLeadCreated } from "@/lib/n8n";
 import { generateLeadCode, normalizePhone } from "@/lib/utils";
 
@@ -91,10 +92,10 @@ export async function POST(request: NextRequest) {
   }
 }
 
-/**
- * GET /api/leads — List leads (admin only)
- */
 export async function GET(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");

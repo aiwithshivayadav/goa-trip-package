@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
 import type { ProductData } from "@/lib/data/db-products";
@@ -27,6 +28,9 @@ import {
   Receipt,
   Calculator,
   Trash2,
+  Loader2,
+  CalendarDays,
+  Type,
 } from "lucide-react";
 
 // ─── Types ───────────────────────────────────────────────────────
@@ -56,6 +60,8 @@ const typeFilters = ["all", "package", "cruise", "yacht", "activity", "hotel", "
 
 // ─── Component ──────────────────────────────────────────────────
 export default function QuoteBuilder({ allProducts }: { allProducts: ProductData[] }) {
+  const router = useRouter();
+
   // Itinerary state
   const [days, setDays] = useState<Day[]>([
     { day: 1, items: [] },
@@ -67,9 +73,18 @@ export default function QuoteBuilder({ allProducts }: { allProducts: ProductData
   // Customer state
   const [customer, setCustomer] = useState({ name: "", phone: "", email: "" });
 
+  // Quote meta
+  const [title, setTitle] = useState("");
+  const [validUntil, setValidUntil] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 7);
+    return d.toISOString().split("T")[0];
+  });
+
   // Pricing state
   const [discount, setDiscount] = useState(0);
   const [advancePercent, setAdvancePercent] = useState(25);
+  const [saving, setSaving] = useState(false);
 
   // Catalog filters
   const [catalogSearch, setCatalogSearch] = useState("");
@@ -152,26 +167,58 @@ export default function QuoteBuilder({ allProducts }: { allProducts: ProductData
 
   const totalItems = days.reduce((sum, d) => sum + d.items.length, 0);
 
-  // ── Publish handler ────────────────────────────────────────────
-  function handlePublish() {
-    if (!customer.name.trim()) {
-      toast.error("Customer name is required");
+  async function saveQuote(status: "draft" | "sent") {
+    if (!title.trim()) {
+      toast.error("Quote title is required");
       return;
     }
-    if (!customer.phone.trim()) {
-      toast.error("Customer phone is required");
-      return;
+    if (status === "sent") {
+      if (!customer.name.trim()) { toast.error("Customer name is required"); return; }
+      if (!customer.phone.trim()) { toast.error("Customer phone is required"); return; }
+      if (totalItems === 0) { toast.error("Add at least one product to the itinerary"); return; }
     }
-    if (totalItems === 0) {
-      toast.error("Add at least one product to the itinerary");
-      return;
+
+    setSaving(true);
+    try {
+      const res = await fetch("/api/quotes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: title.trim(),
+          customerName: customer.name.trim() || undefined,
+          customerPhone: customer.phone.trim() || undefined,
+          customerEmail: customer.email.trim() || undefined,
+          validUntil,
+          itemsJson: JSON.stringify(days),
+          totalPrice: total,
+          discountAmount,
+          gstAmount,
+          advancePercent,
+          status,
+        }),
+      });
+
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || "Failed to save");
+      }
+
+      const data = await res.json();
+      if (status === "sent") {
+        toast.success("Quote published!", { description: `Code: ${data.quoteCode}` });
+      } else {
+        toast.success("Draft saved", { description: data.quoteCode });
+      }
+      router.push("/admin/quotes");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Failed to save quote");
+    } finally {
+      setSaving(false);
     }
-    toast.success("Quote published! Link copied to clipboard");
   }
 
-  function handleSaveDraft() {
-    toast.success("Draft saved", { description: "You can continue editing later." });
-  }
+  function handlePublish() { saveQuote("sent"); }
+  function handleSaveDraft() { saveQuote("draft"); }
 
   // ── Render ─────────────────────────────────────────────────────
   return (
@@ -452,6 +499,35 @@ export default function QuoteBuilder({ allProducts }: { allProducts: ProductData
            ════════════════════════════════════════════════════════ */}
         <div className="lg:col-span-1 glass-card rounded-xl p-4 flex flex-col max-h-[calc(100vh-10rem)] overflow-hidden">
           <div className="flex-1 overflow-y-auto pr-1 scrollbar-thin space-y-5">
+            {/* Quote Details */}
+            <div>
+              <h2 className="text-xs font-bold text-gold uppercase tracking-wider mb-3 flex items-center gap-1.5">
+                <Type className="h-3.5 w-3.5" />
+                Quote Details
+              </h2>
+              <div className="space-y-2">
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Quote title (e.g. Honeymoon 3N/4D) *"
+                  className="w-full h-8 rounded-lg bg-surface border border-border-gold px-3 text-xs text-white placeholder:text-text-dim focus:border-gold transition-colors"
+                />
+                <div>
+                  <label className="text-[10px] text-text-dim uppercase tracking-wider mb-1 block">Valid Until</label>
+                  <div className="relative">
+                    <CalendarDays className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-text-dim" />
+                    <input
+                      type="date"
+                      value={validUntil}
+                      onChange={(e) => setValidUntil(e.target.value)}
+                      className="w-full h-8 rounded-lg bg-surface border border-border-gold pl-8 pr-3 text-xs text-white focus:border-gold transition-colors"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Customer Info */}
             <div>
               <h2 className="text-xs font-bold text-gold uppercase tracking-wider mb-3 flex items-center gap-1.5">
@@ -607,16 +683,18 @@ export default function QuoteBuilder({ allProducts }: { allProducts: ProductData
           <div className="mt-4 pt-3 border-t border-border-gold/20 space-y-2">
             <button
               onClick={handlePublish}
-              className="flex w-full h-9 items-center justify-center gap-2 rounded-lg bg-gold-gradient text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02]"
+              disabled={saving}
+              className="flex w-full h-9 items-center justify-center gap-2 rounded-lg bg-gold-gradient text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Send className="h-3.5 w-3.5" />
+              {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Send className="h-3.5 w-3.5" />}
               Publish Quote
             </button>
             <button
               onClick={handleSaveDraft}
-              className="flex w-full h-9 items-center justify-center gap-2 rounded-lg border border-border-gold text-xs font-medium text-text-muted hover:text-white hover:bg-surface transition-colors"
+              disabled={saving}
+              className="flex w-full h-9 items-center justify-center gap-2 rounded-lg border border-border-gold text-xs font-medium text-text-muted hover:text-white hover:bg-surface transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Save className="h-3.5 w-3.5" />
+              {saving ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Save className="h-3.5 w-3.5" />}
               Save Draft
             </button>
           </div>

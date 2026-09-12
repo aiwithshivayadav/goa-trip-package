@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
+import { requireAdmin } from "@/lib/api-auth";
 
-/**
- * GET /api/customers — List customers (admin)
- * Returns real data from DB, or empty array if DB is unreachable.
- */
 export async function GET(request: NextRequest) {
+  const denied = await requireAdmin();
+  if (denied) return denied;
+
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get("page") || "1");
@@ -23,6 +23,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ customers, total, page, limit });
   } catch (error) {
     console.error("[Customers API] GET error:", error);
-    return NextResponse.json({ customers: [], total: 0, page: 1, limit: 50 });
+    return NextResponse.json({ error: "Failed to load customers" }, { status: 500 });
   }
 }
