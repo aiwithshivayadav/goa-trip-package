@@ -89,7 +89,7 @@ function generateShortDesc(input: GenerateRequest): string {
     return `A romantic ${ctx.category} designed for couples in ${location}. Enjoy ${pickRandom(ctx.activities, 2).join(" and ")} in an intimate setting.`;
   }
 
-  return templates[Math.floor(Math.random() * templates.length)];
+  return templates[Math.floor(Math.random() * templates.length)] ?? templates[0]!;
 }
 
 function generateLongDesc(input: GenerateRequest): string {
