@@ -8,7 +8,7 @@ import { signOut } from "next-auth/react";
 import {
   LayoutDashboard, Users, FileText, CalendarDays, Package,
   CreditCard, Tag, BarChart3, Settings, LogOut, Menu, X,
-  ChevronRight, Inbox,
+  ChevronRight, Inbox, Layers,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -20,6 +20,7 @@ const navItems = [
   { href: "/admin/customers", label: "Customers", icon: Users },
   { href: "/admin/payments", label: "Payments", icon: CreditCard },
   { href: "/admin/products", label: "Products", icon: Package },
+  { href: "/admin/composer", label: "Composer", icon: Layers },
   { href: "/admin/coupons", label: "Coupons", icon: Tag },
   { href: "/admin/calendar", label: "Calendar", icon: CalendarDays },
   { href: "/admin/reports", label: "Reports", icon: BarChart3 },

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Save, Plus, X, Upload, GripVertical, Trash2 } from "lucide-react";
+import { ArrowLeft, Save, Plus, X, Upload, GripVertical, Trash2, Sparkles, Loader2 as Spinner } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
@@ -46,6 +46,7 @@ export default function ProductEditPage() {
   const [itinerary, setItinerary] = useState<{ day: number; title: string; description: string }[]>([]);
   const [faq, setFaq] = useState<{ q: string; a: string }[]>([]);
   const [dragging, setDragging] = useState(false);
+  const [generating, setGenerating] = useState(false);
 
   useEffect(() => {
     const loadId = isNew ? cloneFromId : params.id;
@@ -124,6 +125,43 @@ export default function ProductEditPage() {
     setList(list.filter((_, i) => i !== index));
   }
 
+  async function handleAIGenerate() {
+    if (!form.name) { toast.error("Enter a product name first"); return; }
+    setGenerating(true);
+    try {
+      const res = await fetch("/api/ai/generate-content", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: form.name,
+          type: form.type,
+          location: form.location,
+          duration: form.duration,
+          capacity: form.capacity,
+          basePrice: form.basePrice ? parseFloat(form.basePrice) : undefined,
+          priceUnit: form.priceUnit,
+          existingShortDesc: form.shortDesc,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) { toast.error(data.error || "Generation failed"); return; }
+      const g = data.generated;
+      setForm((prev) => ({
+        ...prev,
+        shortDesc: g.shortDesc || prev.shortDesc,
+        longDesc: g.longDesc || prev.longDesc,
+      }));
+      if (g.highlights?.length) setHighlights(g.highlights);
+      if (g.inclusions?.length) setInclusions(g.inclusions);
+      if (g.exclusions?.length) setExclusions(g.exclusions);
+      toast.success("AI content generated! Review and save.");
+    } catch {
+      toast.error("Failed to generate content");
+    } finally {
+      setGenerating(false);
+    }
+  }
+
   async function handleSave() {
     if (!form.name || !form.slug || !form.basePrice) {
       toast.error("Name, slug, and price are required");
@@ -176,9 +214,15 @@ export default function ProductEditPage() {
           </Link>
           <h1 className="text-lg font-bold text-white">{isNew ? (cloneFromId ? "Clone Product" : "Add New Product") : "Edit Product"}</h1>
         </div>
-        <button onClick={handleSave} disabled={saving} className="flex h-9 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02] disabled:opacity-50">
-          <Save className="h-3.5 w-3.5" /> {saving ? "Saving..." : "Save Product"}
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={handleAIGenerate} disabled={generating} className="flex h-9 items-center gap-1.5 rounded-lg border border-violet-500/50 bg-violet-500/10 px-3 text-xs font-bold text-violet-300 hover:bg-violet-500/20 transition-colors disabled:opacity-50">
+            {generating ? <Spinner className="h-3.5 w-3.5 animate-spin" /> : <Sparkles className="h-3.5 w-3.5" />}
+            {generating ? "Generating..." : "AI Generate"}
+          </button>
+          <button onClick={handleSave} disabled={saving} className="flex h-9 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02] disabled:opacity-50">
+            <Save className="h-3.5 w-3.5" /> {saving ? "Saving..." : "Save Product"}
+          </button>
+        </div>
       </div>
 
       {/* Basic Info */}
@@ -227,11 +271,17 @@ export default function ProductEditPage() {
           </div>
         </div>
         <div>
-          <label className="block text-xs text-text-muted mb-1.5">Short Description</label>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-xs text-text-muted">Short Description</label>
+            {!form.shortDesc && <button onClick={handleAIGenerate} disabled={generating} className="flex items-center gap-1 text-[10px] text-violet-400 hover:text-violet-300"><Sparkles className="h-3 w-3" /> Auto-fill with AI</button>}
+          </div>
           <textarea value={form.shortDesc} onChange={(e) => updateForm("shortDesc", e.target.value)} placeholder="One-liner shown on cards..." rows={2} className="w-full rounded-lg bg-surface border border-border-gold px-3 py-2 text-sm text-white placeholder:text-text-dim focus:border-gold transition-colors resize-none" />
         </div>
         <div>
-          <label className="block text-xs text-text-muted mb-1.5">Long Description</label>
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-xs text-text-muted">Long Description</label>
+            {!form.longDesc && <button onClick={handleAIGenerate} disabled={generating} className="flex items-center gap-1 text-[10px] text-violet-400 hover:text-violet-300"><Sparkles className="h-3 w-3" /> Auto-fill with AI</button>}
+          </div>
           <textarea value={form.longDesc} onChange={(e) => updateForm("longDesc", e.target.value)} placeholder="Detailed description shown on the product page..." rows={4} className="w-full rounded-lg bg-surface border border-border-gold px-3 py-2 text-sm text-white placeholder:text-text-dim focus:border-gold transition-colors resize-none" />
         </div>
       </div>

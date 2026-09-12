@@ -1,36 +1,82 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { Search, Download, IndianRupee } from "lucide-react";
+import { Search, Download, Loader2 } from "lucide-react";
+import { formatINR } from "@/lib/utils";
 
-const payments = [
-  { id: 1, bookingId: "GTP-2026-A8K2L", customer: "Meera Joshi", amount: 3500, method: "PayU", status: "success", txnId: "PAY-8472615", date: "Jun 1, 2026" },
-  { id: 2, bookingId: "GTP-2026-B3M9N", customer: "Rahul & Priya", amount: 6500, method: "PayU", status: "success", txnId: "PAY-8472616", date: "May 30, 2026" },
-  { id: 3, bookingId: "GTP-2026-D2R6S", customer: "Sneha & Amit", amount: 2400, method: "PayU", status: "success", txnId: "PAY-8472614", date: "May 26, 2026" },
-  { id: 4, bookingId: "GTP-2026-E5T8U", customer: "Arjun's Group", amount: 12000, method: "PayU", status: "success", txnId: "PAY-8472617", date: "May 29, 2026" },
-  { id: 5, bookingId: "GTP-2026-F9V1W", customer: "Divya Kapoor", amount: 24000, method: "Bank Transfer", status: "success", txnId: "NEFT-99218", date: "Jun 1, 2026" },
-];
+interface PaymentRow {
+  id: number;
+  bookingId: string;
+  customer: string;
+  amount: number;
+  method: string;
+  status: string;
+  milestone: string;
+  txnId: string;
+  date: string;
+}
+
+interface Summary { collected: number; pending: number; refunded: number }
+
+const statusColors: Record<string, string> = {
+  paid: "bg-green-500/20 text-green-400",
+  pending: "bg-gold/20 text-gold",
+  failed: "bg-red-500/20 text-red-400",
+  refunded: "bg-violet-500/20 text-violet-400",
+  partial: "bg-gold/20 text-gold",
+};
+
+const methodLabels: Record<string, string> = {
+  payu: "PayU", cash: "Cash", bank_transfer: "Bank Transfer", upi_qr: "UPI / QR",
+};
 
 export default function PaymentsPage() {
+  const [payments, setPayments] = useState<PaymentRow[]>([]);
+  const [summary, setSummary] = useState<Summary>({ collected: 0, pending: 0, refunded: 0 });
   const [search, setSearch] = useState("");
-  const total = payments.reduce((s, p) => s + p.amount, 0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/payments?limit=200")
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.payments) {
+          setPayments(
+            data.payments.map((p: Record<string, unknown>) => {
+              const booking = p.booking as Record<string, unknown> | null;
+              return {
+                id: p.id,
+                bookingId: booking?.bookingId || `#${p.bookingId}`,
+                customer: booking?.customerName || "—",
+                amount: Number(p.amount) || 0,
+                method: methodLabels[(p.method as string)] || (p.method as string) || "—",
+                status: (p.status as string) || "pending",
+                milestone: (p.milestone as string) || "full",
+                txnId: (p.payuTxnid as string) || (p.payuMihpayid as string) || "—",
+                date: p.createdAt ? new Date(p.createdAt as string).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—",
+              };
+            })
+          );
+        }
+        if (data.summary) setSummary({ collected: Number(data.summary.collected), pending: Number(data.summary.pending), refunded: Number(data.summary.refunded) });
+      })
+      .catch(() => toast.error("Failed to load payments"))
+      .finally(() => setLoading(false));
+  }, []);
 
   const filtered = search
     ? payments.filter((p) => p.customer.toLowerCase().includes(search.toLowerCase()) || p.bookingId.toLowerCase().includes(search.toLowerCase()) || p.txnId.toLowerCase().includes(search.toLowerCase()))
     : payments;
 
   const handleExportCSV = () => {
-    const csv = "Date,Booking ID,Customer,Amount,Method,Status,Txn ID\n" +
-      payments.map(p => `${p.date},${p.bookingId},${p.customer},${p.amount},${p.method},${p.status},${p.txnId}`).join("\n");
+    const csv = "Date,Booking ID,Customer,Amount,Method,Milestone,Status,Txn ID\n" +
+      payments.map((p) => `${p.date},${p.bookingId},"${p.customer}",${p.amount},${p.method},${p.milestone},${p.status},${p.txnId}`).join("\n");
     const blob = new Blob([csv], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "payment-ledger.csv";
-    a.click();
+    const a = document.createElement("a"); a.href = url; a.download = "payment-ledger.csv"; a.click();
     URL.revokeObjectURL(url);
-    toast.success("Payment ledger exported to CSV");
+    toast.success("Payment ledger exported");
   };
 
   return (
@@ -45,51 +91,61 @@ export default function PaymentsPage() {
         </button>
       </div>
 
-      {/* Summary cards */}
       <div className="grid gap-4 sm:grid-cols-3">
         <div className="glass-card rounded-xl p-4 text-center">
           <p className="text-xs text-text-muted">Total Collected</p>
-          <p className="text-2xl font-bold text-green-400 mt-1">₹{total.toLocaleString("en-IN")}</p>
+          <p className="text-2xl font-bold text-green-400 mt-1">{formatINR(summary.collected)}</p>
         </div>
         <div className="glass-card rounded-xl p-4 text-center">
           <p className="text-xs text-text-muted">Pending Balance</p>
-          <p className="text-2xl font-bold text-gold mt-1">₹2,04,490</p>
+          <p className="text-2xl font-bold text-gold mt-1">{formatINR(summary.pending)}</p>
         </div>
         <div className="glass-card rounded-xl p-4 text-center">
           <p className="text-xs text-text-muted">Refunds</p>
-          <p className="text-2xl font-bold text-text-muted mt-1">₹0</p>
+          <p className="text-2xl font-bold text-text-muted mt-1">{formatINR(summary.refunded)}</p>
         </div>
       </div>
 
       <div className="glass-card rounded-xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-border-gold/30 bg-cosmic-900/50">
-                <th className="text-left text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3">Date</th>
-                <th className="text-left text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3">Booking</th>
-                <th className="text-left text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3">Customer</th>
-                <th className="text-right text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3">Amount</th>
-                <th className="text-center text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3 hidden sm:table-cell">Method</th>
-                <th className="text-center text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3">Status</th>
-                <th className="text-left text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3 hidden md:table-cell">Txn ID</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((p) => (
-                <tr key={p.id} className="border-b border-border-gold/10 hover:bg-surface/50 transition-colors">
-                  <td className="px-4 py-3.5 text-text-muted whitespace-nowrap">{p.date}</td>
-                  <td className="px-4 py-3.5"><span className="font-mono text-xs text-gold">{p.bookingId}</span></td>
-                  <td className="px-4 py-3.5 text-white font-medium">{p.customer}</td>
-                  <td className="px-4 py-3.5 text-right font-bold text-white">₹{p.amount.toLocaleString("en-IN")}</td>
-                  <td className="px-4 py-3.5 text-center hidden sm:table-cell"><span className="rounded bg-surface px-2 py-0.5 text-[10px] text-text-muted">{p.method}</span></td>
-                  <td className="px-4 py-3.5 text-center"><span className="rounded-full bg-green-500/20 px-2 py-0.5 text-[10px] font-bold text-green-400">{p.status}</span></td>
-                  <td className="px-4 py-3.5 hidden md:table-cell"><span className="font-mono text-[10px] text-text-dim">{p.txnId}</span></td>
+        {loading ? (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="h-6 w-6 animate-spin text-gold" />
+          </div>
+        ) : payments.length === 0 ? (
+          <div className="py-20 text-center">
+            <p className="text-text-muted text-sm">No payments recorded yet</p>
+            <p className="text-text-dim text-xs mt-1">Payment records are created when customers pay via PayU</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-border-gold/30 bg-cosmic-900/50">
+                  <th className="text-left text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3">Date</th>
+                  <th className="text-left text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3">Booking</th>
+                  <th className="text-left text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3">Customer</th>
+                  <th className="text-right text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3">Amount</th>
+                  <th className="text-center text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3 hidden sm:table-cell">Method</th>
+                  <th className="text-center text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3">Status</th>
+                  <th className="text-left text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3 hidden md:table-cell">Txn ID</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {filtered.map((p) => (
+                  <tr key={p.id} className="border-b border-border-gold/10 hover:bg-surface/50 transition-colors">
+                    <td className="px-4 py-3.5 text-text-muted whitespace-nowrap">{p.date}</td>
+                    <td className="px-4 py-3.5"><span className="font-mono text-xs text-gold">{p.bookingId}</span></td>
+                    <td className="px-4 py-3.5 text-white font-medium">{p.customer}</td>
+                    <td className="px-4 py-3.5 text-right font-bold text-white">{formatINR(p.amount)}</td>
+                    <td className="px-4 py-3.5 text-center hidden sm:table-cell"><span className="rounded bg-surface px-2 py-0.5 text-[10px] text-text-muted">{p.method}</span></td>
+                    <td className="px-4 py-3.5 text-center"><span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${statusColors[p.status] || "bg-surface text-text-muted"}`}>{p.status}</span></td>
+                    <td className="px-4 py-3.5 hidden md:table-cell"><span className="font-mono text-[10px] text-text-dim">{p.txnId}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   );
