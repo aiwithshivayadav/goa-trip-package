@@ -174,9 +174,15 @@ export default function QuotesPage() {
               </thead>
               <tbody>
                 {filtered.map((q) => (
-                  <tr key={q.id} className="border-b border-border-gold/10 hover:bg-surface/50 transition-colors">
+                  <tr
+                    key={q.id}
+                    onClick={() => window.location.href = `/admin/quotes/${q.id}`}
+                    className="border-b border-border-gold/10 hover:bg-surface/50 transition-colors cursor-pointer"
+                  >
                     <td className="px-4 py-3.5">
-                      <span className="font-mono text-xs text-gold">{q.quoteCode}</span>
+                      <Link href={`/admin/quotes/${q.id}`} className="font-mono text-xs text-gold hover:underline" onClick={(e) => e.stopPropagation()}>
+                        {q.quoteCode}
+                      </Link>
                     </td>
                     <td className="px-4 py-3.5">
                       <p className="font-medium text-white text-sm">{customerName(q)}</p>

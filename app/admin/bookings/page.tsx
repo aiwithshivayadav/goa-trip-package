@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Search, Filter, Download, Plus, Loader2 } from "lucide-react";
 import { formatINR } from "@/lib/utils";
@@ -43,6 +44,7 @@ const categoryLabels: Record<string, string> = {
 };
 
 export default function BookingsPage() {
+  const router = useRouter();
   const [bookings, setBookings] = useState<BookingRow[]>([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
@@ -139,7 +141,7 @@ export default function BookingsPage() {
               </thead>
               <tbody>
                 {filtered.map((b) => (
-                  <tr key={b.bookingId} className="border-b border-border-gold/10 hover:bg-surface/50 transition-colors cursor-pointer">
+                  <tr key={b.bookingId} onClick={() => router.push(`/admin/bookings/${b.id}`)} className="border-b border-border-gold/10 hover:bg-surface/50 transition-colors cursor-pointer">
                     <td className="px-4 py-3.5"><span className="font-mono text-xs text-gold">{b.bookingId}</span></td>
                     <td className="px-4 py-3.5">
                       <p className="font-medium text-white text-sm">{b.customerName}</p>

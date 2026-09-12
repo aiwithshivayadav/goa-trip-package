@@ -60,6 +60,7 @@ export async function PATCH(
     if (body.gstAmount !== undefined) data.gstAmount = body.gstAmount;
     if (body.advancePercent !== undefined) data.advancePercent = body.advancePercent;
     if (body.status !== undefined) data.status = body.status;
+    if (body.termsMarkdown !== undefined) data.termsMarkdown = body.termsMarkdown;
 
     const quote = await db.quote.update({
       where: { id: quoteId },
