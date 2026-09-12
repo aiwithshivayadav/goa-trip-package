@@ -153,7 +153,7 @@ export default function ComposerPage() {
       location: product.location,
     };
     setDays((prev) => prev.map((d, i) => i === dayIndex ? { ...d, items: [...d.items, item] } : d));
-    toast.success(`Added ${product.name} to ${days[dayIndex].title}`);
+    toast.success(`Added ${product.name} to ${days[dayIndex]?.title ?? `Day ${dayIndex + 1}`}`);
   }, [days]);
 
   // Remove item from day
