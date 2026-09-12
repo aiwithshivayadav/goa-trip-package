@@ -1,6 +1,5 @@
 import { Shield, IndianRupee, Clock, Headphones, Sparkles } from "lucide-react";
 import { ProductListingFilters } from "./ProductListingFilters";
-import { ScrollReveal } from "./ScrollReveal";
 import type { ProductData } from "@/lib/data/db-products";
 
 export interface CategoryConfig {
@@ -109,9 +108,7 @@ export function CategoryListingLayout({ products, config }: Props) {
 
       {/* ── Product grid ── */}
       <section className="mx-auto max-w-7xl px-4 py-10 md:px-8 md:py-14">
-        <ScrollReveal>
-          <ProductListingFilters products={products} categoryLabel={config.categoryLabel} />
-        </ScrollReveal>
+        <ProductListingFilters products={products} categoryLabel={config.categoryLabel} />
       </section>
     </div>
   );
