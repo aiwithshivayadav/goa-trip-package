@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import { Search, Filter, Plus, Star, Anchor, Ship, Waves, Hotel, Palmtree, PartyPopper, Loader2, RefreshCw } from "lucide-react";
+import { Search, Filter, Plus, Star, Anchor, Ship, Waves, Hotel, Palmtree, PartyPopper, Loader2, RefreshCw, Copy } from "lucide-react";
 import { toast } from "sonner";
 
 type ProductType = "package_tour" | "cruise" | "yacht" | "activity" | "hotel" | "party";
@@ -195,6 +195,7 @@ export default function ProductsPage() {
                   <th className="text-left text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3 hidden md:table-cell">Location</th>
                   <th className="text-center text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3">Status</th>
                   <th className="text-center text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3 w-16">Featured</th>
+                  <th className="text-center text-[10px] font-medium text-text-dim uppercase tracking-wider px-4 py-3 w-12"></th>
                 </tr>
               </thead>
               <tbody>
@@ -250,6 +251,11 @@ export default function ProductsPage() {
                         <button onClick={() => toggleFeatured(p.id, p.isFeatured)} className="transition-colors">
                           <Star className={`h-4 w-4 ${p.isFeatured ? "fill-gold text-gold" : "text-text-dim hover:text-gold/50"}`} />
                         </button>
+                      </td>
+                      <td className="px-4 py-3.5 text-center">
+                        <Link href={`/admin/products/new?clone=${p.id}`} className="text-text-dim hover:text-gold transition-colors" title="Clone product">
+                          <Copy className="h-3.5 w-3.5" />
+                        </Link>
                       </td>
                     </tr>
                   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Save, Plus, X, Upload, GripVertical, Trash2 } from "lucide-react";
@@ -15,7 +15,9 @@ import { cn } from "@/lib/utils";
 export default function ProductEditPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const isNew = params.id === "new";
+  const cloneFromId = isNew ? searchParams.get("clone") : null;
 
   const [saving, setSaving] = useState(false);
   const [form, setForm] = useState({
@@ -46,37 +48,37 @@ export default function ProductEditPage() {
   const [dragging, setDragging] = useState(false);
 
   useEffect(() => {
-    if (!isNew) {
-      fetch(`/api/products/${params.id}`).then(r => r.json()).then(data => {
-        if (data.product) {
-          const p = data.product;
-          setForm({
-            name: p.name || "",
-            slug: p.slug || "",
-            type: p.type || "package",
-            shortDesc: p.shortDesc || "",
-            longDesc: p.longDescMd || "",
-            basePrice: String(p.basePrice || ""),
-            originalPrice: p.originalPrice ? String(p.originalPrice) : "",
-            priceUnit: p.priceUnit || "per person",
-            duration: p.duration || "",
-            capacity: p.capacity || "",
-            location: p.location || "",
-            status: p.status || "active",
-            isFeatured: p.isFeatured || false,
-            isSelfServe: p.isSelfServe || false,
-            isQuoteLed: p.isQuoteLed !== false,
-          });
-          if (p.imagesJson) setImages(JSON.parse(p.imagesJson));
-          if (p.inclusionsJson) setInclusions(JSON.parse(p.inclusionsJson));
-          if (p.exclusionsJson) setExclusions(JSON.parse(p.exclusionsJson));
-          if (p.highlightsJson) setHighlights(JSON.parse(p.highlightsJson));
-          if (p.itineraryJson) setItinerary(JSON.parse(p.itineraryJson));
-          if (p.faqJson) setFaq(JSON.parse(p.faqJson));
-        }
-      }).catch(() => {});
-    }
-  }, [isNew, params.id]);
+    const loadId = isNew ? cloneFromId : params.id;
+    if (!loadId) return;
+    fetch(`/api/products/${loadId}`).then(r => r.json()).then(data => {
+      if (data.product) {
+        const p = data.product;
+        setForm({
+          name: cloneFromId ? `${p.name} (Copy)` : p.name || "",
+          slug: cloneFromId ? `${p.slug}-copy` : p.slug || "",
+          type: p.type || "package",
+          shortDesc: p.shortDesc || "",
+          longDesc: p.longDescMd || "",
+          basePrice: String(p.basePrice || ""),
+          originalPrice: p.originalPrice ? String(p.originalPrice) : "",
+          priceUnit: p.priceUnit || "per person",
+          duration: p.duration || "",
+          capacity: p.capacity || "",
+          location: p.location || "",
+          status: cloneFromId ? "paused" : p.status || "active",
+          isFeatured: false,
+          isSelfServe: p.isSelfServe || false,
+          isQuoteLed: p.isQuoteLed !== false,
+        });
+        if (p.imagesJson) setImages(JSON.parse(p.imagesJson));
+        if (p.inclusionsJson) setInclusions(JSON.parse(p.inclusionsJson));
+        if (p.exclusionsJson) setExclusions(JSON.parse(p.exclusionsJson));
+        if (p.highlightsJson) setHighlights(JSON.parse(p.highlightsJson));
+        if (p.itineraryJson) setItinerary(JSON.parse(p.itineraryJson));
+        if (p.faqJson) setFaq(JSON.parse(p.faqJson));
+      }
+    }).catch(() => {});
+  }, [isNew, params.id, cloneFromId]);
 
   function handleDrop(e: React.DragEvent) {
     e.preventDefault();
@@ -172,7 +174,7 @@ export default function ProductEditPage() {
           <Link href="/admin/products" className="flex h-8 w-8 items-center justify-center rounded-lg text-text-muted hover:text-white hover:bg-surface">
             <ArrowLeft className="h-4 w-4" />
           </Link>
-          <h1 className="text-lg font-bold text-white">{isNew ? "Add New Product" : "Edit Product"}</h1>
+          <h1 className="text-lg font-bold text-white">{isNew ? (cloneFromId ? "Clone Product" : "Add New Product") : "Edit Product"}</h1>
         </div>
         <button onClick={handleSave} disabled={saving} className="flex h-9 items-center gap-1.5 rounded-lg bg-gold-gradient px-4 text-xs font-bold text-cosmic-950 transition-transform hover:scale-[1.02] disabled:opacity-50">
           <Save className="h-3.5 w-3.5" /> {saving ? "Saving..." : "Save Product"}
